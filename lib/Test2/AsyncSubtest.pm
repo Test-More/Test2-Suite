@@ -9,7 +9,7 @@ use Test2::Hub::AsyncSubtest();
 use Test2::Util::Trace();
 use Test2::Event::Exception();
 
-use Test2::Util::HashBase qw/name hub events _finished/;
+use Test2::Util::HashBase qw/name hub errored events _finished/;
 
 our @CARP_NOT = qw/Test2::Tools::AsyncSubtest/;
 
@@ -80,6 +80,7 @@ sub run {
             ),
         );
         $hub->send($e);
+        $self->{+ERRORED} = 1;
     }
 
     return $hub->is_passing;
@@ -122,6 +123,9 @@ sub event_data {
 
 sub diagnostics {
     my $self = shift;
+    # If the subtest then we've already sent an appropriate event. No need to
+    # send another telling the user that the plan was wrong.
+    return if $self->{+ERRORED};
     my $hub = $self->{+HUB};
     return if $hub->check_plan;
     return "Bad subtest plan, expected " . $hub->plan . " but ran " . $hub->count;
