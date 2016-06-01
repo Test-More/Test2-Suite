@@ -1,0 +1,212 @@
+<dl class="listnav">
+    <dt id="Load">Load</dt>
+    <dd>
+        <h2>What to load?</h2>
+
+        This will get you pretty much everything Fennec has:
+        <script class="code">
+            use Test2::IPC;
+            use Test2::Bundle::Extended;
+            use Test2::Tools::Spec;
+        </script>
+
+        If you want the declarative syntax:
+        <script class="code">
+            # This also loads the 3 packages above.
+            use Test2::Bundle::SpecDeclare;
+        </script>
+
+        <table>
+            <tr><th style="text-align: left">Test2::IPC</th>                <td>Make fork/threads work</td></tr>
+            <tr><th style="text-align: left">Test2::Bundle::Extended</th>   <td>Many tools</td></tr>
+            <tr><th style="text-align: left">Test2::Tools::Spec</th>        <td>SPEC tools</td></tr>
+            <tr><th style="text-align: left">Test2::Bundle::SpecDeclare</th><td>Declare syntax plugin (plus all the above)</td></tr>
+        </table>
+    </dd>
+
+    <dt id="DreamHost">DreamHost</dt>
+    <dd>
+        <h2>What to load at DreamHost?</h2>
+
+        <script class="code">
+            use Ndn::Test::Bundle;
+        </script>
+
+        <ul>
+            <li>This will load Everything from the previous slide.</li>
+            <li>Maps Fennec env-vars to the Test2 ones.</li>
+            <li>Loads the DBHarness.</li>
+            <li>Loads the DB Fixture tools.</li>
+            <li>Loads other DH specific tools.</li>
+        </ul>
+    </dd>
+
+    <dt id="Compare">Compare</dt>
+    <dd>
+        <h2>Comparing structures</h2>
+
+        <ul>
+            <li>is_deeply() is gone, just use is().</li>
+            <li>like() can also check deep structures now.</li>
+        </ul>
+
+        <script class="code">
+            is('foo', 'foo', "foo");
+            is({foo => 1}, { foo => 1 }, "deep foo");
+
+            like('-foo-', qr/foo/, "like /foo/");
+            like({a => '-foo-'}, {a => qr/foo/}, "{a} like /foo/");
+
+            # Like only checks fields you specify, this will pass:
+            like(
+                {a => '-foo-', b => 'ignored', c => 'also ignored'},
+                {a => qr/foo/},    # We only care about {a}
+                "{a} like /foo/"
+            );
+        </script>
+    </dd>
+
+    <dt id="Mocking">Mocking</dt>
+    <dd>
+
+        <dl class="sub_list">
+            <dt id="Tool">Tool</dt>
+            <dd>
+                <h2>Test2::Tools::Mock</h2>
+
+                Test2::Tools::Mock replaces Mock::Quick.
+
+                <script class="code">
+                    use Test2::Tools::Mock;
+
+                    my $c = mock 'Some::Class' => (
+                        add => [
+                            new_method => sub { ... },
+                        ],
+                        override => [
+                            new   => sub { ... },
+                            do_it => sub { ... },
+                        ],
+                        # Any method on Test2::Mock can be used as a key here.
+                    );
+                </script>
+
+                <ul>
+                    <li>mock() returns a control object, just like Mock::Quick.</li>
+                    <li>Must specify override or add.</li>
+                    <li>Control object has more capabilities.</li>
+                    <li>One function for all mocking.</li>
+                </ul>
+            </dd>
+
+            <dt id="Class">Class</dt>
+            <dd>
+                <h2>Mocking Classes</h2>
+
+                This replaces both qtakeover() and qclass() from Mock::Quick.
+
+                <script class="code">
+                    # Quick way
+                    my $c = mock 'Some::Class' => (...);
+
+                    # Explicit way
+                    my $c = mock 'class', 'Some::Class' => (...);
+
+                    # Alternative
+                    my $c = mock_class 'Some::Class' => (...); # Not exported by default
+
+                    $c = undef;
+                </script>
+
+                <ul>
+                    <li>If the first argument is a string other than 'obj' or 'class' it is treated as a package name.</li>
+                    <li>making the first argument 'class' will force the next argument to be used as a package name.</li>
+                    <li>mock_class() can also be used, but is not exported by default.</li>
+                </ul>
+            </dd>
+
+            <dt id="Object">Object</dt>
+            <dd>
+                <h2>Mocking Objects</h2>
+
+                Instead of qobj() and qmeth(), use mock().
+
+                <script class="code">
+                    my $obj = mock {attr1 => 1, attr2 => 2 } => (
+                        add => [
+                            foo => sub { 'foo' },
+                        ],
+                    );
+
+                    $obj->xxx('123');
+                    is($obj->xxx, 123, "Auto-vivify accessor");
+                    is($obj->attr1, 1, "read/write accessor generated");
+                    is($obj->foo, 'foo', "Custom accessor.");
+                </script>
+
+                You could also use mock_obj() (not exported by default).
+            </dd>
+        </dl>
+    </dd>
+
+    <dt id="SPEC">SPEC</dt>
+    <dd>
+        <h2>SPEC Workflow</h2>
+
+        <div id="wf_code" style="float: left; width: 400px;">
+            <script class="code">
+                # Bind to scope
+                before_all  foo => sub { ... };
+                after_all   foo => sub { ... };
+                around_all  foo => sub { ... };
+
+                # Bind to cases
+                before_case foo => sub { ... };
+                after_case  foo => sub { ... };
+                around_case foo => sub { ... };
+
+                # Bind to tests
+                before_each foo => sub { ... };
+                after_each  foo => sub { ... };
+                around_each foo => sub { ... };
+
+                case a          => sub { ... };
+                case b          => sub { ... };
+                tests foo       => sub { ... };
+                describe nested => sub { ... };
+            </script>
+        </div>
+
+        <div style="float: left">
+            <ul>
+                <li>More clearly specified run order.</li>
+                <li>Does not fork for each test by default.</li>
+                <li>Mocking works, no need to keep the control object.</li>
+                <li>Can still run specific test. ($ENV{T2_WORKFLOW})</li>
+            </ul>
+        </div>
+    </dd>
+
+    <dt id="Declare">Declare</dt>
+    <dd>
+        <h2>Declarative Syntax</h2>
+
+        <script class="code">
+            # Mark a block as TODO
+            tests foo(todo => "why") { ... }
+
+            # Mark a block to be skipped
+            tests foo(skip => "why") { ... }
+
+            # Block may be run concurrently (fork or thread) or in serial
+            tests foo(async => 1) { ... }
+
+            # Block must be run in isolation (fork or thread, parent waits)
+            tests foo (iso => 1) { ... }
+
+            # Block must be run in isolation, can also run concurrently
+            # (What Fennec did)
+            tests foo (iso => 1, async => 1) { ... };
+        </script>
+    </dd>
+</dl>

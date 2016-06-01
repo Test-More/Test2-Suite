@@ -1,0 +1,176 @@
+<dl class="listnav">
+
+    <dt id="Convert">Convert</dt>
+    <dd>
+        <dl class="sub_list">
+            <dt id="musti">Must&nbsp;I?</dt>
+            <dd>
+                <h2>Do I need to convert?</h2>
+    
+                <b>Short Answer: No.</b>
+    
+                <br />
+                <br />
+                <br />
+                <h3>Do I need the latest Test-Simple?</h3>
+    
+                No. You will only need to install the latest version if you need
+                something it provides.
+    
+                <br />
+                <br />
+                <br />
+                <h3>Do I need to change my existing tests?</h3>
+    
+                Most things will "just work"! Few test files need to be altered.
+            </dd>
+
+            <dt id="Before">Before</dt>
+            <dd>
+                <h2>Before</h2>
+                <script class="code">
+                    # Load Test::More and set plan
+                    use Test::More tests => #;
+
+                    use_ok 'foo';
+                    require_ok 'bar';
+
+                    ok(1, 'simple ok');
+                    is('foo', 'foo', 'simple is');
+                    is_deeply({a => 1}, {a => 1}, "simple is_deeply");
+
+                    # check $thing->isa('Base') or dump $thing
+                    isa_ok($thing, 'Base',  "thing->isa(Base)")  || explain($thing);
+                    isa_ok($thing, 'Base2', "thing->isa(Base1)") || explain($thing);
+
+                    {
+                        local $TODO = "fixme";
+                        ok(0, "oops");
+                    }
+
+                    # Not required with a plan, but allowed
+                    done_testing;
+                </script>
+            </dd>
+
+            <dt id="After">After</dt>
+            <dd>
+                <h2>After</h2>
+                <script class="code">
+                    # Load Bundle, no planning at import
+                    use Test2::Bundle::More;
+
+                    use 'foo';      # use_ok is gone
+                    require 'bar';  # require_ok is gone
+
+                    ok(1, 'simple ok');
+                    is('foo', 'foo', 'simple is');
+                    is_deeply({a => 1}, {a => 1}, "simple is_deeply");
+
+                    # isa_ok is now consistent with can_ok, all args after the
+                    # first are classes 
+                    isa_ok($thing, 'Base', 'Base1'); # explain() is gone
+
+                    {
+                        my $todo = todo "fixme";
+                        ok(0, "oops");
+                    }
+
+                    # Not required with a plan, but allowed
+                    done_testing;
+                </script>
+            </dd>
+
+            <dt id="different">Different</dt>
+            <dd>
+                <h2>What is different?</h2>
+
+                <ul>
+                    <li>use_ok() is gone (use ok(...) still works)</li>
+                    <li>require_ok() is gone</li>
+                    <li>todo_skip() is gone</li>
+                    <li>eq_array(), eq_hash(), and eq_set() are gone</li>
+                    <li>explain() is gone</li>
+                    <li>new_ok() is gone</li>
+                    <li>isa_ok() takes different arguments</li>
+                    <li>is_deeply() has better diagnostics</li>
+                    <li>$TODO is replaced by todo()</li>
+                </ul>
+
+                <script class="code">
+                    my $todo = todo "foo";
+                    ...
+                    $todo = undef; # End the todo
+
+                    # OR:
+
+                    todo "foo" => sub {
+                        ...
+                    };
+                    # End of todo
+                </script>
+            </dd>
+        </dl>
+    </dd>
+
+    <dt id="broken">What&nbsp;Breaks?</dt>
+    <dd>
+        <dl class="sub_list">
+            <dt id="overview">Overview</dt>
+            <dd>
+                <h2>Overview of what breaks</h2>
+
+                <dl>
+                    <dt>Replacing the Test::Builder singleton</dt>
+                    <dd style="margin-bottom: 10px">
+                        Some test tools re-blessed or replaced the
+                        Test::Builder singleton. This is not supported.
+                    </dd>
+
+                    <dt>Direct hash access to the singleton</dt>
+                    <dd style="margin-bottom: 10px">
+                    Some tools directly accessed the values of the singleton
+                    hashref. Many of the old hash keys are now gone.
+                    </dd>
+
+                    <dt>Some private methods on the singleton</dt>
+                    <dd style="margin-bottom: 10px">
+                        Some private (underscore) methods have been removed.
+                    </dd>
+
+                    <dt>Monkey Patching</dt>
+                    <dd style="margin-bottom: 10px">
+                        A lot of effort was made to allow existing
+                        monkeypatching to work, but not all survived.
+                    </dd>
+                </dl>
+            </dd>
+
+            <dt id="modules">Modules</dt>
+            <dd>
+                <h2>Modules known to be broken</h2>
+
+                <table>
+                    <tr><th>Module</th><th>Verson</th><th>Fixed?</th></tr>
+                    <tr><td>Test::Exception</td>               <td>0.42</td> <td>YES</td></tr>
+                    <tr><td>Test::SharedFork</td>              <td>0.34</td> <td>YES</td></tr>
+                    <tr><td>Test::Clustericious::Cluster</td>  <td>0.30</td> <td>YES</td></tr>
+                    <tr><td>Test::Alien</td>                   <td>0.04</td> <td>YES</td></tr>
+                    <tr><td>Log::Dispatch::Config::TestLog</td><td>0.02</td> <td></td></tr>
+                    <tr><td>Net::BitTorrent</td>               <td>0.052</td><td></td></tr>
+                    <tr><td>Test::Able</td>                    <td>0.11</td> <td></td></tr>
+                    <tr><td>Test::Aggregate</td>               <td>0.373</td><td></td></tr>
+                    <tr><td>Test::Builder::Clutch</td>         <td>0.07</td> <td></td></tr>
+                    <tr><td>Test::Dist::VersionSync</td>       <td>1.1.4</td><td></td></tr>
+                    <tr><td>Test::Flatten</td>                 <td>0.11</td> <td></td></tr>
+                    <tr><td>Test::Group</td>                   <td>0.20</td> <td></td></tr>
+                    <tr><td>Test::Modern</td>                  <td>0.012</td><td></td></tr>
+                    <tr><td>Test::More::Prefix</td>            <td>0.005</td><td>Maybe?</td></tr>
+                    <tr><td>Test::ParallelSubtest</td>         <td>0.05</td> <td></td></tr>
+                    <tr><td>Test::Pretty</td>                  <td>0.32</td> <td></td></tr>
+                    <tr><td>Test::Wrapper</td>                 <td>0.3.0</td><td></td></tr>
+                </table>
+            </dd>
+        </dl>
+    </dd>
+</dl>

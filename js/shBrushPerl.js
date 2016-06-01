@@ -50,7 +50,7 @@
 			'for foreach goto if import last local my next no our package redo ref ' + 
 			'require return sub tie tied unless untie until use wantarray while ' +
             'describe it tests before_all after_all before_each after_each case cases ' +
-            'around_each around_all';
+            'around_each around_all before_case around_case after_case';
     
 		this.regexList = [
 			{ regex: new RegExp('#[^!].*$', 'gm'),					css: 'comments' },

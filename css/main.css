@@ -495,3 +495,7 @@ dl.short dd, dl.medium dd {
 dl.medium dt {
     width: 100px;
 }
+
+#wf_code div.syntaxhighlighter {
+    height: 350px;
+}
