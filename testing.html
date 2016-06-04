@@ -1,0 +1,493 @@
+<dl class="listnav">
+    <dt id="Overview">Overview</dt>
+    <dd>
+        <dl class="sub_list">
+            <dt id="namespaces">Namespaces</dt>
+            <dd>
+                <h2>Namespaces</h2>
+
+                <h3>Test2::Tools::</h3>
+                
+                Modules that export tools like ok() and is().
+
+                <h3>Test2::Plugin</h3>
+                
+                Modules that change or enhance the behavior of Test2.
+
+                <h3>Test2::Require::</h3>
+                
+                Modules that cause a test to be skipped when conditions do not allow it to run.
+
+                <h3>Test2::Bundle::</h3>
+                
+                Bundles will load multiple tools and plugins all at once.
+            </dd>
+
+            <dt id="Essentials">Essentials</dt>
+            <dd>
+                <h2>Essential parts of any test</h2>
+
+                <p><br />
+
+                <ol>
+                    <li>Load Test2</li>
+                    <li>Set a plan</li>
+                    <li>Make assertions</li>
+                </ol>
+
+                <p><br />
+
+                <ul>
+                    <li>Parts 2 and 3 can be done in any order.</li>
+                    <li>Part 2 is not required if the plan is to skip all.</li>
+                </ul>
+            </dd>
+
+            <dt id="example">Example</dt>
+            <dd>
+                <h2>Example Test</h2>
+
+                <script class="code">
+                    # Loads Test2
+                    use Test2::Bundle::Extended;
+
+                    # Assertions:
+                    is(1 + 1, 2, "Math works");
+
+                    like('foo', qr/o/, "string contains 'o'");
+
+                    is(
+                        { a => 'apple', b => 'butter' },
+                        { a => 'apple', b => 'butter' },
+                        "The two data structures are identical"
+                    );
+
+                    like(
+                        { a => 'apple', b => 'butter', c => 'ignore' },
+                        { a => qr/pl/,  b => 'butter' },
+                        "The parts we care about match"
+                    );
+
+                    # Set the plan
+                    done_testing;
+                </script>
+            </dd>
+
+            <dt id="planning">Planning</dt>
+            <dd>
+                <h2>Ways to set a plan</h2>
+
+                <script class="code">
+                use Test2::Tools::Basic(
+                    'plan',
+                    'skip_all',
+                    'done_testing',
+                );
+
+                # Set an exact test count
+                plan(5);
+
+                # Skip all the tests (exits 0)
+                skip_all('Do not run this');
+
+                # Automatically set the count here, we are done.
+                done_testing();
+                </script>
+            </dd>
+        </dl>
+    </dd>
+
+    <dt id="Bundles">Bundles</dt>
+    <dd>
+        <dl class="sub_list">
+            <dt id="extended">Extended</dt>
+            <dd>
+                <h2>Test2::Bundle::Extended</h2>
+
+                <table>
+                    <tr>
+                        <th width="140" align="left">Pragmas</th>
+                        <th width="140" align="left">Plugins</th>
+                        <th width="140" align="left">Tools</th>
+                        <th             align="left">Other</th>
+                    </tr>
+                    <tr><td>strict</td>   <td>SRand</td>      <td>Basic    </td><td>Test2::API::context()</td></tr>
+                    <tr><td>warnings</td> <td>UTF8</td>       <td>Class    </td><td>Test2::API::intercept()</td></tr>
+                    <tr><td>utf8</td>     <td>ExitSummary</td><td>Compare  </td><td>Test2::IPC</td></tr>
+                    <tr><td></td>         <td></td>           <td>Defer    </td><td></td></tr>
+                    <tr><td></td>         <td></td>           <td>Encoding </td><td></td></tr>
+                    <tr><td></td>         <td></td>           <td>Event    </td><td></td></tr>
+                    <tr><td></td>         <td></td>           <td>Exception</td><td></td></tr>
+                    <tr><td></td>         <td></td>           <td>Exports  </td><td></td></tr>
+                    <tr><td></td>         <td></td>           <td>Mock     </td><td></td></tr>
+                    <tr><td></td>         <td></td>           <td>Ref      </td><td></td></tr>
+                    <tr><td></td>         <td></td>           <td>Target   </td><td></td></tr>
+                    <tr><td></td>         <td></td>           <td>Warnings </td><td></td></tr>
+                    <tr><td></td>         <td></td>           <td colspan=2>ClassicCompare <small>[cmp_ok()]</small></td></tr>
+                    <tr><td></td>         <td></td>           <td colspan=2>Subtest <small>[subtest_buffered() as subtest()]</small></td></tr>
+                </table>
+            </dd>
+
+            <dt id="More">More</dt>
+            <dd>
+                <h2>Test2::Bundle::More</h2>
+
+                This is intended to be a <i>mostly</i> drop-in replacement for Test::More.
+
+                <p>
+
+                <br />
+
+                <table>
+                    <tr>
+                        <th width="140" align="left">Plugins</th>
+                        <th             align="left">Tools</th>
+                    </tr>
+                    <tr><td>ExitSummary</td><td>Basic</td></tr>
+                    <tr><td></td>           <td>ClassicCompare</td></tr>
+                    <tr><td></td>           <td>Class <small>[can_ok() and isa_ok()]</small></td></tr>
+                    <tr><td></td>           <td>Subtest <small>[subtest_streamed() as subtest()]</small></td></tr>
+                </table>
+            </dd>
+        </dl>
+    </dd>
+
+    <dt id="Plugins">Plugins</dt>
+    <dd>
+        <dl class="sub_list">
+            <dt id="UTF8">UTF8</dt>
+            <dd>
+                <h2>Test2::Plugin::UTF8</h2>
+
+                <br />
+
+                <script class="code">
+                    use Test2::Plugin::UTF8;
+                </script>
+
+                <br />
+This is essentially the same as this, except more complete:
+
+                <p><br />
+
+                <script class="code">
+                    use utf8;
+
+                    BEGIN {
+                        Test2::Tools::Encoding::set_encoding('utf8');
+                        binmode(STDERR, ':utf8');
+                        binmode(STDOUT, ':utf8');
+                    }
+                </script>
+
+            </dd>
+
+            <dt id="SRand">SRand</dt>
+            <dd>
+                <h2>Test2::Plugin::SRand</h2>
+
+                <br />
+
+                By default this will call srand('YYYYMMDD') to seed the random
+                number generator with todays date.
+
+                <p>
+                <br />
+
+                Why?
+
+                <ul>
+                    <li>Insures that on any given day all "random" behavior is reproducable.</li>
+                    <li>Different from day to day, so random behavior still gets tested.</li>
+                    <li>You can use the seed to exactly (well almost) reproduce a test that fails.</li>
+                    <li>Seed can be set at import, or via the $T2_RAND_SEED env var.</li>
+                </ul>
+
+                <p>
+                <br />
+
+                This plugin should be loaded as EARLY as possible.
+
+                <script class="code">
+                    use Test2::Plugin::SRand;    # $T2_RAND_SEED // YYYYMMDD
+                    use Test2::Plugin::SRand 42; # Set the seed manually instead of using date
+                </script>
+            </dd>
+
+            <dt id="ExitSummary">ExitSummary</dt>
+            <dd>
+                <h2>Test2::Plugin::ExitSummary</h2>
+
+                <br /> <br />
+
+                <ul>
+                    <li>Most bundles load this.</li>
+                    <li>Helpful diagnostics at the end of a failing test</li>
+                    <li>Implements some expected legacy Test::Builder behaviors</li>
+                </ul>
+            </dd>
+
+            <dt id="DieOnFail">DieOnFail</dt>
+            <dd>
+                <h2>Test2::Plugin::DieOnFail</h2>
+
+                This is one of the most requested features, and it was not viable before Test2.
+
+                <script class="code">
+                    use Test2::Plugin::DieOnFail;
+
+                    ok(0, "oops"); # Will throw an exception.
+                </script>
+
+                This also solves the diagnostics problem that made the feature impossible on old Test::Builder:
+
+                <script class="code">
+                    use Test2::Plugin::DieOnFail;
+
+                    sub my_ok {
+                        my $ctx = context();
+
+                        my $ok = ok(@_); # Call the real ok function
+
+                        $ctx->diag("Essential Information!!!") unless $ok;
+
+                        $ctx->release; # Exception is thrown here!
+                    }
+
+                    # Exception is thrown AFTER we see "Essential Information!!!"
+                    my_ok(0, "oops");
+                </script>
+            </dd>
+
+            <dt id="BailOnFail">BailOnFail</dt>
+            <dd>
+                <h2>Test2::Plugin::BailOnFail</h2>
+
+                This is one of the most requested features, and it was not viable before Test2.
+
+                <script class="code">
+                    use Test2::Plugin::BailOnFail;
+
+                    ok(0, "oops"); # Will bail-out.
+                </script>
+
+                This also solves the diagnostics problem that made the feature impossible on old Test::Builder:
+
+                <script class="code">
+                    use Test2::Plugin::BailOnFail;
+
+                    sub my_ok {
+                        my $ctx = context();
+
+                        my $ok = ok(@_); # Call the real ok function
+
+                        $ctx->diag("Essential Information!!!") unless $ok;
+
+                        $ctx->release; # Bail-out happens here
+                    }
+
+                    # bail-out happens AFTER we see "Essential Information!!!"
+                    my_ok(0, "oops");
+                </script>
+            </dd>
+        </dl>
+    </dd>
+
+    <dt id="Require">Require</dt>
+    <dd>
+        <dl class="sub_list">
+            <dt id="Perl">Perl</dt>
+            <dd>
+                <h2>Test2::Require::Perl</h2>
+
+                <p> <br />
+
+                Skip the test unless the specified perl version (or greater) is installed.
+
+                <p> <br />
+
+                <script class="code">
+                    use Test2::Require::Perl 'v5.10';
+                </script>
+
+                <p> <br />
+
+                Note: This will NOT enable features from the specified version, you must do that yourself.
+            </dd>
+
+            <dt id="Module">Module</dt>
+            <dd>
+                <h2>Test2::Require::Module</h2>
+
+                <p> <br />
+
+                Skip the test unless the specified module (and version
+                number) are installed.
+
+                <p> <br />
+
+                <script class="code">
+                    # The test will be skipped unless Some::Module is installed, any version.
+                    use Test2::Require::Module 'Some::Module';
+                
+                    # The test will be skipped unless 'Other::Module' is installed and at
+                    # version '5.555' or greater.
+                    use Test2::Require::Module 'Other::Module' => '5.555';
+                </script>
+
+                <p> <br />
+
+                import() is not called for us. If we need the modules import()
+                method called we need to manually 'use' it.
+            </dd>
+
+            <dt id="Fork">Fork</dt>
+            <dd>
+                <h2>Test2::Require::Fork</h2>
+
+                <p> <br />
+                <p> <br />
+
+                <ul>
+                    <li>This will skip the test if the system cannot fork.</li>
+                    <li>Emulated fork counts.</li>
+                </ul>
+            </dd>
+
+            <dt id="RealFork">RealFork</dt>
+            <dd>
+                <h2>Test2::Require::RealFork</h2>
+
+                <p> <br />
+                <p> <br />
+
+                <ul>
+                    <li>This will skip the test if the system cannot fork.</li>
+                    <li>Emulated fork DOES NOT count.</li>
+                </ul>
+            </dd>
+
+            <dt id="Threads">Threads</dt>
+            <dd>
+                <h2>Test2::Require::Threads</h2>
+
+                <ul>
+                    <li>This will skip the test if the system cannot use threads.</li>
+                    <li>Takes into account a lot of things you may not.</li>
+                </ul>
+
+                The check is VERY complete:
+                <script class="code">
+                    sub can_thread {
+                        return 0 unless $] >= 5.008001;
+                        return 0 unless $Config{'useithreads'};
+                    
+                        # Threads are broken on perl 5.10.0 built with gcc 4.8+
+                        if ($] == 5.010000 && $Config{'ccname'} eq 'gcc' && $Config{'gccversion'}) {
+                            my @parts = split /\./, $Config{'gccversion'};
+                            return 0 if $parts[0] > 4 || ($parts[0] == 4 && $parts[1] >= 8);
+                        }
+                    
+                        # Devel::Cover does not work with threads.
+                        return 0 if $INC{'Devel/Cover.pm'};
+                        return 1;
+                    }
+                    #
+                </script>
+            </dd>
+
+            <dt id="AuthorTesting">AuthorTesting</dt>
+            <dd>
+                <h2>Test2::Require::AuthorTesting</h2>
+
+                <p> <br />
+                <p> <br />
+
+                <ul>
+                    <li>This will skip the test unless the $AUTHOR_TESTING env var is set.</li>
+                </ul>
+            </dd>
+
+            <dt id="EnvVar">EnvVar</dt>
+            <dd>
+                <h2>Test2::Require::EnvVar</h2>
+
+                <p> <br />
+                <p> <br />
+
+                <ul>
+                    <li>This will skip the test unless the specified env var is set.</li>
+                </ul>
+
+                <script class="code">
+                    use Test2::Require::EnvVar 'SOMEVAR';
+                </script>
+            </dd>
+        </dl>
+    </dd>
+
+    <dt id="Tools">Tools</dt>
+    <dd>
+        <dl class="sub_list">
+            <dt id="Basic">Basic</dt>
+            <dd>
+            </dd>
+
+            <dt id="Compare">Compare</dt>
+            <dd>
+            </dd>
+
+            <dt id="Class">Class</dt>
+            <dd>
+            </dd>
+
+            <dt id="Defer">Defer</dt>
+            <dd>
+            </dd>
+
+            <dt id="Event">Event</dt>
+            <dd>
+            </dd>
+
+            <dt id="Exception">Exception</dt>
+            <dd>
+            </dd>
+
+            <dt id="Exports">Exports</dt>
+            <dd>
+            </dd>
+
+            <dt id="Grab">Grab</dt>
+            <dd>
+            </dd>
+
+            <dt id="Mock">Mock</dt>
+            <dd>
+            </dd>
+
+            <dt id="Ref">Ref</dt>
+            <dd>
+            </dd>
+
+            <dt id="Subtest">Subtest</dt>
+            <dd>
+            </dd>
+
+            <dt id="Target">Target</dt>
+            <dd>
+            </dd>
+
+            <dt id="Warnings">Warnings</dt>
+            <dd>
+            </dd>
+
+            <dt id="Encoding">Encoding</dt>
+            <dd>
+            </dd>
+
+            <dt id="ClassicCompare">ClassicCompare</dt>
+            <dd>
+            </dd>
+        </dl>
+    </dd>
+</dl>

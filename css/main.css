@@ -101,7 +101,7 @@ div#small_title {
 div#subnav {
     padding: 0px;
     margin: 0;
-    width: 120px;
+    width: 126px;
     overflow: hidden;
     float: left;
     display: block;
@@ -120,7 +120,7 @@ ul.listnav {
     padding-top: 12px;
     padding-bottom: 12px;
     margin-right: -120px;
-    width: 114px;
+    width: 124px;
 
     list-style: none;
 

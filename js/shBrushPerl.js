@@ -43,7 +43,7 @@
 			'sqrt srand stat study substr symlink syscall sysopen sysread sysseek ' + 
 			'system syswrite tell telldir time times tr truncate uc ucfirst umask ' + 
 			'undef unlink unpack unshift utime values vec wait waitpid warn write ' +
-            'ok is is_deeply done_testing use_ok require_ok child';
+            'ok is is_deeply like done_testing use_ok require_ok child plan skip_all';
     
 		var keywords =  
 			'bless caller continue dbmclose dbmopen die do dump else elsif eval exit ' +
