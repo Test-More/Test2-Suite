@@ -128,6 +128,8 @@ ul.listnav {
 
     clear: left;
     overflow: hidden;
+
+    margin-top: 0;
 }
 
 ul.listnav li {
@@ -498,4 +500,9 @@ dl.medium dt {
 
 #wf_code div.syntaxhighlighter {
     height: 350px;
+}
+
+div.syntaxhighlighter {
+    padding-bottom: 2px !important;
+    overflow-y: hidden !important;
 }

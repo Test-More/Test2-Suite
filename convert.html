@@ -24,27 +24,6 @@
     <dt id="test_more">Test::More</dt>
     <dd>
         <dl class="sub_list">
-            <dt id="different">Different</dt>
-            <dd>
-                <h2>What is different?</h2>
-
-                <b>Note:</b> Differences are only if you load
-                Test2::Bundle::More. Test::More itself has not changed.
-
-                <ul>
-                    <li>Cannot plan at import</li>
-                    <li>use_ok() is gone (use ok(...) still works)</li>
-                    <li>require_ok() is gone</li>
-                    <li>todo_skip() is gone</li>
-                    <li>eq_array(), eq_hash(), and eq_set() are gone</li>
-                    <li>explain() is gone</li>
-                    <li>new_ok() is gone</li>
-                    <li>isa_ok() takes different arguments</li>
-                    <li>is_deeply() has better diagnostics</li>
-                    <li>$TODO is replaced by todo()</li>
-                </ul>
-            </dd>
-
             <dt id="Before">Before</dt>
             <dd>
                 <h2>Before</h2>
@@ -146,6 +125,27 @@
                     # End of todo
                 </script>
             </dd>
+
+            <dt id="Summary">Summary</dt>
+            <dd>
+                <h2>What is different?</h2>
+
+                <b>Note:</b> Differences are only if you load
+                Test2::Bundle::More. Test::More itself has not changed.
+
+                <ul>
+                    <li>Cannot plan at import</li>
+                    <li>use_ok() is gone (use ok(...) still works)</li>
+                    <li>require_ok() is gone</li>
+                    <li>todo_skip() is gone</li>
+                    <li>eq_array(), eq_hash(), and eq_set() are gone</li>
+                    <li>explain() is gone</li>
+                    <li>new_ok() is gone</li>
+                    <li>isa_ok() takes different arguments</li>
+                    <li>is_deeply() has better diagnostics</li>
+                    <li>$TODO is replaced by todo()</li>
+                </ul>
+            </dd>
         </dl>
     </dd>
 
@@ -180,13 +180,13 @@
             <dt id="DreamHost">DreamHost</dt>
             <dd>
                 <h2>What to load at DreamHost?</h2>
-        
+
                 <script class="code">
                     use Ndn::Test::Bundle;
                     # OR
                     use Ndn::Test::Bundle -target => 'Class::You::Are::Testing;
                 </script>
-        
+
                 <ul>
                     <li>This will load Everything from the previous slide.</li>
                     <li>Maps Fennec env-vars to the Test2 ones.</li>
@@ -200,19 +200,19 @@
             <dt id="Compare">Compare</dt>
             <dd>
                 <h2>Comparing structures</h2>
-        
+
                 <ul>
                     <li>is_deeply() is gone, just use is().</li>
                     <li>like() can also check deep structures now.</li>
                 </ul>
-        
+
                 <script class="code">
                     is('foo', 'foo', "foo");
                     is({foo => 1}, { foo => 1 }, "deep foo");
-        
+
                     like('-foo-', qr/foo/, "like /foo/");
                     like({a => '-foo-'}, {a => qr/foo/}, "{a} like /foo/");
-        
+
                     # Like only checks fields you specify, this will pass:
                     like(
                         {a => '-foo-', b => 'ignored', c => 'also ignored'},
@@ -225,12 +225,12 @@
             <dt id="mock1">Mocking</dt>
             <dd>
                 <h2>Test2::Tools::Mock</h2>
-        
+
                 Test2::Tools::Mock replaces Mock::Quick.
-        
+
                 <script class="code">
                     use Test2::Tools::Mock;
-        
+
                     my $c = mock 'Some::Class' => (
                         add => [
                             new_method => sub { ... },
@@ -242,7 +242,7 @@
                         # Any method on Test2::Mock can be used as a key here.
                     );
                 </script>
-        
+
                 <ul>
                     <li>mock() returns a control object, just like Mock::Quick.</li>
                     <li>Must specify override or add.</li>
@@ -250,83 +250,83 @@
                     <li>One function for all mocking.</li>
                 </ul>
             </dd>
-        
+
             <dt id="Class">Mock-Class</dt>
             <dd>
                 <h2>Mocking Classes</h2>
-        
+
                 This replaces both qtakeover() and qclass() from Mock::Quick.
-        
+
                 <script class="code">
                     # Quick way
                     my $c = mock 'Some::Class' => (...);
-        
+
                     # Explicit way
                     my $c = mock 'class', 'Some::Class' => (...);
-        
+
                     # Alternative
                     my $c = mock_class 'Some::Class' => (...); # Not exported by default
-        
+
                     $c = undef;
                 </script>
-        
+
                 <ul>
                     <li>If the first argument is a string other than 'obj' or 'class' it is treated as a package name.</li>
                     <li>making the first argument 'class' will force the next argument to be used as a package name.</li>
                     <li>mock_class() can also be used, but is not exported by default.</li>
                 </ul>
             </dd>
-        
+
             <dt id="Object">Mock-Object</dt>
             <dd>
                 <h2>Mocking Objects</h2>
-        
+
                 Instead of qobj() and qmeth(), use mock().
-        
+
                 <script class="code">
                     my $obj = mock {attr1 => 1, attr2 => 2 } => (
                         add => [
                             foo => sub { 'foo' },
                         ],
                     );
-        
+
                     $obj->xxx('123');
                     is($obj->xxx, 123, "Auto-vivify accessor");
                     is($obj->attr1, 1, "read/write accessor generated");
                     is($obj->foo, 'foo', "Custom accessor.");
                 </script>
-        
+
                 You could also use mock_obj() (not exported by default).
             </dd>
-        
+
             <dt id="SPEC">SPEC</dt>
             <dd>
                 <h2>SPEC Workflow</h2>
-        
+
                 <div id="wf_code" style="float: left; width: 400px;">
                     <script class="code">
                         # Bind to scope
                         before_all  foo => sub { ... };
                         after_all   foo => sub { ... };
                         around_all  foo => sub { ... };
-        
+
                         # Bind to cases
                         before_case foo => sub { ... };
                         after_case  foo => sub { ... };
                         around_case foo => sub { ... };
-        
+
                         # Bind to tests
                         before_each foo => sub { ... };
                         after_each  foo => sub { ... };
                         around_each foo => sub { ... };
-        
+
                         case a          => sub { ... };
                         case b          => sub { ... };
                         tests foo       => sub { ... };
                         describe nested => sub { ... };
                     </script>
                 </div>
-        
+
                 <div style="float: left">
                     <ul>
                         <li>More clearly specified run order.</li>
@@ -336,24 +336,24 @@
                     </ul>
                 </div>
             </dd>
-        
+
             <dt id="Declare">Declare</dt>
             <dd>
                 <h2>Declarative Syntax</h2>
-        
+
                 <script class="code">
                     # Mark a block as TODO
                     tests foo(todo => "why") { ... }
-        
+
                     # Mark a block to be skipped
                     tests foo(skip => "why") { ... }
-        
+
                     # Block may be run concurrently (fork or thread) or in serial
                     tests foo(async => 1) { ... }
-        
+
                     # Block must be run in isolation (fork or thread, parent waits)
                     tests foo (iso => 1) { ... }
-        
+
                     # Block must be run in isolation, can also run concurrently
                     # (What Fennec did)
                     tests foo (iso => 1, async => 1) { ... };
