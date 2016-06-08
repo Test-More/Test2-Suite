@@ -59,8 +59,8 @@
                     # Load Bundle, no planning at import
                     use Test2::Bundle::More;
 
-                    use 'foo';      # use_ok is gone
-                    require 'bar';  # require_ok is gone
+                    use foo;      # use_ok is gone
+                    require bar;  # require_ok is gone
 
                     ok(1, 'simple ok');
                     is('foo', 'foo', 'simple is');
@@ -184,7 +184,7 @@
                 <script class="code">
                     use Ndn::Test::Bundle;
                     # OR
-                    use Ndn::Test::Bundle -target => 'Class::You::Are::Testing;
+                    use Ndn::Test::Bundle -target => 'Class::You::Are::Testing';
                 </script>
 
                 <ul>
@@ -334,6 +334,29 @@
                         <li>Mocking works, no need to keep the control object.</li>
                         <li>Can still run specific test. ($ENV{T2_WORKFLOW})</li>
                     </ul>
+
+                    Order of execution:
+                    <ol>
+                        <li>before_all</li>
+                        <li>
+                            (for each case)
+                            <ol>
+                                <li>before_case</li>
+                                <li>case</li>
+                                <li>after_case</li>
+                                <li>
+                                    (for each test block)
+                                    <ol>
+                                        <li>before_each</li>
+                                        <li>tests</li>
+                                        <li>after_each</li>
+                                    </ol>
+                                </li>
+                            </ol>
+                        </li>
+                        <li>after_all</li>
+                    </ol>
+
                 </div>
             </dd>
 

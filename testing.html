@@ -322,11 +322,14 @@
                     is($thing, string($thing), "use a string comparison");
 
                     my $r = [];
-                    is({a => $r}, {a => exact_ref($r)}, "ensure the 'a' key has the exact ref we want.");
-                    _
+                    is(
+                        {a => $r},
+                        {a => exact_ref($r)},
+                        "ensure the 'a' key has the exact ref we want."
+                    );
                 </script>
 
-                <p><br />
+                <p>
 
                 <ul>
                     <li>These can all be nested as deep as you need.</li>
@@ -390,6 +393,90 @@
                 </script>
             </dd>
 
+            <dt id="Array">Array</dt>
+            <dd>
+                <h2>Array Checks</h2>
+
+                <ul>
+                    <li>Array checks let you declare an array.</li>
+                </ul>
+
+                <script class="code">
+                    is(
+                        [qw/foo bar baz bat/],
+                        array {
+                            item 'foo';        # [0] First item is 'foo'
+                            item match qr/a/;  # [1] second item matches /a/
+                            item 3 => 'bat';   # [3] Skip right to index 3
+                            end;               # Specify that there should be no more items.
+                        },
+                        "Array matches expectations"
+                    );
+                </script>
+
+                If we change the array, we can see how nice the diagnostics are:
+
+                <script class="code">
+                    [qw/bad oops/]
+                </script>
+
+                <script class="output">
+                    not ok 1 - Array matches expectations
+                    # Failed test 'Array matcheds expectations'
+                    # at test.pl line 9.
+                    # +------+------------------+----+---------+------+
+                    # | PATH | GOT              | OP | CHECK   | LNs  |
+                    # +------+------------------+----+---------+------+
+                    # |      | ARRAY(0x850b58)  |    | <ARRAY> | 3, 8 |
+                    # | [0]  | bad              | eq | foo     | 4    |
+                    # | [1]  | oops             | =~ | (?^:a)  | 5    |
+                    # | [3]  | <DOES NOT EXIST> |    | bat     | 6    |
+                    # +------+------------------+----+---------+------+
+                    1..1
+                </script>
+            </dd>
+
+            <dt id="Hash">Hash</dt>
+            <dd>
+                <h2>Hash Checks</h2>
+
+                <ul>
+                    <li>Hash checks let you declare a hash.</li>
+                </ul>
+
+                <script class="code">
+                    is(
+                        {foo => 'foo', bar => 'bar'},
+                        array {
+                            field foo => 'foo';
+                            field bar => match qr/a/;
+                            end; # Specify that there should be no more elements.
+                        },
+                        "Hash matches expectations"
+                    );
+                </script>
+
+                If we change the hash, we can see how nice the diagnostics are:
+
+                <script class="code">
+                    {apple => 'butter', foo => 'foops', bar => 'buurr'}
+                </script>
+
+                <script class="output">
+                    not ok 1 - Hash matches expectations
+                    # Failed test 'Hash matches expectations'
+                    # at test.pl line 8.
+                    # +---------+-----------------+---------+------------------+------+
+                    # | PATH    | GOT             | OP      | CHECK            | LNs  |
+                    # +---------+-----------------+---------+------------------+------+
+                    # |         | HASH(0x1ff7b58) |         | <HASH>           | 3, 7 |
+                    # | {foo}   | foops           | eq      | foo              | 4    |
+                    # | {bar}   | buurr           | =~      | (?^:a)           | 5    |
+                    # | {apple} | butter          | !exists | <DOES NOT EXIST> |      |
+                    # +---------+-----------------+---------+------------------+------+
+                </script>
+            </dd>
+
             <dt id="Meta">Meta</dt>
             <dd>
                 <h2>Meta Checks</h2>
@@ -425,91 +512,6 @@
                 The 4 properties above are available for any type of item.
                 <br />
                 <small>* Except size</small>
-
-            </dd>
-
-            <dt id="Array">Array</dt>
-            <dd>
-                <h2>Array Checks</h2>
-
-                <ul>
-                    <li>Array checks let you declare an array.</li>
-                </ul>
-
-                <script class="code">
-                    is(
-                        [qw/foo bar baz bat/],
-                        array {
-                            item 'foo';        # [0] First item is 'foo'
-                            item match qr/a/;  # [1] second item matches /a/
-                            item 3 => 'bat';   # [3] Skip right to index 3
-                            end;               # Specify that there should be no more items.
-                        },
-                        "Array matches expectations"
-                    );
-                </script>
-
-                If we change the array, we can see how nice the diagnostics are:
-
-                <script class="code">
-                    [qw/bad oops/]
-                </script>
-
-                <script class="output">
-					not ok 1 - Array matches expectations
-					# Failed test 'Array matcheds expectations'
-					# at test.pl line 9.
-					# +------+------------------+----+---------+------+
-					# | PATH | GOT              | OP | CHECK   | LNs  |
-					# +------+------------------+----+---------+------+
-					# |      | ARRAY(0x850b58)  |    | <ARRAY> | 3, 8 |
-					# | [0]  | bad              | eq | foo     | 4    |
-					# | [1]  | oops             | =~ | (?^:a)  | 5    |
-					# | [3]  | <DOES NOT EXIST> |    | bat     | 6    |
-					# +------+------------------+----+---------+------+
-					1..1
-                </script>
-            </dd>
-
-            <dt id="Hash">Hash</dt>
-            <dd>
-                <h2>Hash Checks</h2>
-
-                <ul>
-                    <li>Hash checks let you declare a hash.</li>
-                </ul>
-
-                <script class="code">
-                    is(
-                        {foo => 'foo', bar => 'bar'},
-                        array {
-                            field foo => 'foo';
-                            field bar => match qr/a/;
-                            end; # Specify that there should be no more elements.
-                        },
-                        "Hash matches expectations"
-                    );
-                </script>
-
-                If we change the hash, we can see how nice the diagnostics are:
-
-                <script class="code">
-                    {apple => 'butter', foo => 'foops', bar => 'buurr'}
-                </script>
-
-                <script class="output">
-					not ok 1 - Hash matches expectations
-					# Failed test 'Hash matches expectations'
-					# at test.pl line 8.
-					# +---------+-----------------+---------+------------------+------+
-					# | PATH    | GOT             | OP      | CHECK            | LNs  |
-					# +---------+-----------------+---------+------------------+------+
-					# |         | HASH(0x1ff7b58) |         | <HASH>           | 3, 7 |
-					# | {foo}   | foops           | eq      | foo              | 4    |
-					# | {bar}   | buurr           | =~      | (?^:a)           | 5    |
-					# | {apple} | butter          | !exists | <DOES NOT EXIST> |      |
-					# +---------+-----------------+---------+------------------+------+
-                </script>
             </dd>
 
             <dt id="Object">Object</dt>
@@ -600,7 +602,7 @@
                 # Release the context
                 $ctx->release;
 
-                return $bool;
+                return;
             }
         </script>
 
@@ -782,11 +784,11 @@
                 <h2>Attributes</h2>
 
                 <script class="code">
-                    tests a => {flat => 1}, sub { ... };
-                    tests b => {todo => "fix later"}, sub { ... };
+                    tests a => {flat => 1           }, sub { ... };
+                    tests b => {todo => "fix later" }, sub { ... };
                     tests c => {skip => "do not run"}, sub { ... };
-                    tests d => {iso => 1}, sub { ... };
-                    tests e => {async => 1}, sub { ... };
+                    tests d => {iso => 1            }, sub { ... };
+                    tests e => {async => 1          }, sub { ... };
                 </script>
 
                 <table>
@@ -807,7 +809,7 @@
                         ...
                     }
                 </script>
-			</dd>
+            </dd>
 
             <dt id="Describe">Describe</dt>
             <dd>
@@ -952,19 +954,19 @@
 
                 Output:
                 <script class="output">
-					ok 1 - red {
-					    ok 1 - red is a color
-					    1..1
-					}
-					ok 2 - blue {
-					    ok 1 - blue is a color
-					    1..1
-					}
-					ok 3 - green {
-					    ok 1 - green is a color
-					    1..1
-					}
-					1..3
+                    ok 1 - red {
+                        ok 1 - red is a color
+                        1..1
+                    }
+                    ok 2 - blue {
+                        ok 1 - blue is a color
+                        1..1
+                    }
+                    ok 3 - green {
+                        ok 1 - green is a color
+                        1..1
+                    }
+                    1..3
                 </script>
 
             </dd>
