@@ -447,7 +447,7 @@
                 <script class="code">
                     is(
                         {foo => 'foo', bar => 'bar'},
-                        array {
+                        hash {
                             field foo => 'foo';
                             field bar => match qr/a/;
                             end; # Specify that there should be no more elements.
@@ -526,7 +526,7 @@
                 <script class="code">
                     is(
                         bless({foo => 'foo', bar => 'bar'}, 'My::Package'),
-                        array {
+                        object {
                             # Meta properties:
                             prop blessed => 'My::Package';
 
@@ -538,7 +538,7 @@
                             call foo => 'foo';
 
                             # Can check results of calling custom methods
-                            call sub {[shift->list]} => [qr/a b c/];
+                            call sub {[shift->list]} => ['a', 'b', 'c'];
                         },
                         "Object is as expected"
                     );

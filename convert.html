@@ -39,8 +39,8 @@
                     is_deeply({a => 1}, {a => 1}, "simple is_deeply");
 
                     # check $thing->isa('Base') or dump $thing
-                    isa_ok($thing, 'Base',  "thing->isa(Base1)") || explain($thing);
-                    isa_ok($thing, 'Base2', "thing->isa(Base2)") || explain($thing);
+                    isa_ok($thing, 'Base',  "thing->isa(Base1)") || print explain($thing);
+                    isa_ok($thing, 'Base2', "thing->isa(Base2)") || print explain($thing);
 
                     {
                         local $TODO = "fixme";
