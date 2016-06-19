@@ -104,10 +104,38 @@ ok 1 - pass
     <dt id="SRand">SRand</dt>
     <dd>
         <h2>Test2::Plugin::SRand</h2>
+
+        <p><br />
+
+        Make test runs consistent, but still test random behavior.
+
+        <p><br />
+
+        <ul>
+            <li>Sets random seed to the current date using srand("YYYYMMDD").</li>
+            <li>Seed can be overriden with T2_RAND_SEED environment variable.</li>
+            <li>Report the seed used in verbose mode, or when there is a test failure.</li>
+            <li>Makes "random" behavior reproducable.</li>
+            <li>Different days have different seeds, so you still verify changes from "random" numbers.</li>
+        </ul>
     </dd>
 
     <dt id="UTF8">UTF8</dt>
     <dd>
         <h2>Test2::Plugin::UTF8</h2>
+
+        <p><br />
+
+        UTF8 ALL THE THINGS!!! <small>no, really...</small>
+
+        <p><br />
+
+        <ul>
+            <li>Imports the utf8 pragma (on current file)</li>
+            <li>Sets STDOUT to utf8</li>
+            <li>Sets STDERR to utf8</li>
+            <li>Sets the current formatter to use UTF8 on all handles</li>
+            <li>Sets it in all formatters in the hub stack</li>
+        </ul>
     </dd>
 </dl>

@@ -1,0 +1,93 @@
+<dl class="listnav">
+    <dt id="Bundle">Bundle?</dt>
+    <dd>
+        <h2>What is a bundle?</h2>
+
+        <p><br />
+
+        A bundle is a collection of tools and plugins.
+
+        <p><br />
+
+        A bundle will load several plugins and tools at once to reduce boilerplate.
+
+        <p><br />
+
+        Anyone can make a custom bundle, or use one thats already on CPAN.
+
+    </dd>
+
+    <dt id="Extended">Extended</dt>
+    <dd>
+        <h2>Test2::Bundle::Extended</h2>
+
+        This is the bundle I use and recommend.
+
+        <p>
+
+        This bundle loads:
+
+        <table class="bundle_table">
+            <tr class="zebra"><th>strict                      </th><td>(unless -no_pragmas or -no_strict)  </td></tr>
+            <tr class="     "><th>warnings                    </th><td>(unless -no_pragmas or -no_warnings)</td></tr>
+            <tr class="zebra"><th>utf8                        </th><td>(unless -no_pragmas or -no_utf8)    </td></tr>
+            <tr class="     "><th>Test2::Plugin::SRand        </th><td></td></tr>
+            <tr class="zebra"><th>Test2::Plugin::UTF8         </th><td>(unless -no_pragmas or -no_utf8)</td></tr>
+            <tr class="     "><th>Test2::Tools::Target        </th><td>(only if -target is specified)  </td></tr>
+            <tr class="zebra"><th>Test2::Plugin::ExitSummary  </th><td></td></tr>
+            <tr class="     "><th>Test2::API                  </th><td>(only intercept() &amp; context())</td></tr>
+            <tr class="zebra"><th>Test2::Tools::Event         </th><td></td></tr>
+            <tr class="     "><th>Test2::Tools::Defer         </th><td></td></tr>
+            <tr class="zebra"><th>Test2::Tools::Basic         </th><td></td></tr>
+            <tr class="     "><th>Test2::Tools::Compare       </th><td></td></tr>
+            <tr class="zebra"><th>Test2::Tools::Warnings      </th><td></td></tr>
+            <tr class="     "><th>Test2::Tools::ClassicCompare</th><td>(only cmp_ok)</td></tr>
+            <tr class="zebra"><th>Test2::Tools::Subtest       </th><td>(buffered)   </td></tr>
+            <tr class="     "><th>Test2::Tools::Class         </th><td></td></tr>
+            <tr class="zebra"><th>Test2::Tools::Encoding      </th><td></td></tr>
+            <tr class="     "><th>Test2::Tools::Exports       </th><td></td></tr>
+            <tr class="zebra"><th>Test2::Tools::Ref           </th><td></td></tr>
+            <tr class="     "><th>Test2::Tools::Mock          </th><td>(only mock &amp; mocked)</td></tr>
+            <tr class="zebra"><th>Test2::Tools::Exception     </th><td></td></tr>
+        </table>
+    </dd>
+
+    <dt id="More">More</dt>
+    <dd>
+        <h2>Test2::Bundle::More</h2>
+
+        This bundle aims to be <i>*almost*</i> a drop-in replacement for Test::More.
+        <p>
+        Here are the differences:
+
+        <ul>
+            <li>Cannot plan at import</li>
+            <li>use_ok() is gone (use ok(...) still works)</li>
+            <li>require_ok() is gone</li>
+            <li>todo_skip() is gone</li>
+            <li>eq_array(), eq_hash(), and eq_set() are gone</li>
+            <li>explain() is gone</li>
+            <li>new_ok() is gone</li>
+            <li>isa_ok() takes different arguments</li>
+            <li>is_deeply() has better diagnostics</li>
+            <li>$TODO is replaced by todo()</li>
+        </ul>
+    </dd>
+
+    <dt id="Simple">Simple</dt>
+    <dd>
+        <h2>Test2::Bundle::Simple</h2>
+
+        <p><br />
+
+        Bare Bones, you get this:
+
+        <p><br />
+
+        <script class="code">
+            use Test2::Plugin::ExitSummary;
+
+            use Test2::Tools::Basic qw/ok plan done_testing skip_all/;
+        </script>
+    </dd>
+</dl>

@@ -506,3 +506,11 @@ div.syntaxhighlighter {
     padding-bottom: 2px !important;
     overflow-y: hidden !important;
 }
+
+table.bundle_table tr th {
+    text-align: left;
+}
+
+table.bundle_table tr.zebra {
+    background: #E0E0E0;
+}

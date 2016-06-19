@@ -1,0 +1,199 @@
+<dl class="listnav">
+    <dt id="Require">Require?</dt>
+    <dd>
+        <h2>What is a require?</h2>
+
+        <p><br />
+
+        A require is a Test2 module that will skip the current test if a condition is not met.
+
+        <p><br />
+
+        These are useful if you have tests that require other modules, or
+        should only be run on specific platforms.
+    </dd>
+
+    <dt id="AuthorTesting">AuthorTesting</dt>
+    <dd>
+        <h2>Test2::Require::AuthorTesting</h2>
+
+        <p><br />
+
+        Skip the test unless the AUTHOR_TESTING environment variable is set.
+
+        <p><br />
+
+        <script class="code">
+            use Test2::Require::AuthorTesting;
+
+            ...
+        </script>
+    </dd>
+
+    <dt id="EnvVar">EnvVar</dt>
+    <dd>
+        <h2>Test2::Require::EnvVar</h2>
+
+        <p><br />
+
+        Skip the test unless the specified environment variable is set.
+
+        <p><br />
+
+        <script class="code">
+            use Test2::Require::EnvVar 'RUN_CRAZY_TESTS';
+
+            ...
+        </script>
+    </dd>
+
+    <dt id="Fork">Fork</dt>
+    <dd>
+        <h2>Test2::Require::Fork</h2>
+
+        Only run tests on systems that can fork, or emulate fork.
+
+        <script class="code">
+            use Test2::Require::Fork;
+        </script>
+
+        Checking for forking yourself is not as trivial as it may sound:
+
+        <script class="code">
+            use Config;
+        
+            sub CAN_FORK {
+                return 1 if $Config{d_fork};
+        
+                # Some platforms use ithreads to mimick forking
+                return 0 unless $^O eq 'MSWin32' || $^O eq 'NetWare';
+                return 0 unless $Config{useithreads};
+                return 0 unless $Config{ccflags} =~ /-DPERL_IMPLICIT_SYS/;
+        
+                # Threads are not reliable before 5.008001
+                return 0 unless $] >= 5.008001;
+
+                # Threads are broken on perl 5.10.0 built with gcc 4.8+
+                if ($] == 5.010000 && $Config{'ccname'} eq 'gcc' && $Config{'gccversion'}) {
+                    my @parts = split /\./, $Config{'gccversion'};
+                    return 0 if $parts[0] > 4 || ($parts[0] == 4 && $parts[1] >= 8);
+                }
+
+                # Devel::Cover currently breaks with threads
+                return 0 if $INC{'Devel/Cover.pm'};
+                return 1;
+            }
+
+            skip_all "This test requires a perl capable of forking." unless CAN_FORK();
+        </script>
+    </dd>
+
+    <dt id="RealFork">RealFork</dt>
+    <dd>
+        <h2>Test2::Require::RealFork</h2>
+
+        <p><br />
+
+        Only run tests on systems that can fork for real.
+
+        <script class="code">
+            use Test2::Require::RealFork;
+        </script>
+
+        <p><br />
+
+        Checking yourself is not that hard, but does your intentions are not as clear:
+
+        <script class="code">
+            use Config;
+
+            skip_all "This test requires a perl capable of forking." unless $Config{d_fork};
+        </script>
+
+        Did you actually want to run only when real forking is available, or
+        did you intend to include emulated fork?
+    </dd>
+
+    <dt id="Module">Module</dt>
+    <dd>
+        <h2>Test2::Require::Module</h2>
+
+        <p><br />
+
+        Only run the test if the required module (and optionally version) is installed.
+
+        <p><br />
+
+        <script class="code">
+            # The test will be skipped unless Some::Module is installed, any version.
+            use Test2::Require::Module 'Some::Module';
+        
+            # The test will be skipped unless 'Other::Module' is installed and at
+            # version '5.555' or greater.
+            use Test2::Require::Module 'Other::Module' => '5.555';
+        
+            # ->import() is not called for us, so if we need to import any subs
+            # we need to do it manually.
+            use Some::Module;
+            use Other::Module;
+        </script>
+
+    </dd>
+
+    <dt id="Perl">Perl</dt>
+    <dd>
+        <h2>Test2::Require::Perl</h2>
+
+        <p><br />
+
+        Skip the test unless the necessary version of perl is installed.
+
+        <p><br />
+
+        <script class="code">
+            # Skip the test unless perl 5.10 or greater is installed.
+            use Test2::Require::Perl 'v5.10';
+        </script>
+    </dd>
+
+    <dt id="Threads">Threads</dt>
+    <dd>
+        <h2>Test2::Require::Threads</h2>
+
+        <p><br />
+
+        Only run tests on perls that have threading enabled.
+
+        <p>
+
+        <script class="code">
+            use Test2::Require::Threads;
+        </script>
+
+        <p><br />
+
+        Checking for threads yourself is not as trivial as it may sound:
+
+        <script class="code">
+            use Config;
+        
+            sub CAN_THREAD {
+                # Threads are not reliable before 5.008001
+                return 0 unless $] >= 5.008001;
+                return 0 unless $Config{'useithreads'};
+        
+                # Threads are broken on perl 5.10.0 built with gcc 4.8+
+                if ($] == 5.010000 && $Config{'ccname'} eq 'gcc' && $Config{'gccversion'}) {
+                    my @parts = split /\./, $Config{'gccversion'};
+                    return 0 if $parts[0] > 4 || ($parts[0] == 4 && $parts[1] >= 8);
+                }
+
+                # Devel::Cover currently breaks with threads
+                return 0 if $INC{'Devel/Cover.pm'};
+                return 1;
+            }
+
+            skip_all "This test requires a perl with thread support" unless CAN_THREAD();
+        </script>
+    </dd>
+</dl>
