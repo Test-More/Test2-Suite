@@ -1,0 +1,360 @@
+<dl class="listnav">
+    <dt id="spec">SPEC?</dt>
+    <dd>
+        <h2>What the %$%^$ is SPEC?</h2>
+
+        <br /><br />
+
+        <ul>
+            <li>Very advanced form of subtests.</li>
+            <li>Influenced by Ruby's RSPEC.</li>
+            <li>Declarative testing structures.</li>
+            <li>Concurrency control.</li>
+            <li>Better test scoping and grouping</li>
+            <li>Provided by the Test2-Workflow distribution</li>
+        </ul>
+    </dd>
+
+    <dt id="test_blocks">Test&nbsp;Blocks</dt>
+    <dd>
+        <h2>Test Blocks</h2>
+
+        <script class="code">
+            use Test2::Bundle::Extended;
+            use Test2::Tools::Spec; # Not loaded by the extended bundle
+
+            tests foo => sub {
+                ok(1, "pass");
+            };
+
+            tests bar => sub {
+                ok(1, "pass");
+            };
+
+            tests bad => {todo => 'This block is todo'}, sub {
+                ok(0, "fail");
+            };
+
+            tests very_bad => {skip => 'this will rm -rf /'}, sub {
+                # This will not run.
+                system('rm -rf /');
+            };
+
+            done_testing;
+        </script>
+
+        The most basic unit in the SPEC tools is 'tests'. This function
+        takes a name, and a codeblock to run.
+        <p>
+        Test blocks are not run immedietly, they will be run when the
+        done_testing() function is called.
+        <p>
+        You can run a specific codeblock using the $T2_WORKFLOW variable, which
+        takes either a name or a line number.
+    </dd>
+
+    <dt id="params">Params</dt>
+    <dd>
+        <h2>Test Block Params</h2>
+
+        <script class="code">
+            tests a => {flat  => 1           }, sub { ... };
+            tests b => {todo  => "fix later" }, sub { ... };
+            tests c => {skip  => "do not run"}, sub { ... };
+            tests d => {iso   => 1           }, sub { ... };
+            tests e => {async => 1           }, sub { ... };
+        </script>
+
+        <table>
+            <tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
+            <tr><td>flat </td><td>0</td><td>Do not render block as a subtest</td></tr>
+            <tr><td>todo </td><td>undef</td><td>Mark entire block as TODO</td></tr>
+            <tr><td>skip </td><td>undef</td><td>Do not run the block, generate skip event</td></tr>
+            <tr><td>iso  </td><td>0</td><td>Isolate test by forking or spawning a new thread</td></tr>
+            <tr><td>async</td><td>0</td><td>Test can be run concurrently (but does not have to be)</td></tr>
+        </table>
+
+        <p>
+
+        You can combine any number of these at once.
+
+        <script class="code">
+            tests foo => {flat => 1, iso => 1, async => 1}, sub {
+                ...
+            }
+        </script>
+    </dd>
+
+    <dt id="Describe">Describe</dt>
+    <dd>
+        <h2>Describe Blocks</h2>
+
+        Describe blocks are a way of grouping test blocks together
+        along with any setup and teardown.
+
+        <script class="code">
+            describe color => sub {
+                tests red   => sub { ... };
+                tests green => sub { ... };
+                tests blue  => sub { ... };
+            };
+
+            describe size => sub {
+                tests small  => sub { ... };
+                tests medium => sub { ... };
+                tests large  => sub { ... };
+
+                # Nestable
+                describe nested => sub { ... };
+            };
+        </script>
+    </dd>
+
+    <dt id="wf_before">Before</dt>
+    <dd>
+        <h2>Before</h2>
+
+        <script class="code">
+            before_all  outer1 => sub { ... };
+            before_each outer2 => sub { ... };
+
+            describe color => sub {
+                before_all  inner1 => sub { ... };
+                before_each inner2 => sub { ... };
+
+                tests red   => sub { ... };
+                tests green => sub { ... };
+                tests blue  => sub { ... };
+
+                describe nested => { ... };
+            };
+
+            tests not_color => sub { ... };
+        </script>
+
+        <ul>
+            <li>outer1 will run once, before anything else</li>
+            <li>outer2 will run once per test block, before the test block</li>
+            <li>outer2 runs for 'not_color', 'red', 'green', and 'blue'</li>
+            <li>inner1 will run once, before 'red', 'green', and 'blue'</li>
+            <li>inner2 will run once per test block, before the block</li>
+            <li>inner2 does not run for 'not_color'</li>
+            <li>inner2 will run for any tests under 'nested'</li>
+        </ul>
+    </dd>
+
+    <dt id="after">After</dt>
+    <dd>
+        <h2>After</h2>
+
+        <script class="code">
+            after_all  outer1 => sub { ... };
+            after_each outer2 => sub { ... };
+
+            describe color => sub {
+                after_all  inner1 => sub { ... };
+                after_each inner2 => sub { ... };
+
+                tests red   => sub { ... };
+                tests green => sub { ... };
+                tests blue  => sub { ... };
+
+                describe nested => { ... };
+            };
+
+            tests not_color => sub { ... };
+        </script>
+
+        <ul>
+            <li>outer1 will run once, after everything else</li>
+            <li>outer2 will run once per test block, after the test block</li>
+            <li>outer2 runs for 'not_color', 'red', 'green', and 'blue'</li>
+            <li>inner1 will run once, after 'red', 'green', and 'blue'</li>
+            <li>inner2 will run once per test block, after the block</li>
+            <li>inner2 does not run for 'not_color'</li>
+            <li>inner2 will run for any tests under 'nested'</li>
+        </ul>
+    </dd>
+
+    <dt id="Around">Around</dt>
+    <dd>
+        <h2>Around</h2>
+
+        <p>
+
+        <script class="code">
+            around_all foo => sub {
+                my $continue = shift;
+                ...
+                $continue->();
+                ...
+            };
+
+            around_each bar => sub {
+                my $continue = shift;
+                ...
+                $continue->();
+                ...
+            };
+        </script>
+
+        <ul>
+            <li>Same rules as before/after.</li>
+            <li>You MUST call the $continue sub.</li>
+            <li>Useful for localizing environment variables.</li>
+        </ul>
+    </dd>
+
+    <dt id="Cases">Cases</dt>
+    <dd>
+        <h2>Test Cases</h2>
+
+        <script class="code">
+            describe color_validator => {flat => 1}, sub {
+                my $c;
+                case red   => sub { $c = 'red'   };
+                case green => sub { $c = 'green' };
+                case blue  => sub { $c = 'blue'  };
+
+                tests validator => {flat => 1}, sub {
+                    ok(is_valid_color($c), "$c is a color");
+                }
+
+                tests visible => {flat => 1}, sub {
+                    ok(is_visible($c), "$c is visible");
+                }
+            };
+        </script>
+
+        Output:
+        <script class="output">
+            ok 1 - red {
+                ok 1 - red is a color
+                1..1
+            }
+            ok 2 - blue {
+                ok 1 - blue is a color
+                1..1
+            }
+            ok 3 - green {
+                ok 1 - green is a color
+                1..1
+            }
+            1..3
+        </script>
+
+    </dd>
+
+    <dt id="mod_case">Case&nbsp;Mods</dt>
+    <dd>
+        <h2>Case Modifiers</h2>
+
+        <script class="code">
+            case a => { ... };
+            case b => { ... };
+
+            before_case foo => sub { ... };
+            after_case  bar => sub { ... };
+
+            around_case baz => sub { ...; $_[0]->(); ... };
+        </script>
+
+        <ul>
+            <li>These work just like before/after do with test blocks</li>
+            <li>These bind to the cases instead of the test blocks</li>
+        </ul>
+
+        Order of execution:
+        <ol>
+            <li>before_all</li>
+            <li>
+                (for each case)
+                <ol>
+                    <li>before_case</li>
+                    <li>case</li>
+                    <li>after_case</li>
+                    <li>
+                        (for each test block)
+                        <ol>
+                            <li>before_each</li>
+                            <li>tests</li>
+                            <li>after_each</li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+            <li>after_all</li>
+        </ol>
+    </dd>
+
+    <dt id="Mocking">Mocking</dt>
+    <dd>
+        <h2>Mocking</h2>
+
+        <p>
+
+        Test2::Tools::Spec is smart with Test2::Tools::Mock. It treats
+        a mock in void context as a before_each (roughly).
+
+        <p>
+
+        <script class="code">
+            describe stuff => sub {
+                mock Foo::Bar => ( ... );
+                # Mock is active, no need to capture the control object
+
+                before_each => sub {
+                    # Mock is active
+                }
+
+                tests foo => sub {
+                    # Mock is active
+                };
+
+                after_each => sub {
+                    # Mock is active
+                }
+            };
+            # Mock is not active
+
+            tests bar => sub {
+                # Mock is not active
+            };
+        </script>
+    </dd>
+
+    <dt id="Declare">Declare</dt>
+    <dd>
+        <h2>Declare</h2>
+
+        <p>
+
+        Test2::Plugin::SpecDeclare provides nice syntax sugar:
+
+        <p>
+
+        <script class="code">
+            use Test2::Bundle::Extended;
+            use Test2::Tools::Spec;
+            use Test2::Plugin::SpecDeclare;
+
+            describe foo(flat => 1) {
+                tests bar(iso => 1) {
+                    ...
+                }
+
+                before_each setup    { ... }
+                after_each  teardown { ... }
+
+                case red { ... }
+            }
+        </script>
+
+        <ul>
+            <li>No need for 'sub' keyword.</li>
+            <li>No need for ending semicolon.</li>
+            <li>Parameters are like a signature.</li>
+            <li>Uses Devel::Declare.</li>
+        </ul>
+    </dd>
+</dl>

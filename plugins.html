@@ -1,0 +1,113 @@
+<dl class="listnav">
+    <dt id="Plugins?">Plugins?</dt>
+    <dd>
+        <h2>What are plugins?</h2>
+
+        <p>
+
+        Plugins are modules that add or alter Test2 behaviors upon loading.
+
+        <p>
+
+        Plugins do not provide assertions.
+
+        <p>
+
+        Plugins are typically global in nature.
+    </dd>
+
+    <dt id="BailOnFail">BailOnFail</dt>
+    <dd>
+        <h2>Test2::Plugin::BailOnFail</h2>
+
+        This, and its brother 'DieOnFail' provide a feature that Test::Builder
+        was unable to provide despite significant demand.
+
+        <p>
+
+        This plugin will issue a Bail-Out event (end of testing) after the
+        first failed assertion.
+
+        <script class="code">
+            use Test2::Bundle::Extended;
+            use Test2::Plugin::BailOnFail;
+
+            ok(1, "pass");
+            ok(0, "fail"); # Bail-out issued after the assertion completes.
+
+            ...; # No more code is run.
+        </script>
+
+        <ul>
+            <li>Bail-Out happens just before ok() would return.</li>
+            <li>Ok() has time to print out diagnostics before the bail-out.</li>
+            <li>Test::Builder had no way to insure diagnostics were seen, but we do!</li>
+        </ul>
+    </dd>
+
+    <dt id="DieOnFail">DieOnFail</dt>
+    <dd>
+        <h2>Test2::Plugin::DieOnFail</h2>
+
+        This, and its brother 'BailOnFail' provide a feature that Test::Builder
+        was unable to provide despite significant demand.
+
+        <p>
+
+        This plugin will throw an exception after the first failed assertion.
+
+        <script class="code">
+            use Test2::Bundle::Extended;
+            use Test2::Plugin::BailOnFail;
+
+            ok(1, "pass");
+            ok(0, "fail"); # Throws an exception
+
+            ...; # No more code is run (unless you catch the exception)
+        </script>
+
+        <ul>
+            <li>Exception happens just before ok() would return.</li>
+            <li>Ok() has time to print out diagnostics before the bail-out.</li>
+            <li>Test::Builder had no way to insure diagnostics were seen, but we do!</li>
+        </ul>
+    </dd>
+
+    <dt id="ExitSummary">ExitSummary</dt>
+    <dd>
+        <h2>Test2::Plugin::ExitSummary</h2>
+
+        This plugin provides some useful diagnostics in some failure cases.
+
+        <p>
+
+        Example, bad plan:
+
+        <script class="code">
+            use Test2::Tools::Basic;
+            use Test2::Plugin::ExitSummary;
+            
+            plan 10;
+            
+            ok(1, "pass");
+            exit 0;
+        </script>
+
+        <script class="output">
+1..10
+ok 1 - pass
+# Did not follow plan: expected 10, ran 1.
+        </script>
+
+    </dd>
+
+    <dt id="SRand">SRand</dt>
+    <dd>
+        <h2>Test2::Plugin::SRand</h2>
+    </dd>
+
+    <dt id="UTF8">UTF8</dt>
+    <dd>
+        <h2>Test2::Plugin::UTF8</h2>
+    </dd>
+</dl>

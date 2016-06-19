@@ -1,0 +1,169 @@
+<dl class="listnav">
+    <dt id="Mocking">Mocking?</dt>
+    <dd>
+        <h2>Test2 Mocking Libraries</h2>
+
+        Mocking is when you set up a 'pretend' instance of an object, class,
+        method, or function. This 'pretend' version emulates the original weel
+        enough to be used in tests, but removes any messy bits that are hard to
+        provide in the test environment.
+        <p>
+
+        There is no shortage of mocking tools on cpan. Most make you want to claw your eyes out.
+
+        <p>
+
+        A while back Mock::Quick came in, and provided a much cleaner API for mocking, but it too had limitations.
+
+        <p>
+        The mocking components provided by Test2 (Specifically Test2::Mock)
+        build off the design of Mock::Quick, but fix several shortcomings.
+    </dd>
+
+    <dt id="Control">Control</dt>
+    <dd>
+        <dl class="sub_list">
+            <dt id="What?">What?</dt>
+            <dd>
+                <h2>What is a control object?</h2>
+
+                <br />
+                It is an object that gives you meta-control over a package.
+                <p>
+                <br />
+
+                <ul>
+                    <li>A control object is a handle on a mocked package.</li>
+                    <li>Always an instance of Test2::Mock.</li>
+                    <li>Allows you to add, override, restore, and reset methods.</li>
+                    <li>Clears all mocking when destroyed.</li>
+                    <li>Nestable.</li>
+                </ul>
+
+                <br />
+                You can use a control object to manage and 'control' a perl
+                package. Unlike a lot of mocking out there, it respects scope,
+                and cleans up after itself.
+            </dd>
+
+            <dt id="Usage">Usage</dt>
+            <dd>
+                <h2>How do I use it?</h2>
+
+                <script class="code">
+                    my $control = Test2::Mock->new(
+                        class => 'MyClass',
+                        override => [
+                            name => sub { 'fred' },
+                        ],
+                        add => [
+                            is_mocked => sub { 1 }
+                        ],
+                    );
+                
+                    $control->override(name => sub { 'tony' });
+                    MyClass->name; # tony
+
+                    $control->restore('name');
+                    MyClass->name; # fred
+
+                    $control->reset('name');
+                    MyClass->name; # Whatever it was before mocking.
+
+                    # Will remove all the mocking
+                    $control = undef;
+                </script>
+
+                <ul>
+                    <li>add() will fail if a method is already defined</li>
+                    <li>override() will fail if a method is not already defined</li>
+                    <li>restore() is like a 'pop' for mocks</li>
+                    <li>reset() removes mocking for a method</li>
+                    <li>Any method can be used in the constructor</li>
+                </ul>
+            </dd>
+        </dl>
+    </dd>
+
+    <dt id="Tools">Tools</dt>
+    <dd>
+        <h2>Test2::Tools::Mock</h2>
+
+        This package provides sugar for Test2::Mock
+
+        <script class="code">
+            use Test2::Tools::Mock(
+                mock
+                mocked
+                mock_class
+                mock_obj
+            );
+
+            # Exception will be thrown if you do not store the control object.
+            my $control = mock ...;
+        </script>
+
+        <table>
+            <tr><td>mock()</td>      <td>&nbsp;&nbsp;&nbsp;</td><td>Universal mocking interface</td></tr>
+            <tr><td>mocked()</td>    <td></td><td>Check if something is mocked</td></tr>
+            <tr><td>mock_class()</td><td></td><td>Explicit class mocking</td></tr>
+            <tr><td>mock_obj()</td>  <td></td><td>Explicit object mocking</td></tr>
+        </table>
+    </dd>
+
+    <dt id="Classes">Classes</dt>
+    <dd>
+        <h2>Class Mocking</h2>
+
+        The <i>mock()</i> function can usually tell if you are mocking a class
+
+        <script class="code">
+            my $control = mock 'Some::Package' => (
+                add      => [foo => sub { 'foo' }],
+                override => [bar => sub { 'bar' }],
+            );
+
+            Some::Package->foo;
+            Some::Package->bar;
+
+            $control = undef;
+            # No more mock.
+        </script>
+
+        If you prefer you can use the explicit form, or the explicit function:
+
+        <script class="code">
+            # Tell it to mock a class
+            my $control = mock class => ( 'Some::Package', ... );
+
+            # directly call mock_class
+            my $control = mock_class => 'Some::Package' => ( ... );
+        </script>
+    </dd>
+
+    <dt id="Objects">Objects</dt>
+    <dd>
+        <h2>Object Mocking</h2>
+
+        Sometimes you do not want to mock out a whole class. Sometimes you just
+        want an object that 'fits' nearly anywhere.
+
+        <script class="code">
+            my $obj = mock {bar => 1} => (
+                add => [foo => sub { 'foo' }],
+            );
+
+            $obj->foo;
+            $obj->bar;
+
+            $obj->baz(1); # baz() is vivified for you as a getter/setter
+        </script>
+
+        <ul>
+            <li>Blesses the hash to an instance of an anonymous class</li>
+            <li>Auto-vivifies any method called as a getter/setter</li>
+            <li>Can add subs as methods via construction or control</li>
+            <li>mocked($obj) will return the control object</li>
+        </ul>
+    </dd>
+</dl>
