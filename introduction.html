@@ -12,11 +12,52 @@
         <small>You can follow along at <a href="https://test-more.github.io/Test2-Manual">https://test-more.github.io/Test2-Manual</a></small>
     </dd>
 
-    <dt id="Benchmarks">Benchmarks</dt>
+    <dt id="Test2">Test2?</dt>
     <dd>
+        <h2>What is Test2?</h2>
+
+        Test2 is the new framework to replace Test::Builder.
+        <p><br />
+
+        <h3>Why?</h3>
+
+        Test::Builder has outlived it's design. Too many tools are forced to
+        work around the limitations it has.
+        <p><br />
+
+        <h3>What is going to happen to Test::Builder?</h3>
+
+        Test::Builder has been modified to use Test2 under the hood.
+        Test::Builder is not going away any time soon, but will play nicely
+        with new tools.
     </dd>
 
-    <dt id="Docs">Docs&nbsp;(POD)</dt>
+    <dt id="Benchmarks">Benchmarks</dt>
     <dd>
+        <h2>Benchmarks</h2>
+
+        Test2 takes longer to load than Test::Builder. Test2 performs much
+        better at run-time when compared to the old Test::Builder.
+
+        <h3>Load Time (Lower is better)</h3>
+        <table>
+            <tr><th>Module</th><th>Before Test2&nbsp;&nbsp;</th><th>With Test2</th></tr>
+            <tr><td>Test::Builder      </td><td>0.010</td><td>0.027</td></tr>
+            <tr><td>Test2::API         </td><td>N/A  </td><td>0.020</td></tr>
+            <tr></tr>
+            <tr><td>Test::More         </td><td>0.014</td><td>0.032</td></tr>
+            <tr><td>Test2::Tools::Basic&nbsp;&nbsp;</td><td>N/A  </td><td>0.021</td></tr>
+        </table>
+
+        <h3>Time to run 100,000 OK's (Lower is better)</h3>
+        <table>
+            <tr><td>Test::Builder (Legacy)</td><td>3.808</td></tr>
+            <tr><td>Test::Builder (Test2)</td><td>3.396</td></tr>
+            <tr><td>Test2</td><td>2.343</td></tr>
+            <tr></tr>
+            <tr><td>Test::Builder (Legacy + Threads)</td><td>5.339</td></tr>
+            <tr><td>Test::Builder (Test2 + Threads)</td><td>4.296</td></tr>
+            <tr><td>Test2 (threads)</td><td>3.163</td></tr>
+        </table>
     </dd>
 </dl>

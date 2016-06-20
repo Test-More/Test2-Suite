@@ -1,0 +1,120 @@
+<dl class="listnav">
+    <dt id="context">Context?</dt>
+    <dd>
+        <h2>What is a context?</h2>
+
+        A context object is the primary interface used inside testing tools.
+        <p><br />
+
+        <h3>Why should I care?</h3>
+
+        There are times where knowing about the context object can help you
+        write better tests.
+        <p><br />
+
+        <h3>What does it do?</h3>
+
+        Tracks file name, line number, and other meta-data about the currently
+        running tool. It is also the primary way to generate events.
+    </dd>
+
+    <dt id="Usage">Usage</dt>
+    <dd>
+        <h2>Using the context</h2>
+
+        <script class="code">
+            use Test2::API qw/context/;
+
+            sub my_ok {
+                my ($bool, $name) = @_;
+
+                my $ctx = context();    # Get the context
+
+                $ctx->ok($bool);
+
+                $ctx->release;          # Clean up the context
+
+                return $bool;
+            }
+        </script>
+
+        This is the most simple usage.
+
+        <ul>
+            <li>Get context</li>
+            <li>Generate events</li>
+            <li>Release context</li>
+        </ul>
+    </dd>
+
+    <dt id="Rules">Rules</dt>
+    <dd>
+        <h2>Context 10 commandments</h2>
+
+        <br /><p>
+        These rules are very important. Failure to follow these rules will lead
+        to incorrect events, diagnostics, extra warnings, exceptions, and possibly death.
+
+        <br /><p>
+        <ol>
+            <li>Get it as early as possible</li>
+            <li>Release it as late as possible</li>
+            <li>Do not forget to release the context</li>
+            <li>Each sub should get its own</li>
+            <li>Do not pass a context around</li>
+            <li>Do not cache or store the context to use later</li>
+            <li>Do not share a context</li>
+            <li>Assumes it is obtained within a sub (not package scope)</li>
+            <li>Do not alter the context internals</li>
+            <li>Do not monkey-patch the context</li>
+        </ol>
+    </dd>
+
+    <dt id="attributes">Attributes</dt>
+    <dd>
+        <h2>Context Attributes</h2>
+
+        <br /><p>
+
+        <table>
+            <tr><td>trace                       </td><td>Test2::Util::Trace instance</td></tr>
+            <tr><td>causes_fail                 </td><td>True if the event is a failure</td></tr>
+            <tr><td>increments_count&nbsp;&nbsp;</td><td>True if the event bumps the test count</td></tr>
+            <tr><td>diagnostics                 </td><td>True if the event is diagnostic in nature</td></tr>
+            <tr><td>no_display                  </td><td>True if a renderer should not display the event</td></tr>
+            <tr><td>callback                    </td><td>Action the event can take after it is recorded</td></tr>
+            <tr><td>terminate                   </td><td>Exit value if event should terminate the test</td></tr>
+            <tr><td>global                      </td><td>True if the event is global in nature</td></tr>
+            <tr><td>sets_plan                   </td><td>Plan information if the evnet sets the plan</td></tr>
+            <tr><td>summary                     </td><td>Human readable description for the event</td></tr>
+        </table>
+    </dd>
+
+    <dt id="Events">Events</dt>
+    <dd>
+        <h2>Event Generation</h2>
+
+        The primary event types all have a shortcut method that creates, sends, and returns an event:
+
+        <script class="code">
+            $e = $ctx->ok($bool, $name, \@diag);
+            $e = $ctx->note($message);
+            $e = $ctx->diag($message);
+            $e = $ctx->plan($count, $directive, $reason);
+            $e = $ctx->skip($name, $reason);
+            $e = $ctx->bail($reason)
+        </script>
+
+        All other event types can be generated via <i>send_event()</i> and <i>build_event()</i>
+
+        <script class="code">
+            # Create and send the event
+            $e = $ctx->send_event('EventType', %params);
+
+            # Create, but do not send
+            $e = $ctx->build_event('EventType', %params);
+        </script>
+    </dd>
+</dl>
+
+
