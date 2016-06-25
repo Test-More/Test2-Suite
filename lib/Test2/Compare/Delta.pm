@@ -292,12 +292,12 @@ sub table {
 
     my @no_collapse = grep { $COLUMNS{$COLUMN_ORDER[$_]}->{no_collapse} } 0 .. $#COLUMN_ORDER;
     unshift @out => Test2::Util::Table::table(
-        header      => $header,
-        rows        => $rows,
+        header      => [@$header],
+        rows        => [@$rows],
         collapse    => 1,
         sanitize    => 1,
         mark_tail   => 1,
-        no_collapse => \@no_collapse,
+        no_collapse => [@no_collapse],
     );
 
     return @out;
