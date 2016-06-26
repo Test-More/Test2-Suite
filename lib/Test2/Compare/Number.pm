@@ -8,25 +8,26 @@ use base 'Test2::Compare::Base';
 
 our $VERSION = '0.000041';
 
+use Scalar::Util qw/looks_like_number/;
 use Test2::Util::HashBase qw/input negate/;
 
 sub init {
-    my $self = shift;
-    my $input = $self->{+INPUT};
+    my $self  = shift;
+    my $input = $self->{ +INPUT };
 
     confess "input must be defined for 'Number' check"
-        unless defined $input;
+      unless defined $input;
 
     # Check for ''
     confess "input must be a number for 'Number' check"
-        unless length($input) && $input =~ m/\S/;
+      unless looks_like_number($input);
 
     $self->SUPER::init(@_);
 }
 
 sub name {
     my $self = shift;
-    my $in = $self->{+INPUT};
+    my $in   = $self->{ +INPUT };
     return $in;
 }
 
@@ -36,36 +37,35 @@ sub operator {
     my ($got) = @_;
 
     return '' unless defined($got);
-    return '' unless length($got) && $got =~ m/\S/;
+    return '' unless looks_like_number($got);
 
-    return '!=' if $self->{+NEGATE};
-    return '==';
+    return $self->{ +NEGATE } ? '!=' : '==';
 }
 
 sub verify {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
-    my ($got, $exists) = @params{qw/got exists/};
+    my ( $got, $exists ) = @params{qw/got exists/};
 
     return 0 unless $exists;
     return 0 unless defined $got;
     return 0 if ref $got;
-    return 0 unless length($got) && $got =~ m/\S/;
+    return 0 unless looks_like_number($got);
 
-    my $input  = $self->{+INPUT};
-    my $negate = $self->{+NEGATE};
+    my $input  = $self->{ +INPUT };
+    my $negate = $self->{ +NEGATE };
 
     my @warnings;
     my $out;
     {
         local $SIG{__WARN__} = sub { push @warnings => @_ };
-        $out = $negate ? ($input != $got) : ($input == $got);
+        $out = $negate ? ( $input != $got ) : ( $input == $got );
     }
 
     for my $warn (@warnings) {
-        if ($warn =~ m/numeric/) {
+        if ( $warn =~ m/numeric/ ) {
             $out = 0;
-            next; # This warning won't help anyone.
+            next;    # This warning won't help anyone.
         }
         warn $warn;
     }
