@@ -54,6 +54,7 @@ use Test2::Tools::Exception qw/dies lives/;
 
 BEGIN {
     *subtest = \&subtest_buffered;
+    *meta_check = \&meta;
 }
 
 our @EXPORT = qw{
@@ -89,6 +90,8 @@ our @EXPORT = qw{
     exact_ref
 };
 
+our @EXPORT_OK = qw/meta_check/;
+
 my $SRAND;
 sub import {
     my $class = shift;
@@ -116,6 +119,8 @@ sub import {
     my $no_warnings = delete $options{'-no_warnings'} || $no_pragmas;
     my $no_utf8     = delete $options{'-no_utf8'} || $no_pragmas;
 
+    my $moose = 1 if grep {$_} delete @options{qw/-moose -Moose/};
+
     strict->import()              unless $no_strict;
     'warnings'->import()          unless $no_warnings;
     Test2::Plugin::UTF8->import() unless $no_utf8;
@@ -126,7 +131,12 @@ sub import {
 
     croak "Unknown option(s): " . join(', ', keys %options) if keys %options;
 
-    $class->Exporter::export_to_level(1, @exports);
+    if ($moose) {
+        @exports = @EXPORT unless @exports;
+        @exports = map { $_ eq 'meta' ? 'meta_check' : $_ } @exports;
+    }
+
+    $class->Exporter::export_to_level(1, __PACKAGE__, @exports);
 }
 
 1;
@@ -156,6 +166,22 @@ extensively to test L<Test2::Suite> itself.
     ...
 
     done_testing;
+
+=head1 MOOSE
+
+    use Moose;
+    use Test2::Bundle::Extended -Moose => 1;
+
+L<Moose> and L<Test2::Bundle::Extended> both export a sub named C<meta()>. This
+is of course a major conflict as L<Moose> relies heavily on C<meta()>. For now
+the simple solution is to use the C<< -Moose => 1 >> flag when importing
+L<Test2::Bundle::Extended> which will rename the C<meta()> import to
+C<meta_check()>.
+
+B<NOTE:> This does not do anything clever beyond renaming an export. This will
+not load L<Moose>. This will not check that L<Moose> is loaded. This will not
+look for or modify C<meta()> before or after L<Moose> has exported it. This
+flag will always work, even if you do not actually use L<Moose>.
 
 =head1 PRAGMAS
 
