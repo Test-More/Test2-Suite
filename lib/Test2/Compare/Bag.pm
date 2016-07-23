@@ -62,7 +62,6 @@ sub deltas {
                 verified => undef,
                 id       => [ARRAY => $list_idx],
                 got      => $val,
-                check    => undef,
             );
         }
         return @deltas;
@@ -82,7 +81,6 @@ sub deltas {
                 dne      => 'got',
                 verified => undef,
                 id       => [ARRAY => '*'],
-                got      => undef,
                 check    => $check,
             );
         }
@@ -114,6 +112,7 @@ sub deltas {
     _show_matrix(\@checks,\@list,\@delta_matrix);
 
     # each item must have matched at least one input
+    my $failed_checks = 0;
     for my $check_idx (0..$#checks) {
         my $matches = grep {
             @{$_} == 0
@@ -126,6 +125,7 @@ sub deltas {
             got      => undef,
             check    => $checks[$check_idx],
         );
+        ++$failed_checks;
     }
 
     if ($closed) {
@@ -135,29 +135,34 @@ sub deltas {
             my $matches = grep {
                 @{$_->[$list_idx]} == 0
             } @delta_matrix;
-            if ($matches) {
-                ++$inputs_with_matches;
-                next;
+
+            if ($matches == 0) {
+                # it's not useful to say that some input failed, if we've
+                # already said that some checks failed
+                unless ($failed_checks) {
+                    # returned all the failed checks for this item
+                    push @deltas => map {
+                        @{$_->[$list_idx]}
+                    } @delta_matrix;
+                }
             }
-            push @deltas => $self->delta_class->new(
-                dne      => 'check',
-                verified => undef,
-                id       => [ARRAY => $list_idx],
-                got      => $list[$list_idx],
-                check    => undef,
-            );
-        }
-        # the number of inputs matched must be the same as the number
-        # of items
-        if ($inputs_with_matches != @checks) {
-            # this delta is wrong
-            push @deltas => $self->delta_class->new(
-                dne      => 'check',
-                verified => undef,
-                id       => [ARRAY => '*'],
-                got      => $list[0],
-                check    => undef,
-            );
+            else {
+                ++$inputs_with_matches;
+                # the number of inputs matched must be the same as the
+                # number of items
+                if ($inputs_with_matches > @checks) {
+                    for my $check_idx (0..$#checks) {
+                        # this check did not match that input, ignore
+                        next if @{$delta_matrix[$check_idx]->[$list_idx]};
+                        # we report as "deltas" every excess match
+                        push @deltas => $self->delta_class->new(
+                            id       => [ARRAY => $list_idx],
+                            got      => $list[$list_idx],
+                            check    => $checks[$check_idx],
+                        );
+                    }
+                }
+            }
         }
     }
 
