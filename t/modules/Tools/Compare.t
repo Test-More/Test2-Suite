@@ -906,6 +906,8 @@ subtest array => sub {
 subtest bag => sub {
     my $empty = bag { };
 
+    my $empty_closed = bag { end; };
+
     my $simple = bag {
         item 'a';
         item 'b';
@@ -922,6 +924,8 @@ subtest bag => sub {
     is([], $empty, "empty array");
     is(['a'], $empty, "any array matches empty");
 
+    is([], $empty_closed, "empty array, closed");
+
     is([qw/a b c/], $simple, "simple exact match");
     is([qw/b c a/], $simple, "simple out of order");
     is([qw/a b c d e/], $simple, "simple with extra");
@@ -935,15 +939,22 @@ subtest bag => sub {
         is(1, $empty);
         is('ARRAY', $empty);
 
+        is(['a'], $empty_closed);
+
         is([qw/x y z/], $simple);
         is([qw/a b x/], $simple);
         is([qw/x b c/], $simple);
+        is([qw/a b/], $simple);
+        is([], $simple);
 
         is([qw/a b c d/], $closed);
+        is([qw/a b c a b c/], $closed);
+        is([qw/a b/], $closed);
+        is([], $closed);
     };
 
     @$events = grep {$_->isa('Test2::Event::Ok')} @$events;
-    is(@$events, 8, "8 events");
+    is(@$events, 14, "14 events");
     is($_->pass, 0, "event failed") for @$events;
 };
 

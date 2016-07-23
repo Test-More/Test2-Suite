@@ -46,36 +46,38 @@ sub deltas {
     my ($got, $convert, $seen) = @params{qw/got convert seen/};
 
     my @deltas;
-    my $state = 0;
-    my @items = @{$self->{+ITEMS}};
-
-    # Make a copy that we can munge as needed.
+    my $closed = $self->{+ENDING};
+    my @checks = map { $convert->($_) } @{$self->{+ITEMS}};
     my @list = @$got;
-    my %unmatched = map { $_ => $list[$_] } 0..$#list;
 
-    while (@items) {
-        my $item = shift @items;
+    # special cases
 
-        my $check = $convert->($item);
-
-        my $match = 0;
-        for my $idx (0..$#list) {
-            my $val = $list[$idx];
-            my $deltas = $check->run(
-                id      => [ARRAY => $idx],
-                convert => $convert,
-                seen    => $seen,
-                exists  => 1,
-                got     => $val,
+    # empty, closed bag vs. non-empty input
+    if (!@checks && $closed && @list) {
+        # deltas = all input elements
+        for my $list_idx (0..$#list) {
+            my $val = $list[$list_idx];
+            push @deltas => $self->delta_class->new(
+                dne      => 'check',
+                verified => undef,
+                id       => [ARRAY => $list_idx],
+                got      => $val,
+                check    => undef,
             );
-
-            unless ($deltas) {
-                $match++;
-                delete $unmatched{$idx};
-                last;
-            }
         }
-        unless ($match) {
+        return @deltas;
+    }
+
+    # empty bag
+    if (!@checks) {
+        # always matches
+        return ();
+    }
+
+    # non-empty bag vs. empty input
+    if (@checks && !@list) {
+        # deltas = all items
+        for my $check (@checks) {
             push @deltas => $self->delta_class->new(
                 dne      => 'got',
                 verified => undef,
@@ -84,23 +86,97 @@ sub deltas {
                 check    => $check,
             );
         }
+        return @deltas;
     }
 
-    # if elements are left over, and ending is true, we have a problem!
-    if($self->{+ENDING} && keys %unmatched) {
-        for my $idx (sort keys %unmatched) {
-            my $elem = $list[$idx];
+    # ok, now we know that both @list and @checks contain elements
+    die "wtf?" unless @list && @checks;
+
+    my @delta_matrix;
+    for my $check_idx (0..$#checks) {
+        my $check = $checks[$check_idx];
+
+        my $match = 0;
+        for my $list_idx (0..$#list) {
+            my $val = $list[$list_idx];
+
+            push @{$delta_matrix[$check_idx]->[$list_idx]}, $check->run(
+                id      => [ARRAY => $list_idx],
+                convert => $convert,
+                seen    => $seen,
+                exists  => 1,
+                got     => $val,
+            );
+
+        }
+    }
+
+    _show_matrix(\@checks,\@list,\@delta_matrix);
+
+    # each item must have matched at least one input
+    for my $check_idx (0..$#checks) {
+        my $matches = grep {
+            @{$_} == 0
+        } @{$delta_matrix[$check_idx]};
+        next if $matches;
+        push @deltas => $self->delta_class->new(
+            dne      => 'got',
+            verified => undef,
+            id       => [ARRAY => '*'],
+            got      => undef,
+            check    => $checks[$check_idx],
+        );
+    }
+
+    if ($closed) {
+        my $inputs_with_matches = 0;
+        # each input must have matched at least one item
+        for my $list_idx (0..$#list) {
+            my $matches = grep {
+                @{$_->[$list_idx]} == 0
+            } @delta_matrix;
+            if ($matches) {
+                ++$inputs_with_matches;
+                next;
+            }
             push @deltas => $self->delta_class->new(
                 dne      => 'check',
                 verified => undef,
-                id       => [ARRAY => $idx],
-                got      => $elem,
+                id       => [ARRAY => $list_idx],
+                got      => $list[$list_idx],
+                check    => undef,
+            );
+        }
+        # the number of inputs matched must be the same as the number
+        # of items
+        if ($inputs_with_matches != @checks) {
+            # this delta is wrong
+            push @deltas => $self->delta_class->new(
+                dne      => 'check',
+                verified => undef,
+                id       => [ARRAY => '*'],
+                got      => $list[0],
                 check    => undef,
             );
         }
     }
 
     return @deltas;
+}
+
+sub _show_matrix {
+    my ($checks,$list,$m) = @_;
+    require Text::Table;
+    my $t = Text::Table->new( '', @$list );
+    for my $i (0..$#$checks) {
+        $t->load([
+            $checks->[$i]->render,
+            map {
+                -scalar @{$_}
+            } @{$m->[$i]},
+        ]);
+    }
+    ::note($t);
 }
 
 1;
