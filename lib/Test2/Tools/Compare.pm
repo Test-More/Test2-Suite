@@ -16,25 +16,6 @@ use Test2::Compare qw{
     strict_convert relaxed_convert
 };
 
-use Test2::Compare::Array();
-use Test2::Compare::Bag();
-use Test2::Compare::Custom();
-use Test2::Compare::Event();
-use Test2::Compare::Hash();
-use Test2::Compare::Meta();
-use Test2::Compare::Number();
-use Test2::Compare::Object();
-use Test2::Compare::OrderedSubset();
-use Test2::Compare::Pattern();
-use Test2::Compare::Ref();
-use Test2::Compare::DeepRef();
-use Test2::Compare::Regex();
-use Test2::Compare::Scalar();
-use Test2::Compare::Set();
-use Test2::Compare::String();
-use Test2::Compare::Undef();
-use Test2::Compare::Wildcard();
-
 %Carp::Internal = (
     %Carp::Internal,
     'Test2::Tools::Compare'         => 1,

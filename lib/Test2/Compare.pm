@@ -17,6 +17,25 @@ our @EXPORT_OK = qw{
 };
 use base 'Exporter';
 
+require Test2::Compare::Array;
+require Test2::Compare::Bag;
+require Test2::Compare::Custom;
+require Test2::Compare::Event;
+require Test2::Compare::Hash;
+require Test2::Compare::Meta;
+require Test2::Compare::Number;
+require Test2::Compare::Object;
+require Test2::Compare::OrderedSubset;
+require Test2::Compare::Pattern;
+require Test2::Compare::Ref;
+require Test2::Compare::DeepRef;
+require Test2::Compare::Regex;
+require Test2::Compare::Scalar;
+require Test2::Compare::Set;
+require Test2::Compare::String;
+require Test2::Compare::Undef;
+require Test2::Compare::Wildcard;
+
 sub compare {
     my ($got, $check, $convert) = @_;
 
