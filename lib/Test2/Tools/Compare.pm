@@ -13,8 +13,10 @@ use Test2::Util::Ref qw/rtype/;
 use Test2::Compare qw{
     compare
     get_build push_build pop_build build
-    strict_convert relaxed_convert
+    strict_convert relaxed_convert convert
 };
+
+use Importer Importer => qw/import/;
 
 use Test2::Compare::Array();
 use Test2::Compare::Bag();
@@ -59,21 +61,60 @@ use Test2::Compare::Wildcard();
     'Test2::Compare::OrderedSubset' => 1,
 );
 
-our @EXPORT = qw/is like/;
-our @EXPORT_OK = qw{
-    is like isnt unlike
-    match mismatch validator
-    hash array bag object meta meta_check number string subset bool
-    in_set not_in_set check_set
-    item field call call_list call_hash prop check all_items all_keys all_vals all_values
-    etc end filter_items
-    T F D DF DNE FDNE E U
-    event fail_events
-    exact_ref
-};
-use base 'Exporter';
+sub IMPORTER_MENU {
+    return (
+        export      => [qw/like/],
+        export_anon => {is => \&is_v1},
+        export_ok   => [
+            qw{
+                is like isnt unlike is_v1 is_v2
+                match mismatch validator
+                hash array bag object meta meta_check number string subset bool
+                in_set not_in_set check_set
+                item field call call_list call_hash prop check all_items all_keys all_vals all_values
+                etc end filter_items
+                T F D DF DNE FDNE E U
+                event fail_events
+                exact_ref
+            }
+        ],
 
-sub is($$;$@) {
+        export_pins => {
+            root_name => 'no-pin',
+
+            'v1' => {
+                inherit     => 'no-pin',
+                export_anon => {is => \&is_v1},
+            },
+
+            'v2' => {
+                inherit     => 'v1',
+                export_anon => {is => \&is_v2},
+            },
+        }
+    );
+}
+
+sub strict_convert_v1 { convert($_[0], { implicit_end => undef, use_regex => 0, use_code => 0 }) }
+sub is_v1($$;$@) {
+    my ($got, $exp, $name, @diag) = @_;
+    my $ctx = context();
+
+    my $delta = compare($got, $exp, \&strict_convert_v1);
+
+    if ($delta) {
+        $ctx->ok(0, $name, [$delta->diag, @diag]);
+    }
+    else {
+        $ctx->ok(1, $name);
+    }
+
+    $ctx->release;
+    return !$delta;
+}
+
+*is = \&is_v2;
+sub is_v2($$;$@) {
     my ($got, $exp, $name, @diag) = @_;
     my $ctx = context();
 
@@ -624,7 +665,7 @@ your data. There are both 'strict' and 'relaxed' versions of the tools.
 
 =head1 SYNOPSIS
 
-    use Test2::Tools::Compare;
+    use Test2::Tools::Compare ':v2';
 
     # Hash for demonstration purposes
     my $some_hash = {a => 1, b => 2, c => 3};
@@ -653,7 +694,7 @@ associated. This is helpful for debugging as the failure output will tell you
 not only which fields was incorrect, but also the line on which you declared
 the field.
 
-    use Test2::Tools::Compare qw{
+    use Test2::Tools::Compare '+v2' => qw{
         is like isnt unlike
         match mismatch validator
         hash array bag object meta number string subset bool
@@ -674,6 +715,24 @@ the field.
         },
         "Hash matches spec"
     );
+
+=head1 VERSION-SETS
+
+=over 4
+
+=item +v1
+
+The original version-set (deprecated, but kept for backwards compatibility)
+
+=item +v2
+
+=item :v2
+
+This version made a backwards incompatible change to C<is()> such that an
+implicit C<end()> is added to array and hash checks created via the compare
+DSL.
+
+=back
 
 =head1 COMPARISON TOOLS
 

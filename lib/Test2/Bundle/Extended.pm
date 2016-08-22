@@ -26,7 +26,8 @@ use Test2::Tools::Basic qw{
 };
 
 use Test2::Tools::Compare qw{
-    is like isnt unlike
+    +v2
+    is like isnt unlike is_v1 is_v2
     match mismatch validator
     hash array bag object meta meta_check number string subset bool
     in_set not_in_set check_set
@@ -87,9 +88,24 @@ our @EXPORT = qw{
     exact_ref
 };
 
-our %EXPORT_TAGS = (
-    'v1' => \@EXPORT,
-);
+sub IMPORTER_MENU {
+    return (
+        export_anon => { is => \&is_v1 },
+        export => \@EXPORT,
+
+        export_pins => {
+            root_name => 'no-pin',
+            'v1' => {
+                inherit => 'no-pin',
+                export_anon => { is => \&is_v1 },
+            },
+            'v2' => {
+                inherit => 'v1',
+                export_anon => { is => \&is_v2 },
+            },
+        },
+    );
+}
 
 my $SRAND;
 sub import {
@@ -151,7 +167,7 @@ extensively to test L<Test2::Suite> itself.
 
 =head1 SYNOPSIS
 
-    use Test2::Bundle::Extended ':v1';
+    use Test2::Bundle::Extended ':v2';
 
     ok(1, "pass");
 
@@ -184,7 +200,13 @@ The following are all identical:
 
     use Test2::Bundle::Extended ':DEFAULT';
 
-=item :v2 (FUTURE)
+=item :v2
+
+This version made a backwards incompatible change to C<is()> such that an
+implicit C<end()> is added to array and hash checks created via the compare
+DSL.
+
+=item :v3 (FUTURE)
 
 Does not exist yet. This will be populated if we find need to make incompatible
 changes to C<:v1>. This was we can move forward with a new tag without breaking

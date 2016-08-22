@@ -1,12 +1,17 @@
 {{$NEXT}}
 
+    - Introduce v2 pin for Extended bundle
+        - Implicit end() for checks inside is()
+    - Introduce v2 pin for Compare tools
+        - Implicit end() for checks inside is()
     - Create Test2::Compare::Negatable
     - Add bool() for deep comparisons
-    - Implicit end() for checks inside is()
     - Add try_ok to Tools/Exception
     - Export convert() in Test2::Compare
     - Make convert more flexible
     - Document how to write a compare tool with custom behavior
+    - Make it possible to warn about deprecate versions
+    - Use Importer pin features (Needs Importer 0.021)
 
 0.000058  2016-08-13 13:06:10-07:00 America/Los_Angeles
 
