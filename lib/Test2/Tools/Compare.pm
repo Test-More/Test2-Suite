@@ -16,6 +16,7 @@ use Test2::Compare qw{
     strict_convert relaxed_convert convert
 };
 
+use Test2::Util::Misc qw/deprecate_pins_before/;
 use Importer Importer => qw/import/;
 
 use Test2::Compare::Array();
@@ -65,6 +66,9 @@ sub IMPORTER_MENU {
     return (
         export      => [qw/like/],
         export_anon => {is => \&is_v1},
+
+        export_on_use => deprecate_pins_before(2),
+
         export_ok   => [
             qw{
                 is like isnt unlike is_v1 is_v2

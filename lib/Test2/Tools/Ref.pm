@@ -8,8 +8,21 @@ use Scalar::Util qw/reftype refaddr/;
 use Test2::API qw/context/;
 use Test2::Util::Ref qw/render_ref/;
 
+use Test2::Util::Misc qw/deprecate_pins_before/;
+use Importer Importer => qw/import/;
+
 our @EXPORT = qw/ref_ok ref_is ref_is_not/;
-use base 'Exporter';
+sub IMPORTER_MENU {
+    return (
+        export        => \@EXPORT,
+        export_on_use => deprecate_pins_before(2),
+        export_pins   => {
+            root_name => 'no-pin',
+            'v1'      => {inherit => 'no-pin'},
+            'v2'      => {inherit => 'v1'},
+        },
+    );
+}
 
 sub ref_ok($;$$) {
     my ($thing, $wanttype, $name) = @_;

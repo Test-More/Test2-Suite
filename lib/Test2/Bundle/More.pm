@@ -7,21 +7,26 @@ our $VERSION = '0.000059';
 use Test2::Plugin::ExitSummary;
 
 use Test2::Tools::Basic qw{
+    +v2
     ok pass fail skip todo diag note
     plan skip_all done_testing bail_out
 };
 
 use Test2::Tools::ClassicCompare qw{
+    +v2
     is is_deeply isnt like unlike cmp_ok
 };
 
-use Test2::Tools::Class qw/can_ok isa_ok/;
-use Test2::Tools::Subtest qw/subtest_streamed/;
+use Test2::Tools::Class qw/+v2 can_ok isa_ok/;
+use Test2::Tools::Subtest qw/+v2 subtest_streamed/;
 
 BEGIN {
     *BAIL_OUT = \&bail_out;
     *subtest  = \&subtest_streamed;
 }
+
+use Test2::Util::Misc qw/deprecate_pins_before/;
+use Importer Importer => qw/import/;
 
 our @EXPORT = qw{
     ok pass fail skip todo diag note
@@ -33,7 +38,17 @@ our @EXPORT = qw{
 
     subtest
 };
-use base 'Exporter';
+sub IMPORTER_MENU {
+    return (
+        export        => \@EXPORT,
+        export_on_use => deprecate_pins_before(2),
+        export_pins   => {
+            root_name => 'no-pin',
+            'v1'      => {inherit => 'no-pin'},
+            'v2'      => {inherit => 'v1'},
+        },
+    );
+}
 
 1;
 

@@ -7,11 +7,24 @@ our $VERSION = '0.000059';
 use Carp qw/croak/;
 use Test2::API qw/context/;
 
+use Test2::Util::Misc qw/deprecate_pins_before/;
+use Importer Importer => qw/import/;
+
 our @EXPORT = qw{
     ok pass fail diag note todo skip
     plan skip_all done_testing bail_out
 };
-use base 'Exporter';
+sub IMPORTER_MENU {
+    return (
+        export        => \@EXPORT,
+        export_on_use => deprecate_pins_before(2),
+        export_pins   => {
+            root_name => 'no-pin',
+            'v1'      => {inherit => 'no-pin'},
+            'v2'      => {inherit => 'v1'},
+        },
+    );
+}
 
 sub ok($;$@) {
     my ($bool, $name, @diag) = @_;

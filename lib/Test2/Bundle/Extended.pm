@@ -16,11 +16,12 @@ use Test2::Plugin::ExitSummary;
 
 use Test2::API qw/intercept context/;
 
-use Test2::Tools::Event qw/gen_event/;
+use Test2::Tools::Event qw/+v2 gen_event/;
 
-use Test2::Tools::Defer qw/def do_def/;
+use Test2::Tools::Defer qw/+v2 def do_def/;
 
 use Test2::Tools::Basic qw{
+    +v2
     ok pass fail diag note todo skip
     plan skip_all done_testing bail_out
 };
@@ -39,21 +40,25 @@ use Test2::Tools::Compare qw{
 };
 
 use Test2::Tools::Warnings qw{
+    +v2
     warns warning warnings no_warnings
 };
 
-use Test2::Tools::ClassicCompare qw/cmp_ok/;
+use Test2::Tools::ClassicCompare qw/+v2 cmp_ok/;
 
 use Importer 'Test2::Tools::Subtest' => (
+    '+v2',
     subtest_buffered => { -as => 'subtest' },
 );
 
-use Test2::Tools::Class     qw/can_ok isa_ok DOES_ok/;
-use Test2::Tools::Encoding  qw/set_encoding/;
-use Test2::Tools::Exports   qw/imported_ok not_imported_ok/;
-use Test2::Tools::Ref       qw/ref_ok ref_is ref_is_not/;
-use Test2::Tools::Mock      qw/mock mocked/;
-use Test2::Tools::Exception qw/try_ok dies lives/;
+use Test2::Tools::Class     qw/+v2 can_ok isa_ok DOES_ok/;
+use Test2::Tools::Encoding  qw/+v2 set_encoding/;
+use Test2::Tools::Exports   qw/+v2 imported_ok not_imported_ok/;
+use Test2::Tools::Ref       qw/+v2 ref_ok ref_is ref_is_not/;
+use Test2::Tools::Mock      qw/+v2 mock mocked/;
+use Test2::Tools::Exception qw/+v2 try_ok dies lives/;
+
+use Test2::Util::Misc qw/deprecate_pins_before/;
 
 our @EXPORT = qw{
     ok pass fail diag note todo skip
@@ -92,6 +97,8 @@ sub IMPORTER_MENU {
     return (
         export_anon => { is => \&is_v1 },
         export => \@EXPORT,
+
+        export_on_use => deprecate_pins_before(2),
 
         export_pins => {
             root_name => 'no-pin',

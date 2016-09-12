@@ -10,12 +10,25 @@ use Test2::Util::Ref qw/rtype/;
 
 use Carp qw/croak/;
 
+use Test2::Util::Misc qw/deprecate_pins_before/;
+use Importer Importer => qw/import/;
+
 our @EXPORT_OK = qw{
     compare
     get_build push_build pop_build build
     strict_convert relaxed_convert convert
 };
-use base 'Exporter';
+sub IMPORTER_MENU {
+    return (
+        export_ok     => \@EXPORT_OK,
+        export_on_use => deprecate_pins_before(2),
+        export_pins   => {
+            root_name => 'no-pin',
+            'v1'      => {inherit => 'no-pin'},
+            'v2'      => {inherit => 'v1'},
+        },
+    );
+}
 
 sub compare {
     my ($got, $check, $convert) = @_;

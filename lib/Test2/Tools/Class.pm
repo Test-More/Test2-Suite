@@ -9,8 +9,21 @@ use Test2::Util::Ref qw/render_ref/;
 
 use Scalar::Util qw/blessed/;
 
+use Test2::Util::Misc qw/deprecate_pins_before/;
+use Importer Importer => qw/import/;
+
 our @EXPORT = qw/can_ok isa_ok DOES_ok/;
-use base 'Exporter';
+sub IMPORTER_MENU {
+    return (
+        export        => \@EXPORT,
+        export_on_use => deprecate_pins_before(2),
+        export_pins   => {
+            root_name => 'no-pin',
+            'v1'      => {inherit => 'no-pin'},
+            'v2'      => {inherit => 'v1'},
+        },
+    );
+}
 
 # For easier grepping
 # sub isa_ok  is defined here

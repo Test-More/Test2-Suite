@@ -8,8 +8,21 @@ use Test2::Plugin::ExitSummary;
 
 use Test2::Tools::Basic qw/ok plan done_testing skip_all/;
 
+use Test2::Util::Misc qw/deprecate_pins_before/;
+use Importer Importer => qw/import/;
+
 our @EXPORT = qw/ok plan done_testing skip_all/;
-use base 'Exporter';
+sub IMPORTER_MENU {
+    return (
+        export        => \@EXPORT,
+        export_on_use => deprecate_pins_before(2),
+        export_pins   => {
+            root_name => 'no-pin',
+            'v1'      => {inherit => 'no-pin'},
+            'v2'      => {inherit => 'v1'},
+        },
+    );
+}
 
 1;
 

@@ -9,7 +9,8 @@ use Test2::Util::Sub qw/gen_accessor gen_reader gen_writer/;
 
 use Test2::Mock();
 
-use base 'Exporter';
+use Test2::Util::Misc qw/deprecate_pins_before/;
+use Importer Importer => qw/import/;
 
 our $VERSION = '0.000059';
 
@@ -23,6 +24,18 @@ our @EXPORT_OK = qw{
     mock_setter   mock_setters
     mock_building
 };
+sub IMPORTER_MENU {
+    return (
+        export        => \@EXPORT,
+        export_ok     => \@EXPORT_OK,
+        export_on_use => deprecate_pins_before(2),
+        export_pins   => {
+            root_name => 'no-pin',
+            'v1'      => {inherit => 'no-pin'},
+            'v2'      => {inherit => 'v1'},
+        },
+    );
+}
 
 my %HANDLERS;
 my %MOCKS;
