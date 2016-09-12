@@ -1,8 +1,8 @@
-use Test2::Bundle::Extended -target => 'Test2::Tools::Exception';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Tools::Exception';
 
 {
     package Foo;
-    use Test2::Tools::Exception qw/dies lives try_ok/;
+    use Test2::Tools::Exception qw/+v2 dies lives try_ok/;
     ::imported_ok(qw/dies lives try_ok/);
 }
 

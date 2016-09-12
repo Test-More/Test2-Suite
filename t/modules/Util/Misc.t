@@ -1,5 +1,7 @@
 use Test2::Bundle::Extended ':v2', -target => 'Test2::Util::Misc';
 
+local $ENV{T2_WARN_OLD_PINS} = 0;
+
 use Test2::Util::Misc qw/deprecate_pins_before/;
 
 imported_ok qw/deprecate_pins_before/;
@@ -17,11 +19,23 @@ like(
     warning { $sub->($caller, undef) },
     <<"    EOT",
 Importing from main without a pin is deprecated at a_file line 42.
-This can be fixed by using the 'v1' pin:
-    use main ':v1';
+This can be fixed quickly by using the 'v1' pin:
+
+Change these
+
+    use main;     # Default imports
+    use main ...; # Custom list
+
+to these:
+
+    use main ':v1';      # Default imports
+    use main '+v1', ...; # Custom list
 
 Or you can use the latest pin (API may change between pins)
+
     use main ':v5';
+    use main '+v5', ...;
+
     EOT
     "Got warning with no pin"
 );

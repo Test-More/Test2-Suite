@@ -1,4 +1,4 @@
-use Test2::Tools::Basic;
+use Test2::Tools::Basic ':v2';
 use Test2::Util::Table qw/table/;
 
 use Test2::Util qw/CAN_FORK CAN_REALLY_FORK CAN_THREAD/;

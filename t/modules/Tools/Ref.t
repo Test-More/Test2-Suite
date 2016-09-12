@@ -1,8 +1,8 @@
-use Test2::Bundle::Extended -target => 'Test2::Tools::Ref';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Tools::Ref';
 
 {
     package Temp;
-    use Test2::Tools::Ref;
+    use Test2::Tools::Ref ':v2';
 
     main::imported_ok(qw/ref_ok ref_is ref_is_not/);
 }

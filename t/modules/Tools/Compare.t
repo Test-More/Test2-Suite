@@ -1,5 +1,5 @@
 use Test2::Bundle::Extended ':v2', -target => 'Test2::Tools::Compare';
-use Test2::Tools::Compare qw/is_v1 is_v2/;
+use Test2::Tools::Compare qw/+v2 is_v1 is_v2/;
 use Test2::Util::Table();
 sub table { join "\n" => Test2::Util::Table::table(@_) }
 

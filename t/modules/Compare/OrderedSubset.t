@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::OrderedSubset';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Compare::OrderedSubset';
 
 isa_ok($CLASS, 'Test2::Compare::Base');
 is($CLASS->name, '<ORDERED SUBSET>', "got name");

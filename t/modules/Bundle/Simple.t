@@ -1,7 +1,7 @@
 use strict;
 use warnings;
-use Test2::Bundle::Simple;
-use Test2::Tools::Exports;
+use Test2::Bundle::Simple ':v2';
+use Test2::Tools::Exports ':v2';
 
 imported_ok qw/ok plan done_testing skip_all/;
 

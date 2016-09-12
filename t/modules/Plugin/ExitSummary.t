@@ -5,9 +5,9 @@ use Test2::API;
 my $initial_count;
 BEGIN { $initial_count = Test2::API::test2_list_exit_callbacks() }
 
-use Test2::Tools::Basic;
+use Test2::Tools::Basic ':v2';
 use Test2::API qw/intercept context/;
-use Test2::Tools::Compare qw/array event end is like/;
+use Test2::Tools::Compare qw/+v2 array event end is like/;
 
 use Test2::Plugin::ExitSummary;
 use Test2::Plugin::ExitSummary;

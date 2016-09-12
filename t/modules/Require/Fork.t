@@ -9,7 +9,7 @@ BEGIN {
     *Test2::Util::CAN_FORK = sub { $forks };
 }
 
-use Test2::Bundle::Extended -target => 'Test2::Require::Fork';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Require::Fork';
 
 {
     $forks = 0;

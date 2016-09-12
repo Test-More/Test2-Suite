@@ -1,8 +1,8 @@
-use Test2::Bundle::Extended -target => 'Test2::Tools::Basic';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Tools::Basic';
 
 {
     package Temp;
-    use Test2::Tools::Basic;
+    use Test2::Tools::Basic ':v2';
 
     main::imported_ok(qw{
         ok pass fail diag note todo skip

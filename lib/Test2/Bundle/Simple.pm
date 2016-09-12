@@ -6,7 +6,7 @@ our $VERSION = '0.000059';
 
 use Test2::Plugin::ExitSummary;
 
-use Test2::Tools::Basic qw/ok plan done_testing skip_all/;
+use Test2::Tools::Basic qw/+v2 ok plan done_testing skip_all/;
 
 use Test2::Util::Misc qw/deprecate_pins_before/;
 use Importer Importer => qw/import/;

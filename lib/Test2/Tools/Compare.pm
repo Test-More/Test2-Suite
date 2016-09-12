@@ -11,6 +11,7 @@ use Test2::API qw/context/;
 use Test2::Util::Ref qw/rtype/;
 
 use Test2::Compare qw{
+    +v2
     compare
     get_build push_build pop_build build
     strict_convert relaxed_convert convert

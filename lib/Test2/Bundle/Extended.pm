@@ -118,7 +118,7 @@ my $SRAND;
 sub import {
     my $class = shift;
 
-    my $caller = caller;
+    my @caller = caller(0);
     my (@exports, %options);
     while (my $arg = shift @_) {
         push @exports => $arg and next unless substr($arg, 0, 1) eq '-';
@@ -146,12 +146,12 @@ sub import {
     Test2::Plugin::UTF8->import() unless $no_utf8;
 
     my $target = delete $options{'-target'};
-    Test2::Tools::Target->import_into($caller, $target)
+    Test2::Tools::Target->import_into($caller[0], $target)
         if $target;
 
     croak "Unknown option(s): " . join(', ', keys %options) if keys %options;
 
-    Importer->import_into($class, $caller, @exports);
+    Importer->import_into($class, \@caller, @exports);
 }
 
 1;

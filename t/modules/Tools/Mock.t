@@ -1,6 +1,7 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Custom';
+use Test2::Bundle::Extended -target => 'Test2::Compare::Custom', ':v2';
 
 use Test2::Tools::Mock qw{
+    +v2
     mock_obj mock_class
     mock_do  mock_build
     mock_accessor mock_accessors

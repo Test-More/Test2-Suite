@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Regex';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Compare::Regex';
 
 my $one = $CLASS->new(input => qr/abc/i);
 

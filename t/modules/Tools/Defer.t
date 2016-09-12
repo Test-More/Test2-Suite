@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test2::Tools::Defer;
+use Test2::Tools::Defer ':v2';
 
 my $START_LINE;
 BEGIN {
@@ -14,7 +14,7 @@ BEGIN {
     def is => ({}, [], "a hash is not an array");
 }
 
-use Test2::Bundle::Extended -target => 'Test2::Tools::Defer';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Tools::Defer';
 
 sub capture(&) {
     my $code = shift;

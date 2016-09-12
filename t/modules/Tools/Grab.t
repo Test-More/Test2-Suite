@@ -1,6 +1,6 @@
-use Test2::Bundle::Extended -target => 'Test2::Util::Grabber';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Util::Grabber';
 
-use Test2::Tools::Grab;
+use Test2::Tools::Grab ':v2';
 
 ok(1, "initializing");
 

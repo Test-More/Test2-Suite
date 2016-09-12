@@ -1,8 +1,8 @@
-use Test2::Bundle::Extended -target => 'Test2::Tools::Exports';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Tools::Exports';
 
 {
     package Temp;
-    use Test2::Tools::Exports;
+    use Test2::Tools::Exports ':v2';
 
     imported_ok(qw/imported_ok not_imported_ok/);
     not_imported_ok(qw/xyz/);

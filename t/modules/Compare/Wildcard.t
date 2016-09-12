@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Wildcard';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Compare::Wildcard';
 
 my $one = $CLASS->new(expect => 'foo');
 isa_ok($one, $CLASS, 'Test2::Compare::Base');

@@ -24,7 +24,7 @@ use Carp qw/carp/;
 use Scalar::Util qw/reftype/;
 
 use Test2::API qw/context/;
-use Test2::Compare qw/compare strict_convert/;
+use Test2::Compare qw/+v2 compare strict_convert/;
 use Test2::Util::Ref qw/rtype render_ref/;
 use Test2::Util::Table qw/table/;
 

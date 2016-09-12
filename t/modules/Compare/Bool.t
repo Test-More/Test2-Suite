@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Bool';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Compare::Bool';
 
 my $one = $CLASS->new(input => 'foo');
 is($one->name, '<TRUE (foo)>', "Got name");

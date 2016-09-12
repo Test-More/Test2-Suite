@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended -target => 'Test2::Todo';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Todo';
 
 my $todo = Test2::Todo->new(reason => 'xyz');
 def isa_ok => ($todo, $CLASS);

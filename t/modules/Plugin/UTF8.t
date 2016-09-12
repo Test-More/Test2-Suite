@@ -3,7 +3,7 @@ use warnings;
 # HARNESS-NO-FORMATTER
 
 use Test2::Plugin::UTF8;
-use Test2::Tools::Basic qw/ok done_testing/;
+use Test2::Tools::Basic qw/+v2 ok done_testing/;
 
 use PerlIO;
 

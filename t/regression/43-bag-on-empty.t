@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended;
+use Test2::Bundle::Extended ':v2';
 
 my $got = intercept {
     my $check = bag {

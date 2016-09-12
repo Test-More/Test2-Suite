@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Custom';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Compare::Custom';
 
 my $pass = $CLASS->new(code => sub { 1 });
 my $fail = $CLASS->new(code => sub { 0 });

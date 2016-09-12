@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended;
+use Test2::Bundle::Extended ':v1';
 
 use Test2::Tools::Target 'Test2::Tools::Target';
 

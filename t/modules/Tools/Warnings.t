@@ -1,8 +1,8 @@
-use Test2::Bundle::Extended -target => 'Test2::Tools::Warnings';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Tools::Warnings';
 
 {
     package Foo;
-    use Test2::Tools::Warnings qw/warns warning warnings no_warnings/;
+    use Test2::Tools::Warnings qw/+v2 warns warning warnings no_warnings/;
     ::imported_ok(qw/warns warning warnings no_warnings/);
 }
 

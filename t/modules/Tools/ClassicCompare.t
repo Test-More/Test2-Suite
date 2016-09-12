@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended -target => 'Test2::Tools::ClassicCompare';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Tools::ClassicCompare';
 
 use Test2::Util::Stash qw/purge_symbol/;
 BEGIN {
@@ -11,7 +11,7 @@ BEGIN {
     not_imported_ok(qw/is is_deeply like unline isnt cmp_ok/);
 }
 
-use Test2::Tools::ClassicCompare;
+use Test2::Tools::ClassicCompare ':v2';
 
 imported_ok(qw/is is_deeply like cmp_ok unlike isnt/);
 
@@ -80,9 +80,9 @@ my $thing = bless {}, 'Foo::Bar';
 # Test cmp_ok in a seperate package so we have access to the better tools.
 package main2;
 
-use Test2::Bundle::Extended;
+use Test2::Bundle::Extended ':v2';
 BEGIN { main::purge_symbol('&cmp_ok') }
-use Test2::Tools::ClassicCompare qw/cmp_ok/;
+use Test2::Tools::ClassicCompare qw/+v2 cmp_ok/;
 use Test2::Util::Table();
 sub table { join "\n" => Test2::Util::Table::table(@_) }
 use Test2::Util::Ref qw/render_ref/;

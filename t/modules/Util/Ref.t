@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended;
+use Test2::Bundle::Extended ':v2';
 
 use Test2::Util::Ref qw/rtype render_ref/;
 

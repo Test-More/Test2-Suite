@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended -target => 'Test2::Require::EnvVar';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Require::EnvVar';
 
 {
     local %ENV = %ENV;

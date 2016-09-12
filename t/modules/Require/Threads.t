@@ -9,7 +9,7 @@ BEGIN {
     *Test2::Util::CAN_THREAD = sub { $threads };
 }
 
-use Test2::Bundle::Extended -target => 'Test2::Require::Threads';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Require::Threads';
 
 {
     $threads = 0;

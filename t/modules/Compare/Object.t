@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Object';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Compare::Object';
 
 subtest simple => sub {
     my $one = $CLASS->new;
