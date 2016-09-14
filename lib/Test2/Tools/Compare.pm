@@ -690,6 +690,44 @@ your data. There are both 'strict' and 'relaxed' versions of the tools.
         "'a' is 1, 'b' is an integer, we don't care about 'c'."
     );
 
+=head1 EXPORT PINS
+
+B<The current pin used by all of Test::Suite is C<v2>.>
+
+Export pins are how L<Test2::Suite> manages changes that could break backwords
+compatability. If we need to break backwards compatability we will do so by
+releasing a new pin. Old pins will continue to import the old functionality
+while new pins will import the new functionality.
+
+There are several ways to specify a pin:
+
+    # Import all the defaults provided by the 'v2' pin
+    use Package ':v2';
+
+    # Import foo, bar, and baz deom the v2 pin.
+    use Package '+v2' => [qw/foo bar baz/];
+
+    # Import 'foo' from the v2 pin, and import 'bar' and 'baz' from the v1 pin
+    use Package qw/+v2 foo +v1 bar baz/;
+
+If you do not specify a pin the default is to use the C<v1> pin (for legacy
+reasons). When the C<$AUTHOR_TESTING> environment variable is set, importing
+without a pin will produce a warning. In the future this warning may occur
+without the environment variable being set.
+
+=head2 DIFFERENCES BETWEEN PINS
+
+=over 4
+
+=item From v1 to v2
+
+When you use C<is()> and the DSL provided by L<Test2::Tools::Compare>, there is
+now an implicit C<end()> call inside array and hash checks. In v1 there was no
+implicit C<end()>. This change has a lot of potential to break existing tests,
+that is why a new pin was needed.
+
+=back
+
 =head2 ADVANCED
 
 Declarative hash, array, and objects builders are available that allow you to
