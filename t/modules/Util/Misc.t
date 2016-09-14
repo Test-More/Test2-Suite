@@ -1,6 +1,7 @@
 use Test2::Bundle::Extended ':v2', -target => 'Test2::Util::Misc';
 
 local $ENV{T2_WARN_OLD_PINS} = 0;
+local $ENV{AUTHOR_TESTING} = 1;
 
 use Test2::Util::Misc qw/deprecate_pins_before/;
 

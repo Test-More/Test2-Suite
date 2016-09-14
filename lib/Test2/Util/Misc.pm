@@ -15,6 +15,7 @@ sub deprecate_pins_before {
     my $exporter = caller;
 
     return sub {
+        return if $ENV{T2_NO_PIN_CHECK};
         return unless $ENV{AUTHOR_TESTING} || $ENV{T2_WARN_OLD_PINS};
         my ($caller, $pin) = @_;
 
