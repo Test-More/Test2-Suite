@@ -35,11 +35,36 @@ then a Bundle that loads them both. This is important as it helps avoid the
 problem where a package exports much-desired tools, but
 also produces undesirable side effects.
 
+# NOTE ON EXPORT PINS
+
+**The current pin used by all of Test::Suite is `v2`.**
+
+Export pins are how [Test2::Suite](https://metacpan.org/pod/Test2::Suite) manages changes that could break backwords
+compatability. If we need to break backwards compatability we will do so by
+releasing a new pin. Old pins will continue to import the old functionality
+while new pins will import the new functionality.
+
+There are several ways to specify a pin:
+
+    # Import all the defaults provided by the 'v2' pin
+    use Package ':v2';
+
+    # Import foo, bar, and baz deom the v2 pin.
+    use Package '+v2' => [qw/foo bar baz/];
+
+    # Import 'foo' from the v2 pin, and import 'bar' and 'baz' from the v1 pin
+    use Package qw/+v2 foo +v1 bar baz/;
+
+If you do not specify a pin the default is to use the `v1` pin (for legacy
+reasons). When the `$AUTHOR_TESTING` environment variable is set, importing
+without a pin will produce a warning. In the future this warning may occur
+without the environment variable being set.
+
 # INCLUDED BUNDLES
 
 - Extended
 
-        use Test2::Bundle::Extended;
+        use Test2::Bundle::Extended ':v2';
         # strict and warnings are on for you now.
 
         ok(...);
@@ -60,7 +85,7 @@ also produces undesirable side effects.
 
 - More
 
-        use Test2::Bundle::More;
+        use Test2::Bundle::More ':v2';
         use strict;
         use warnings;
 
@@ -87,7 +112,7 @@ also produces undesirable side effects.
 
 - Simple
 
-        use Test2::Bundle::Simple;
+        use Test2::Bundle::Simple ':v2';
         use strict;
         use warnings;
 
