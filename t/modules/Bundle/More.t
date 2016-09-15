@@ -1,7 +1,7 @@
 use strict;
 use warnings;
-use Test2::Bundle::More;
-use Test2::Tools::Exports;
+use Test2::Bundle::More ':v2';
+use Test2::Tools::Exports ':v2';
 
 imported_ok qw{
     ok pass fail skip todo diag note

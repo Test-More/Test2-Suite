@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Meta';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Compare::Meta';
 
 local *convert = Test2::Compare->can('strict_convert');
 

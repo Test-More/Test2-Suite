@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Array';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Compare::Array';
 
 isa_ok($CLASS, 'Test2::Compare::Base');
 is($CLASS->name, '<ARRAY>', "got name");

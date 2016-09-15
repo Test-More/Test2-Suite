@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::String';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Compare::String';
 
 my $number = $CLASS->new(input => '22.0');
 my $string = $CLASS->new(input => 'hello');

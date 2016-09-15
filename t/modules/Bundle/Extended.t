@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended;
+use Test2::Bundle::Extended ':v2';
 use Test2::API qw/test2_stack/;
 use PerlIO;
 # HARNESS-NO-FORMATTER
@@ -37,9 +37,10 @@ ok(Test2::Plugin::ExitSummary->active, "Exit Summary is loaded");
 ok(defined(Test2::Plugin::SRand->seed), "SRand is loaded");
 
 subtest strictures => sub {
+    no warnings 'redefine';
     local $^H;
     my $hbefore = $^H;
-    Test2::Bundle::Extended->import;
+    Test2::Bundle::Extended->import(':v2');
     my $hafter = $^H;
 
     my $strict = do { local $^H; strict->import(); $^H };
@@ -52,7 +53,7 @@ subtest strictures => sub {
 subtest warnings => sub {
     local ${^WARNING_BITS};
     my $wbefore = ${^WARNING_BITS} || '';
-    Test2::Bundle::Extended->import;
+    Test2::Bundle::Extended->import(':v2');
     my $wafter = ${^WARNING_BITS} || '';
 
     my $warnings = do { local ${^WARNING_BITS}; 'warnings'->import(); ${^WARNING_BITS} || '' };
@@ -83,14 +84,14 @@ subtest utf8 => sub {
 
 subtest "rename imports" => sub {
     package A::Consumer;
-    use Test2::Bundle::Extended ':v1', '!subtest', subtest => {-as => 'a_subtest'};
+    use Test2::Bundle::Extended qw/:v2 +v2/, '!subtest', subtest => {-as => 'a_subtest'};
     imported_ok('a_subtest');
     not_imported_ok('subtest');
 };
 
 subtest "no meta" => sub {
     package B::Consumer;
-    use Test2::Bundle::Extended '!meta';
+    use Test2::Bundle::Extended ':v2', '!meta';
     imported_ok('meta_check');
     not_imported_ok('meta');
 };

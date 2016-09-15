@@ -11,10 +11,14 @@ use Test2::API qw/context/;
 use Test2::Util::Ref qw/rtype/;
 
 use Test2::Compare qw{
+    +v2
     compare
     get_build push_build pop_build build
-    strict_convert relaxed_convert
+    strict_convert relaxed_convert convert
 };
+
+use Test2::Util::Misc qw/deprecate_pins_before/;
+use Importer Importer => qw/import/;
 
 use Test2::Compare::Array();
 use Test2::Compare::Bag();
@@ -59,21 +63,63 @@ use Test2::Compare::Wildcard();
     'Test2::Compare::OrderedSubset' => 1,
 );
 
-our @EXPORT = qw/is like/;
-our @EXPORT_OK = qw{
-    is like isnt unlike
-    match mismatch validator
-    hash array bag object meta meta_check number string subset bool
-    in_set not_in_set check_set
-    item field call call_list call_hash prop check all_items all_keys all_vals all_values
-    etc end filter_items
-    T F D DF DNE FDNE E U
-    event fail_events
-    exact_ref
-};
-use base 'Exporter';
+sub IMPORTER_MENU {
+    return (
+        export      => [qw/like/],
+        export_anon => {is => \&is_v1},
 
-sub is($$;$@) {
+        export_on_use => deprecate_pins_before(2),
+
+        export_ok   => [
+            qw{
+                is like isnt unlike is_v1 is_v2
+                match mismatch validator
+                hash array bag object meta meta_check number string subset bool
+                in_set not_in_set check_set
+                item field call call_list call_hash prop check all_items all_keys all_vals all_values
+                etc end filter_items
+                T F D DF DNE FDNE E U
+                event fail_events
+                exact_ref
+            }
+        ],
+
+        export_pins => {
+            root_name => 'no-pin',
+
+            'v1' => {
+                inherit     => 'no-pin',
+                export_anon => {is => \&is_v1},
+            },
+
+            'v2' => {
+                inherit     => 'v1',
+                export_anon => {is => \&is_v2},
+            },
+        }
+    );
+}
+
+sub strict_convert_v1 { convert($_[0], { implicit_end => undef, use_regex => 0, use_code => 0 }) }
+sub is_v1($$;$@) {
+    my ($got, $exp, $name, @diag) = @_;
+    my $ctx = context();
+
+    my $delta = compare($got, $exp, \&strict_convert_v1);
+
+    if ($delta) {
+        $ctx->ok(0, $name, [$delta->diag, @diag]);
+    }
+    else {
+        $ctx->ok(1, $name);
+    }
+
+    $ctx->release;
+    return !$delta;
+}
+
+*is = \&is_v2;
+sub is_v2($$;$@) {
     my ($got, $exp, $name, @diag) = @_;
     my $ctx = context();
 
@@ -625,7 +671,7 @@ your data. There are both 'strict' and 'relaxed' versions of the tools.
 
 =head1 SYNOPSIS
 
-    use Test2::Tools::Compare;
+    use Test2::Tools::Compare ':v2';
 
     # Hash for demonstration purposes
     my $some_hash = {a => 1, b => 2, c => 3};
@@ -645,6 +691,44 @@ your data. There are both 'strict' and 'relaxed' versions of the tools.
         "'a' is 1, 'b' is an integer, we don't care about 'c'."
     );
 
+=head1 EXPORT PINS
+
+B<The current pin used by all of Test::Suite is C<v2>.>
+
+Export pins are how L<Test2::Suite> manages changes that could break backwords
+compatability. If we need to break backwards compatability we will do so by
+releasing a new pin. Old pins will continue to import the old functionality
+while new pins will import the new functionality.
+
+There are several ways to specify a pin:
+
+    # Import all the defaults provided by the 'v2' pin
+    use Package ':v2';
+
+    # Import foo, bar, and baz deom the v2 pin.
+    use Package '+v2' => [qw/foo bar baz/];
+
+    # Import 'foo' from the v2 pin, and import 'bar' and 'baz' from the v1 pin
+    use Package qw/+v2 foo +v1 bar baz/;
+
+If you do not specify a pin the default is to use the C<v1> pin (for legacy
+reasons). When the C<$AUTHOR_TESTING> environment variable is set, importing
+without a pin will produce a warning. In the future this warning may occur
+without the environment variable being set.
+
+=head2 DIFFERENCES BETWEEN PINS
+
+=over 4
+
+=item From v1 to v2
+
+When you use C<is()> and the DSL provided by L<Test2::Tools::Compare>, there is
+now an implicit C<end()> call inside array and hash checks. In v1 there was no
+implicit C<end()>. This change has a lot of potential to break existing tests,
+that is why a new pin was needed.
+
+=back
+
 =head2 ADVANCED
 
 Declarative hash, array, and objects builders are available that allow you to
@@ -654,7 +738,7 @@ associated. This is helpful for debugging as the failure output will tell you
 not only which fields was incorrect, but also the line on which you declared
 the field.
 
-    use Test2::Tools::Compare qw{
+    use Test2::Tools::Compare '+v2' => qw{
         is like isnt unlike
         match mismatch validator
         hash array bag object meta number string subset bool
@@ -675,6 +759,24 @@ the field.
         },
         "Hash matches spec"
     );
+
+=head1 VERSION-SETS
+
+=over 4
+
+=item +v1
+
+The original version-set (deprecated, but kept for backwards compatibility)
+
+=item +v2
+
+=item :v2
+
+This version made a backwards incompatible change to C<is()> such that an
+implicit C<end()> is added to array and hash checks created via the compare
+DSL.
+
+=back
 
 =head1 COMPARISON TOOLS
 

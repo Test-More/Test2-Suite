@@ -1,8 +1,8 @@
-use Test2::Bundle::Extended -target => 'Test2::Tools::Class';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Tools::Class';
 
 {
     package Temp;
-    use Test2::Tools::Class;
+    use Test2::Tools::Class ':v2';
 
     main::imported_ok(qw/can_ok isa_ok DOES_ok/);
 }

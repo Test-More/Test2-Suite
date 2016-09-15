@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Undef';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Compare::Undef';
 
 my $undef = $CLASS->new();
 my $isdef = $CLASS->new(negate => 1);

@@ -1,11 +1,11 @@
 use strict;
 use warnings;
 
-use Test2::Tools::Basic;
+use Test2::Tools::Basic ':v2';
 use Test2::API qw/intercept test2_stack context/;
-use Test2::Tools::Compare qw/array event end is like/;
+use Test2::Tools::Compare qw/+v2 array event end is like/;
 use Test2::Tools::Target 'Test2::Plugin::SRand';
-use Test2::Tools::Warnings qw/warning/;
+use Test2::Tools::Warnings qw/+v2 warning/;
 
 test2_stack->top;
 my ($root) = test2_stack->all;

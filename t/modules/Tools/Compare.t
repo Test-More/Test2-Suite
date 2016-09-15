@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Tools::Compare';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Tools::Compare';
+use Test2::Tools::Compare qw/+v2 is_v1 is_v2/;
 use Test2::Util::Table();
 sub table { join "\n" => Test2::Util::Table::table(@_) }
 
@@ -25,31 +26,33 @@ subtest simple => sub {
     };
 };
 
-subtest is => sub {
+subtest $_ => sub {
+    my $it = $_;
+    my $is = __PACKAGE__->can($it);
     my $events = intercept {
-        def ok => (is(1, 1), '2 arg pass');
+        def ok => ($is->(1, 1), '2 arg pass');
 
-        def ok => (is('a', 'a', "simple pass", 'diag'), 'simple pass');
-        def ok => (!is('a', 'b', "simple fail", 'diag'), 'simple fail');
+        def ok => ($is->('a', 'a', "simple pass", 'diag'), 'simple pass');
+        def ok => (!$is->('a', 'b', "simple fail", 'diag'), 'simple fail');
 
-        def ok => (is([{'a' => 1}], [{'a' => 1}], "complex pass", 'diag'), 'complex pass');
-        def ok => (!is([{'a' => 2, 'b' => 3}], [{'a' => 1}], "complex fail", 'diag'), 'complex fail');
+        def ok => ($is->([{'a' => 1}], [{'a' => 1}], "complex pass", 'diag'), 'complex pass');
+        def ok => (!$is->([{'a' => 2, 'b' => 3}], [{'a' => 1}], "complex fail", 'diag'), 'complex fail');
 
-        def ok => (is(undef, undef), 'undef pass');
-        def ok => (!is(0, undef), 'undef fail');
+        def ok => ($is->(undef, undef), 'undef pass');
+        def ok => (!$is->(0, undef), 'undef fail');
 
         my $true  = do { bless \(my $dummy = 1), "My::Boolean" };
         my $false = do { bless \(my $dummy = 0), "My::Boolean" };
-        def ok => (is($true,  $true,  "true scalar ref is itself"),  "true scalar ref is itself");
-        def ok => (is($false, $false, "false scalar ref is itself"), "false scalar ref is itself");
+        def ok => ($is->($true,  $true,  "true scalar ref is itself"),  "true scalar ref is itself");
+        def ok => ($is->($false, $false, "false scalar ref is itself"), "false scalar ref is itself");
 
         my $x = \\"123";
-        def ok => (is($x, \\"123", "Ref-Ref check 1"), "Ref-Ref check 1");
+        def ok => ($is->($x, \\"123", "Ref-Ref check 1"), "Ref-Ref check 1");
 
         $x = \[123];
-        def ok => (is($x, \["123"], "Ref-Ref check 2"), "Ref-Ref check 2");
+        def ok => ($is->($x, \["123"], "Ref-Ref check 2"), "Ref-Ref check 2");
 
-        def ok => (!is(\$x, \\["124"], "Ref-Ref check 3"), "Ref-Ref check 3");
+        def ok => (!$is->(\$x, \\["124"], "Ref-Ref check 3"), "Ref-Ref check 3");
     };
 
     do_def;
@@ -144,7 +147,7 @@ subtest is => sub {
         },
         "Got expected events"
     );
-};
+} for qw/is is_v1 is_v2/;
 
 subtest like => sub {
     my $events = intercept {

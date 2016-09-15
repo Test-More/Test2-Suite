@@ -53,13 +53,38 @@ then a Bundle that loads them both. This is important as it helps avoid the
 problem where a package exports much-desired tools, but
 also produces undesirable side effects.
 
+=head1 NOTE ON EXPORT PINS
+
+B<The current pin used by all of Test::Suite is C<v2>.>
+
+Export pins are how L<Test2::Suite> manages changes that could break backwords
+compatability. If we need to break backwards compatability we will do so by
+releasing a new pin. Old pins will continue to import the old functionality
+while new pins will import the new functionality.
+
+There are several ways to specify a pin:
+
+    # Import all the defaults provided by the 'v2' pin
+    use Package ':v2';
+
+    # Import foo, bar, and baz deom the v2 pin.
+    use Package '+v2' => [qw/foo bar baz/];
+
+    # Import 'foo' from the v2 pin, and import 'bar' and 'baz' from the v1 pin
+    use Package qw/+v2 foo +v1 bar baz/;
+
+If you do not specify a pin the default is to use the C<v1> pin (for legacy
+reasons). When the C<$AUTHOR_TESTING> environment variable is set, importing
+without a pin will produce a warning. In the future this warning may occur
+without the environment variable being set.
+
 =head1 INCLUDED BUNDLES
 
 =over 4
 
 =item Extended
 
-    use Test2::Bundle::Extended;
+    use Test2::Bundle::Extended ':v2';
     # strict and warnings are on for you now.
 
     ok(...);
@@ -80,7 +105,7 @@ See L<Test2::Bundle::Extended> for complete documentation.
 
 =item More
 
-    use Test2::Bundle::More;
+    use Test2::Bundle::More ':v2';
     use strict;
     use warnings;
 
@@ -107,7 +132,7 @@ See L<Test2::Bundle::More> for complete documentation.
 
 =item Simple
 
-    use Test2::Bundle::Simple;
+    use Test2::Bundle::Simple ':v2';
     use strict;
     use warnings;
 

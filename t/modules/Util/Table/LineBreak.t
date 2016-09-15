@@ -1,4 +1,4 @@
-use Test2::Bundle::Extended;
+use Test2::Bundle::Extended ':v2';
 use Test2::Util::Table::LineBreak;
 
 subtest with_unicode_linebreak => sub {

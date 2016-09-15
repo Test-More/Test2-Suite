@@ -16,17 +16,19 @@ use Test2::Plugin::ExitSummary;
 
 use Test2::API qw/intercept context/;
 
-use Test2::Tools::Event qw/gen_event/;
+use Test2::Tools::Event qw/+v2 gen_event/;
 
-use Test2::Tools::Defer qw/def do_def/;
+use Test2::Tools::Defer qw/+v2 def do_def/;
 
 use Test2::Tools::Basic qw{
+    +v2
     ok pass fail diag note todo skip
     plan skip_all done_testing bail_out
 };
 
 use Test2::Tools::Compare qw{
-    is like isnt unlike
+    +v2
+    is like isnt unlike is_v1 is_v2
     match mismatch validator
     hash array bag object meta meta_check number string subset bool
     in_set not_in_set check_set
@@ -38,21 +40,25 @@ use Test2::Tools::Compare qw{
 };
 
 use Test2::Tools::Warnings qw{
+    +v2
     warns warning warnings no_warnings
 };
 
-use Test2::Tools::ClassicCompare qw/cmp_ok/;
+use Test2::Tools::ClassicCompare qw/+v2 cmp_ok/;
 
 use Importer 'Test2::Tools::Subtest' => (
+    '+v2',
     subtest_buffered => { -as => 'subtest' },
 );
 
-use Test2::Tools::Class     qw/can_ok isa_ok DOES_ok/;
-use Test2::Tools::Encoding  qw/set_encoding/;
-use Test2::Tools::Exports   qw/imported_ok not_imported_ok/;
-use Test2::Tools::Ref       qw/ref_ok ref_is ref_is_not/;
-use Test2::Tools::Mock      qw/mock mocked/;
-use Test2::Tools::Exception qw/try_ok dies lives/;
+use Test2::Tools::Class     qw/+v2 can_ok isa_ok DOES_ok/;
+use Test2::Tools::Encoding  qw/+v2 set_encoding/;
+use Test2::Tools::Exports   qw/+v2 imported_ok not_imported_ok/;
+use Test2::Tools::Ref       qw/+v2 ref_ok ref_is ref_is_not/;
+use Test2::Tools::Mock      qw/+v2 mock mocked/;
+use Test2::Tools::Exception qw/+v2 try_ok dies lives/;
+
+use Test2::Util::Misc qw/deprecate_pins_before/;
 
 our @EXPORT = qw{
     ok pass fail diag note todo skip
@@ -87,15 +93,32 @@ our @EXPORT = qw{
     exact_ref
 };
 
-our %EXPORT_TAGS = (
-    'v1' => \@EXPORT,
-);
+sub IMPORTER_MENU {
+    return (
+        export_anon => { is => \&is_v1 },
+        export => \@EXPORT,
+
+        export_on_use => deprecate_pins_before(2),
+
+        export_pins => {
+            root_name => 'no-pin',
+            'v1' => {
+                inherit => 'no-pin',
+                export_anon => { is => \&is_v1 },
+            },
+            'v2' => {
+                inherit => 'v1',
+                export_anon => { is => \&is_v2 },
+            },
+        },
+    );
+}
 
 my $SRAND;
 sub import {
     my $class = shift;
 
-    my $caller = caller;
+    my @caller = caller(0);
     my (@exports, %options);
     while (my $arg = shift @_) {
         push @exports => $arg and next unless substr($arg, 0, 1) eq '-';
@@ -123,12 +146,12 @@ sub import {
     Test2::Plugin::UTF8->import() unless $no_utf8;
 
     my $target = delete $options{'-target'};
-    Test2::Tools::Target->import_into($caller, $target)
+    Test2::Tools::Target->import_into($caller[0], $target)
         if $target;
 
     croak "Unknown option(s): " . join(', ', keys %options) if keys %options;
 
-    Importer->import_into($class, $caller, @exports);
+    Importer->import_into($class, \@caller, @exports);
 }
 
 1;
@@ -151,7 +174,7 @@ extensively to test L<Test2::Suite> itself.
 
 =head1 SYNOPSIS
 
-    use Test2::Bundle::Extended ':v1';
+    use Test2::Bundle::Extended ':v2';
 
     ok(1, "pass");
 
@@ -161,34 +184,48 @@ extensively to test L<Test2::Suite> itself.
 
 =head1 RESOLVING CONFLICTS WITH MOOSE
 
-    use Test2::Bundle::Extended '!meta';
+    use Test2::Bundle::Extended qw/:v1 !meta/;
 
 L<Moose> and L<Test2::Bundle::Extended> both export very different C<meta()>
 subs. Adding C<'!meta'> to the import args will prevent the sub from being
 imported. This bundle also exports the sub under the name C<meta_check()> so
 you can use that spelling as an alternative.
 
-=head2 TAGS
+=head1 EXPORT PINS
+
+B<The current pin used by all of Test::Suite is C<v2>.>
+
+Export pins are how L<Test2::Suite> manages changes that could break backwords
+compatability. If we need to break backwards compatability we will do so by
+releasing a new pin. Old pins will continue to import the old functionality
+while new pins will import the new functionality.
+
+There are several ways to specify a pin:
+
+    # Import all the defaults provided by the 'v2' pin
+    use Package ':v2';
+
+    # Import foo, bar, and baz deom the v2 pin.
+    use Package '+v2' => [qw/foo bar baz/];
+
+    # Import 'foo' from the v2 pin, and import 'bar' and 'baz' from the v1 pin
+    use Package qw/+v2 foo +v1 bar baz/;
+
+If you do not specify a pin the default is to use the C<v1> pin (for legacy
+reasons). When the C<$AUTHOR_TESTING> environment variable is set, importing
+without a pin will produce a warning. In the future this warning may occur
+without the environment variable being set.
+
+=head2 DIFFERENCES BETWEEN PINS
 
 =over 4
 
-=item :v1
+=item From v1 to v2
 
-=item :DEFAULT
-
-The following are all identical:
-
-    use Test2::Bundle::Extended;
-
-    use Test2::Bundle::Extended ':v1';
-
-    use Test2::Bundle::Extended ':DEFAULT';
-
-=item :v2 (FUTURE)
-
-Does not exist yet. This will be populated if we find need to make incompatible
-changes to C<:v1>. This was we can move forward with a new tag without breaking
-backwards compatibility.
+When you use C<is()> and the DSL provided by L<Test2::Tools::Compare>, there is
+now an implicit C<end()> call inside array and hash checks. In v1 there was no
+implicit C<end()>. This change has a lot of potential to break existing tests,
+that is why a new pin was needed.
 
 =back
 

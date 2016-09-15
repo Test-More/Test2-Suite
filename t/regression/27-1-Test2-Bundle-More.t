@@ -1,4 +1,4 @@
-use Test2::Bundle::More;
+use Test2::Bundle::More ':v2';
 use strict;
 use warnings;
 

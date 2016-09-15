@@ -1,4 +1,4 @@
-use Test2::Tools::Compare;
+use Test2::Tools::Compare ':v2';
 use strict;
 use warnings;
 

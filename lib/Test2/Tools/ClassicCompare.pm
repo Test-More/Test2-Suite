@@ -4,14 +4,27 @@ use warnings;
 
 our $VERSION = '0.000059';
 
+use Test2::Util::Misc qw/deprecate_pins_before/;
+use Importer Importer => qw/import/;
+
 our @EXPORT = qw/is is_deeply isnt like unlike cmp_ok/;
-use base 'Exporter';
+sub IMPORTER_MENU {
+    return (
+        export        => \@EXPORT,
+        export_on_use => deprecate_pins_before(2),
+        export_pins   => {
+            root_name => 'no-pin',
+            'v1'      => {inherit => 'no-pin'},
+            'v2'      => {inherit => 'v1'},
+        },
+    );
+}
 
 use Carp qw/carp/;
 use Scalar::Util qw/reftype/;
 
 use Test2::API qw/context/;
-use Test2::Compare qw/compare strict_convert/;
+use Test2::Compare qw/+v2 compare strict_convert/;
 use Test2::Util::Ref qw/rtype render_ref/;
 use Test2::Util::Table qw/table/;
 
@@ -317,7 +330,7 @@ unlike the L<Test2::Tools::Compare> plugin which has modified them.
 
 =head1 SYNOPSIS
 
-    use Test2::Tools::ClassicCompare qw/is is_deeply isnt like unlike cmp_ok/;
+    use Test2::Tools::ClassicCompare '+v2' => [qw/is is_deeply isnt like unlike cmp_ok/];
 
     is($got, $expect, "These are the same when stringified");
     isnt($got, $unexpect, "These are not the same when stringified");
@@ -330,6 +343,46 @@ unlike the L<Test2::Tools::Compare> plugin which has modified them.
     cmp_ok($GOT, $OP, $WANT, 'Compare these items using the specified operatr');
 
 =head1 EXPORTS
+
+=head2 EXPORT PINS
+
+B<The current pin used by all of Test::Suite is C<v2>.>
+
+Export pins are how L<Test2::Suite> manages changes that could break backwords
+compatability. If we need to break backwards compatability we will do so by
+releasing a new pin. Old pins will continue to import the old functionality
+while new pins will import the new functionality.
+
+There are several ways to specify a pin:
+
+    # Import all the defaults provided by the 'v2' pin
+    use Package ':v2';
+
+    # Import foo, bar, and baz deom the v2 pin.
+    use Package '+v2' => [qw/foo bar baz/];
+
+    # Import 'foo' from the v2 pin, and import 'bar' and 'baz' from the v1 pin
+    use Package qw/+v2 foo +v1 bar baz/;
+
+If you do not specify a pin the default is to use the C<v1> pin (for legacy
+reasons). When the C<$AUTHOR_TESTING> environment variable is set, importing
+without a pin will produce a warning. In the future this warning may occur
+without the environment variable being set.
+
+=head3 DIFFERENCES BETWEEN PINS
+
+=over 4
+
+=item From v1 to v2
+
+This package does not have any differences between pins C<v1> and C<v2>. This
+package has 'v2' because all Test2::Suite packages gain new pins at the same
+time for consistency.
+
+=back
+
+=head2 EXPORTED SYMBOLS
+
 
 =over 4
 

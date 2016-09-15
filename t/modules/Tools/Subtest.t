@@ -1,6 +1,6 @@
-use Test2::Bundle::Extended -target => 'Test2::Tools::Subtest';
+use Test2::Bundle::Extended ':v2', -target => 'Test2::Tools::Subtest';
 
-use Test2::Tools::Subtest qw/subtest_streamed subtest_buffered/;
+use Test2::Tools::Subtest qw/+v2 subtest_streamed subtest_buffered/;
 
 
 use File::Temp qw/tempfile/;
@@ -14,7 +14,7 @@ if ($] > 5.020000) {
             subtest_streamed 'foo' => sub {
                 my ($fh, $name) = tempfile;
                 print $fh <<"                EOT";
-                    use Test2::Bundle::Extended;
+                    use Test2::Bundle::Extended ':v2';
                     BEGIN { skip_all 'because' }
                     1;
                 EOT
