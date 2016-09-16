@@ -4,6 +4,52 @@ use warnings;
 
 our $VERSION = '0.000060';
 
+my $LATEST = 'V1';
+
+sub import {
+    my $class = shift;
+    my @args = @_;
+
+    my $no_warn = 0;
+
+    if (@args && $args[0] eq 'YES REALLY') {
+        shift @args;
+        $no_warn = 1;
+    }
+
+    my ($pkg, $file, $line) = caller(0);
+
+    warn <<"    EOT" unless $no_warn;
+Test2::Suite was imported at $file line $line.
+
+Using Test2::Suite directly is not recommended, you should instead use
+Test2::Suite::$LATEST which is the latest bundle of tools and plugins.
+
+Loading Test2::Suite will always load the latest bundle, which means things
+will change out from under you. We release new bundles whenever we have to
+break backwards compatability. Using a specific bundle will insure your tests
+do not break when we need to change things.
+
+If you really want to use Test2::Suite directly instead of a specific bundle
+you may surpress this warning by passing the string C<"YES REALLY"> in as the
+first import argument:
+
+    use Test2::Suite 'YES REALLY';
+
+    EOT
+
+    my $sub = eval <<"    EOT" || die $@;
+sub {
+    package $pkg;
+    require Test2::Suite::$LATEST;
+#line $line "$file"
+    Test2::Suite::$LATEST\->import(\@args);
+}
+    EOT
+
+    $sub->();
+}
+
 1;
 
 __END__
@@ -22,6 +68,14 @@ framework.
 Rich set of tools, plugins, bundles, etc built upon the L<Test2> testing
 library. If you are interested in writing tests, this is the distribution for
 you.
+
+=head1 SYNOPSIS
+
+    use Test2::Suite::V1
+
+    ...
+
+    done_testing;
 
 =head2 WHAT ARE TOOLS, PLUGINS, AND BUNDLES?
 
@@ -57,9 +111,9 @@ also produces undesirable side effects.
 
 =over 4
 
-=item Extended
+=item Recommended Bundle (V1)
 
-    use Test2::Bundle::Extended;
+    use Test2::Suite::V1;
     # strict and warnings are on for you now.
 
     ok(...);
@@ -71,12 +125,12 @@ also produces undesirable side effects.
 
     done_testing;
 
-This bundle includes every tool listed in the L</INCLUDED TOOLS> section below,
-except for L<Test2::Tools::ClassicCompare>. This bundle provides most of what
-anyone writing tests could need. This is also the preferred bundle/toolset of
-the L<Test2> author.
+See L<Test2::Suite::V1> for complete documentation.
 
-See L<Test2::Bundle::Extended> for complete documentation.
+The V# naming gives us the freedom to make major changes if needed without
+breaking backwards compatability. If we ever need to break backwards
+compatability we will release a new ::V2 module with the changes leaving
+consumers of ::V1 un-effected.
 
 =item More
 
