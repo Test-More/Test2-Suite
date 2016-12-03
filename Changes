@@ -1,5 +1,26 @@
 {{$NEXT}}
 
+0.000062  2016-12-03 14:03:44-08:00 America/Los_Angeles (TRIAL RELEASE)
+
+    - An event without a trace object would an exception when using
+      Test2::Compare::Event and the comparison failed
+    - Fix tests for small terminals (#106)
+    - Enhance the table library
+    - UTF8 plugin does not set STDERR/STDOUT
+
+0.000061  2016-11-26 12:39:14-08:00 America/Los_Angeles
+
+    - Fix mocked objects so that they respond properly to ->can when using AUTOLOAD.
+    - Fix some meta-files
+    - Small build improvements
+    - Minor fixes
+
+0.000060  2016-09-25 12:38:43-07:00 America/Los_Angeles
+
+    - Fix some docs
+    - Fix defer.t to work in windows
+    - Fix stack stomping bug triggered by certain Term::Readkey conditions
+
 0.000059  2016-09-15 13:00:03-07:00 America/Los_Angeles (TRIAL RELEASE)
 
     - Create Test2::Compare::Negatable

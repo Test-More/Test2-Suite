@@ -8,7 +8,7 @@ use Test2::Compare::EventMeta();
 
 use base 'Test2::Compare::Object';
 
-our $VERSION = '0.000060';
+our $VERSION = '0.000063';
 
 use Test2::Util::HashBase qw/etype/;
 
@@ -27,6 +27,7 @@ sub got_lines {
     return unless $event;
     return unless blessed($event);
     return unless $event->isa('Test2::Event');
+    return unless $event->trace;
 
     return ($event->trace->line);
 }
