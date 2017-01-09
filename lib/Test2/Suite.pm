@@ -2,20 +2,20 @@ package Test2::Suite;
 use strict;
 use warnings;
 
+use 5.008001;
+use Test2 1.302032;
+
 our $VERSION = '0.000064';
 
 1;
+
+# ABSTRACT: Distribution with a rich set of tools built upon the Test2 framework
 
 __END__
 
 =pod
 
 =encoding UTF-8
-
-=head1 NAME
-
-Test2::Suite - Distribution with a rich set of tools built upon the Test2
-framework.
 
 =head1 DESCRIPTION
 
@@ -304,43 +304,5 @@ See L<Test2::Require::Threads> for complete documentation.
 
 See the L<Test2> documentation for a namespace map. Everything in this
 distribution uses L<Test2>.
-
-=head1 CONTACTING US
-
-Many Test2 developers and users lurk on L<irc://irc.perl.org/#perl>. We also
-have a slack team that can be joined by anyone with an C<@cpan.org> email
-address L<https://perl-test2.slack.com/> If you do not have an C<@cpan.org>
-email you can ask for a slack invite by emailing Chad Granum
-E<lt>exodist@cpan.orgE<gt>.
-
-=head1 SOURCE
-
-The source code repository for Test2-Suite can be found at
-F<http://github.com/Test-More/Test2-Suite/>.
-
-=head1 MAINTAINERS
-
-=over 4
-
-=item Chad Granum E<lt>exodist@cpan.orgE<gt>
-
-=back
-
-=head1 AUTHORS
-
-=over 4
-
-=item Chad Granum E<lt>exodist@cpan.orgE<gt>
-
-=back
-
-=head1 COPYRIGHT
-
-Copyright 2016 Chad Granum E<lt>exodist@cpan.orgE<gt>.
-
-This program is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
-
-See F<http://dev.perl.org/licenses/>
 
 =cut

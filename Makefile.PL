@@ -7,7 +7,7 @@ use 5.008001;
 use ExtUtils::MakeMaker;
 
 my %WriteMakefileArgs = (
-  "ABSTRACT" => "Distribution with a rich set of tools built upon the Test2 framework.",
+  "ABSTRACT" => "Distribution with a rich set of tools built upon the Test2 framework",
   "AUTHOR" => "Chad Granum <exodist\@cpan.org>",
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => 0
@@ -19,12 +19,29 @@ my %WriteMakefileArgs = (
   "PREREQ_PM" => {
     "B" => 0,
     "Carp" => 0,
+    "Data::Dumper" => 0,
+    "Exporter" => 0,
     "Importer" => "0.024",
     "List::Util" => 0,
     "Scalar::Util" => 0,
     "Test2" => "1.302032",
+    "Test2::API" => 0,
+    "Test2::Hub::Interceptor" => 0,
+    "Test2::Util" => 0,
+    "Test2::Util::HashBase" => 0,
+    "Test2::Util::Trace" => 0,
+    "base" => 0,
     "overload" => 0,
-    "utf8" => 0
+    "strict" => 0,
+    "utf8" => 0,
+    "warnings" => 0
+  },
+  "TEST_REQUIRES" => {
+    "ExtUtils::MakeMaker" => 0,
+    "File::Spec" => 0,
+    "File::Temp" => 0,
+    "PerlIO" => 0,
+    "Test::More" => 0
   },
   "VERSION" => "0.000064",
   "test" => {
@@ -36,12 +53,27 @@ my %WriteMakefileArgs = (
 my %FallbackPrereqs = (
   "B" => 0,
   "Carp" => 0,
+  "Data::Dumper" => 0,
+  "Exporter" => 0,
+  "ExtUtils::MakeMaker" => 0,
+  "File::Spec" => 0,
+  "File::Temp" => 0,
   "Importer" => "0.024",
   "List::Util" => 0,
+  "PerlIO" => 0,
   "Scalar::Util" => 0,
   "Test2" => "1.302032",
+  "Test2::API" => 0,
+  "Test2::Hub::Interceptor" => 0,
+  "Test2::Util" => 0,
+  "Test2::Util::HashBase" => 0,
+  "Test2::Util::Trace" => 0,
+  "Test::More" => 0,
+  "base" => 0,
   "overload" => 0,
-  "utf8" => 0
+  "strict" => 0,
+  "utf8" => 0,
+  "warnings" => 0
 );
 
 

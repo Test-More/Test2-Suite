@@ -89,15 +89,13 @@ sub get_prop_size {
 
 1;
 
+# ABSTRACT: Check library for meta-checks
+
 __END__
 
 =pod
 
 =encoding UTF-8
-
-=head1 NAME
-
-Test2::Compare::Meta - Check library for meta-checks
 
 =head1 DESCRIPTION
 
@@ -129,35 +127,5 @@ elements. For a hashref this is the number of keys. For everything else this is
 undef.
 
 =back
-
-=head1 SOURCE
-
-The source code repository for Test2-Suite can be found at
-F<http://github.com/Test-More/Test2-Suite/>.
-
-=head1 MAINTAINERS
-
-=over 4
-
-=item Chad Granum E<lt>exodist@cpan.orgE<gt>
-
-=back
-
-=head1 AUTHORS
-
-=over 4
-
-=item Chad Granum E<lt>exodist@cpan.orgE<gt>
-
-=back
-
-=head1 COPYRIGHT
-
-Copyright 2016 Chad Granum E<lt>exodist@cpan.orgE<gt>.
-
-This program is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
-
-See F<http://dev.perl.org/licenses/>
 
 =cut

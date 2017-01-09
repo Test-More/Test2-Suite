@@ -2,8 +2,6 @@ package Test2::Bundle::Extended;
 use strict;
 use warnings;
 
-use Importer;
-
 our $VERSION = '0.000064';
 
 use Carp qw/croak/;
@@ -43,7 +41,7 @@ use Test2::Tools::Warnings qw{
 
 use Test2::Tools::ClassicCompare qw/cmp_ok/;
 
-use Importer 'Test2::Tools::Subtest' => (
+use Importer 0.024 'Test2::Tools::Subtest' => (
     subtest_buffered => { -as => 'subtest' },
 );
 
@@ -133,15 +131,13 @@ sub import {
 
 1;
 
+# ABSTRACT: The bundle used by the Test2 Author
+
 __END__
 
 =pod
 
 =encoding UTF-8
-
-=head1 NAME
-
-Test2::Bundle::Extended - The bundle used by the Test2 Author.
 
 =head1 DESCRIPTION
 
@@ -554,35 +550,5 @@ See L<Test2::Tools::Warnings>.
 =item $bool = no_warnings { ... }
 
 =back
-
-=head1 SOURCE
-
-The source code repository for Test2-Suite can be found at
-F<http://github.com/Test-More/Test2-Suite/>.
-
-=head1 MAINTAINERS
-
-=over 4
-
-=item Chad Granum E<lt>exodist@cpan.orgE<gt>
-
-=back
-
-=head1 AUTHORS
-
-=over 4
-
-=item Chad Granum E<lt>exodist@cpan.orgE<gt>
-
-=back
-
-=head1 COPYRIGHT
-
-Copyright 2016 Chad Granum E<lt>exodist@cpan.orgE<gt>.
-
-This program is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
-
-See F<http://dev.perl.org/licenses/>
 
 =cut

@@ -1,0 +1,30 @@
+## test jargon
+diag
+subtest
+subtests
+TODO
+todo
+
+## computerese
+AuthorTesting
+BailOnFail
+ClassicCompare
+codeblock
+dep
+DieOnFail
+DNE
+EnvVar
+ExitSummary
+ge
+le
+num
+RealFork
+reftype
+str
+subname
+tid
+unicode
+validators
+
+## other jargon, slang
+XNOR

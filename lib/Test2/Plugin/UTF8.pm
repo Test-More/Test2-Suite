@@ -37,15 +37,13 @@ sub import {
 
 1;
 
+# ABSTRACT: Test2 plugin to test with utf8
+
 __END__
 
 =pod
 
 =encoding UTF-8
-
-=head1 NAME
-
-Test2::Plugin::UTF8 - Test2 plugin to test with utf8.
 
 =head1 DESCRIPTION
 
@@ -73,35 +71,5 @@ verifying characters.  There is a debate about weather or not encoding
 to utf8 from perl internals can ever fail, so it may not matter. This
 was also chosen because the alternative causes threads to segfault,
 see L<perlbug 31923|https://rt.perl.org/Public/Bug/Display.html?id=31923>.
-
-=head1 SOURCE
-
-The source code repository for Test2-Suite can be found at
-F<http://github.com/Test-More/Test2-Suite/>.
-
-=head1 MAINTAINERS
-
-=over 4
-
-=item Chad Granum E<lt>exodist@cpan.orgE<gt>
-
-=back
-
-=head1 AUTHORS
-
-=over 4
-
-=item Chad Granum E<lt>exodist@cpan.orgE<gt>
-
-=back
-
-=head1 COPYRIGHT
-
-Copyright 2016 Chad Granum E<lt>exodist@cpan.orgE<gt>.
-
-This program is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
-
-See F<http://dev.perl.org/licenses/>
 
 =cut

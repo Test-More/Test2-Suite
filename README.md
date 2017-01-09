@@ -1,7 +1,10 @@
 # NAME
 
-Test2::Suite - Distribution with a rich set of tools built upon the Test2
-framework.
+Test2::Suite - Distribution with a rich set of tools built upon the Test2 framework
+
+# VERSION
+
+version 0.000064
 
 # DESCRIPTION
 
@@ -271,32 +274,50 @@ also produces undesirable side effects.
 See the [Test2](https://metacpan.org/pod/Test2) documentation for a namespace map. Everything in this
 distribution uses [Test2](https://metacpan.org/pod/Test2).
 
-# CONTACTING US
+# SUPPORT
 
-Many Test2 developers and users lurk on [irc://irc.perl.org/#perl](irc://irc.perl.org/#perl). We also
-have a slack team that can be joined by anyone with an `@cpan.org` email
-address [https://perl-test2.slack.com/](https://perl-test2.slack.com/) If you do not have an `@cpan.org`
-email you can ask for a slack invite by emailing Chad Granum
-<exodist@cpan.org>.
+Bugs may be submitted at [https://github.com/Test-More/Test2-Suite/issues](https://github.com/Test-More/Test2-Suite/issues).
+
+Join us on IRC at [irc://irc.perl.org/#perl-qa](irc://irc.perl.org/#perl-qa) for more help.
+
+We also have a Slack team that can be joined by anyone with an `@cpan.org` email address [https://perl-test2.slack.com/](https://perl-test2.slack.com/) If you do not have an `@cpan.org` email you can ask for a Slack invite by emailing Chad Granum <exodist@cpan.org>.
 
 # SOURCE
 
-The source code repository for Test2-Suite can be found at
-`http://github.com/Test-More/Test2-Suite/`.
+The source code repository for Test2-Suite can be found at [https://github.com/Test-More/Test2-Suite](https://github.com/Test-More/Test2-Suite).
 
 # MAINTAINERS
 
-- Chad Granum <exodist@cpan.org>
+Chad Granum <exodist@cpan.org>
 
-# AUTHORS
+# AUTHOR
 
-- Chad Granum <exodist@cpan.org>
+Chad Granum <exodist@cpan.org>
 
-# COPYRIGHT
+# CONTRIBUTORS
 
-Copyright 2016 Chad Granum <exodist@cpan.org>.
+- Alfie John <alfie@fastmail.com>
+- Andy Lester <andy@petdance.com>
+- Brian Manning <cpan@xaoc.org>
+- Chad Granum <exodist7@gmail.com>
+- dakkar <dakkar@thenautilus.net>
+- Dan Book <grinnz@grinnz.com>
+- Dave Rolsky <autarch@urth.org>
+- Graham Knop <haarg@haarg.org>
+- Joel Berger <joel.a.berger@gmail.com>
+- Joshua Keroes <joshua.keroes@dreamhost.com>
+- Karen Etheridge <ether@cpan.org>
+- Mark Fowler <mark@twoshortplanks.com>
+- Michael G. Schwern <schwern@pobox.com>
+- Ricardo Signes <rjbs@cpan.org>
+- Steve Bertrand <steveb@cpan.org>
 
-This program is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
+# COPYRIGHT AND LICENSE
 
-See `http://dev.perl.org/licenses/`
+This software is copyright (c) 2016 by Chad Granum.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+The full text of the license can be found in the
+`LICENSE` file included with this distribution.

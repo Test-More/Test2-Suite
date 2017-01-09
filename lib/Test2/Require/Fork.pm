@@ -15,15 +15,13 @@ sub skip {
 
 1;
 
+# ABSTRACT: Skip a test file unless the system supports forking
+
 __END__
 
 =pod
 
 =encoding UTF-8
-
-=head1 NAME
-
-Test2::Require::Fork - Skip a test file unless the system supports forking
 
 =head1 DESCRIPTION
 
@@ -78,35 +76,5 @@ Similar to this module, but will skip on any perl that only has fork emulation.
 Skip the test file if the system does not support threads.
 
 =back
-
-=head1 SOURCE
-
-The source code repository for Test2-Suite can be found at
-F<http://github.com/Test-More/Test2-Suite/>.
-
-=head1 MAINTAINERS
-
-=over 4
-
-=item Chad Granum E<lt>exodist@cpan.orgE<gt>
-
-=back
-
-=head1 AUTHORS
-
-=over 4
-
-=item Chad Granum E<lt>exodist@cpan.orgE<gt>
-
-=back
-
-=head1 COPYRIGHT
-
-Copyright 2016 Chad Granum E<lt>exodist@cpan.orgE<gt>.
-
-This program is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
-
-See F<http://dev.perl.org/licenses/>
 
 =cut

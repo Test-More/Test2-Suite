@@ -58,15 +58,13 @@ sub verify {
 
 1;
 
+# ABSTRACT: Compare two values as strings
+
 __END__
 
 =pod
 
 =encoding UTF-8
-
-=head1 NAME
-
-Test2::Compare::String - Compare two values as strings
 
 =head1 DESCRIPTION
 
@@ -74,35 +72,5 @@ This is used to compare two items after they are stringified. You can also check
 that two strings are not equal.
 
 B<Note>: This will fail if the received value is undefined, it must be defined.
-
-=head1 SOURCE
-
-The source code repository for Test2-Suite can be found at
-F<http://github.com/Test-More/Test2-Suite/>.
-
-=head1 MAINTAINERS
-
-=over 4
-
-=item Chad Granum E<lt>exodist@cpan.orgE<gt>
-
-=back
-
-=head1 AUTHORS
-
-=over 4
-
-=item Chad Granum E<lt>exodist@cpan.orgE<gt>
-
-=back
-
-=head1 COPYRIGHT
-
-Copyright 2016 Chad Granum E<lt>exodist@cpan.orgE<gt>.
-
-This program is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
-
-See F<http://dev.perl.org/licenses/>
 
 =cut
