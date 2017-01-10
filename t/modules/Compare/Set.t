@@ -78,7 +78,7 @@ subtest deltas => sub {
 
         $one->set_checks(undef);
         $one->set_lines([__LINE__]);
-        my $line1 = __LINE__;
+        my $line1 = __LINE__ - 1;
         is(
             dies { $one->deltas() },
             "No checks defined for set (Set defined in $file line $line1)\n",
@@ -87,7 +87,7 @@ subtest deltas => sub {
 
         $one->set_checks([]);
         push @{$one->lines} => __LINE__;
-        my $line2 = __LINE__;
+        my $line2 = __LINE__ - 1;
         is(
             dies { $one->deltas() },
             "No checks defined for set (Set defined in $file lines $line1, $line2)\n",

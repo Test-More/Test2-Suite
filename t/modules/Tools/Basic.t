@@ -19,11 +19,11 @@ my @lines;
 like(
     intercept {
         pass('pass');
-        push @lines => __LINE__;
+        push @lines => __LINE__ - 1;
         fail('fail');
-        push @lines => __LINE__;
+        push @lines => __LINE__ - 1;
         fail('fail', 'added diag');
-        push @lines => __LINE__;
+        push @lines => __LINE__ - 1;
     },
     array {
         event Ok => sub {
@@ -91,11 +91,11 @@ ok(1, 'Testing ok');
 like(
     intercept {
         ok(1, 'pass', 'invisible diag');
-        push @lines => __LINE__;
+        push @lines => __LINE__ - 1;
         ok(0, 'fail');
-        push @lines => __LINE__;
+        push @lines => __LINE__ - 1;
         ok(0, 'fail', 'added diag');
-        push @lines => __LINE__;
+        push @lines => __LINE__ - 1;
     },
     array {
         event Ok => sub {

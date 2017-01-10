@@ -242,11 +242,11 @@ subtest shortcuts => sub {
     my @lines;
     my $events = intercept {
         is(0, T(), "not true");
-        push @lines => __LINE__;
+        push @lines => __LINE__- 1;
         is('', T(), "not true");
-        push @lines => __LINE__;
+        push @lines => __LINE__- 1;
         is(undef, T(), "not true");
-        push @lines => __LINE__;
+        push @lines => __LINE__- 1;
     };
     like(
         $events,
@@ -374,7 +374,7 @@ subtest exact_ref => sub {
     my $ref = {};
 
     my $check = exact_ref($ref);
-    my $line  = __LINE__;
+    my $line  = __LINE__- 1;
     is($check->lines, [$line], "correct line");
 
     my $hash   = {};
@@ -403,7 +403,7 @@ subtest exact_ref => sub {
 
 subtest string => sub {
     my $check = string "foo";
-    my $line  = __LINE__;
+    my $line  = __LINE__- 1;
     is($check->lines, [$line], "Got line number");
 
     my $events = intercept {
@@ -458,7 +458,7 @@ subtest string => sub {
 
 subtest number => sub {
     my $check = number "22.0";
-    my $line  = __LINE__;
+    my $line  = __LINE__- 1;
     is($check->lines, [$line], "Got line number");
 
     my $events = intercept {
@@ -656,7 +656,7 @@ subtest bool => sub {
 
 subtest match => sub {
     my $check = match qr/xyz/;
-    my $line  = __LINE__;
+    my $line  = __LINE__- 1;
     is($check->lines, [$line], "Got line number");
 
     my $events = intercept {
@@ -684,7 +684,7 @@ subtest match => sub {
 
 subtest '!match' => sub {
     my $check = !match qr/xyz/;
-    my $line  = __LINE__;
+    my $line  = __LINE__- 1;
     is($check->lines, [$line], "Got line number");
 
     my $events = intercept {
@@ -712,7 +712,7 @@ subtest '!match' => sub {
 
 subtest '!mismatch' => sub {
     my $check = !mismatch qr/xyz/;
-    my $line  = __LINE__;
+    my $line  = __LINE__- 1;
     is($check->lines, [$line], "Got line number");
 
     my $events = intercept {
@@ -740,7 +740,7 @@ subtest '!mismatch' => sub {
 
 subtest mismatch => sub {
     my $check = mismatch qr/xyz/;
-    my $line  = __LINE__;
+    my $line  = __LINE__- 1;
     is($check->lines, [$line], "Got line number");
 
     my $events = intercept {
@@ -769,11 +769,11 @@ subtest mismatch => sub {
 subtest check => sub {
     my @lines;
     my $one = validator sub { $_ ? 1 : 0 };
-    push @lines => __LINE__;
+    push @lines => __LINE__- 1;
     my $two = validator two => sub { $_ ? 1 : 0 };
-    push @lines => __LINE__;
+    push @lines => __LINE__- 1;
     my $thr = validator 't', thr => sub { $_ ? 1 : 0 };
-    push @lines => __LINE__;
+    push @lines => __LINE__- 1;
 
     is($one->lines, [$lines[0]], "line 1");
     is($two->lines, [$lines[1]], "line 2");
@@ -1562,11 +1562,11 @@ subtest all_items => sub {
             $array,
             array {
                 all_items match $regx;
-                push @lines => __LINE__;
+                push @lines => __LINE__- 1;
                 item 'b';
-                push @lines => __LINE__;
+                push @lines => __LINE__- 1;
                 item 'aa';
-                push @lines => __LINE__;
+                push @lines => __LINE__- 1;
                 end;
             },
             "items do not all match, and diag reflects all issues, and in order"
@@ -1580,7 +1580,7 @@ subtest all_items => sub {
                 message => table(
                     header => [qw/PATH GOT OP CHECK LNs/],
                     rows   => [
-                        ['', "$array", '', "<ARRAY>", ($lines[0] - 1) . ", " . ($lines[-1] + 2)],
+                        ['', "$array", '', "<ARRAY>", ($lines[0] - 1) . ", " . ($lines[-1] + 3)],
                         ['[0]', 'a',   '=~',      $regx,              $lines[0]],
                         ['[0]', 'a',   'eq',      'b',                $lines[1]],
                         ['[1]', 'aa',  '=~',      $regx,              $lines[0]],
@@ -1616,13 +1616,13 @@ subtest all_keys_and_vals => sub {
             $hash,
             hash {
                 all_keys match $regx;
-                push @lines => __LINE__;
+                push @lines => __LINE__- 1;
                 all_vals match $regx;
-                push @lines => __LINE__;
+                push @lines => __LINE__- 1;
                 field aa    => 'aa';
-                push @lines => __LINE__;
+                push @lines => __LINE__- 1;
                 field b     => 'b';
-                push @lines => __LINE__;
+                push @lines => __LINE__- 1;
                 end;
             },
             "items do not all match, and diag reflects all issues, and in order"
@@ -1636,7 +1636,7 @@ subtest all_keys_and_vals => sub {
                 message => table(
                     header => [qw/PATH GOT OP CHECK LNs/],
                     rows   => [
-                        ['',            $hash,              '',        '<HASH>',           join(', ', $lines[0] - 1, $lines[-1] + 2)],
+                        ['',            $hash,              '',        '<HASH>',           join(', ', $lines[0] - 1, $lines[-1] + 3)],
                         ['{aa} <KEY>',  'aa',               '=~',      $regx,              $lines[0]],
                         ['{aa}',        'aa',               '=~',      $regx,              $lines[1]],
                         ['{b}',         '<DOES NOT EXIST>', '',        'b',                $lines[3]],

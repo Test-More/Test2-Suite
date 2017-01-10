@@ -158,7 +158,7 @@ like(
 );
 
 my $warning;
-$line = __LINE__ + 2;
+$line = __LINE__ + 3;
 like(
     intercept {
         $warning = main::warning { cmp_ok(5, '&& die', 42, 'number fail', 'extra diag') }

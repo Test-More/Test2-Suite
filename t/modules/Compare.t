@@ -89,7 +89,7 @@ my $build = sub {
         });
     }
     ->();
-is($build->lines, [__LINE__ - 4, __LINE__ - 1], "got lines");
+is($build->lines, [__LINE__ - 6, __LINE__ - 3], "got lines");
 is($build->file, __FILE__, "got file");
 
 ref_is($inner, $build, "Build was set inside block");

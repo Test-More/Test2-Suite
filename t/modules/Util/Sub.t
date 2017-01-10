@@ -35,16 +35,16 @@ like(
 
 no warnings 'once';
 sub empty_named { }
-my $empty_named = __LINE__;
+my $empty_named = __LINE__ - 1;
 *empty_anon = sub { };
-my $empty_anon = __LINE__;
+my $empty_anon = __LINE__- 1;
 
 sub one_line_named { 1 }
-my $one_line_named = __LINE__;
+my $one_line_named = __LINE__- 1;
 *one_line_anon = sub { 1 };
-my $one_line_anon = __LINE__;
+my $one_line_anon = __LINE__- 1;
 
-my $multi_line_named_start = __LINE__ + 1;
+my $multi_line_named_start = __LINE__ + 2;
 
 sub multi_line_named {
     my $x = 1;

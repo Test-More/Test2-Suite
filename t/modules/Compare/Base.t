@@ -43,7 +43,7 @@ is(
 $one = $CLASS->new;
 is($one->lines, [], "no lines");
 
-my $line1 = __LINE__ + 1;
+my $line1 = __LINE__ + 2;
 $one = $CLASS->new(
     builder => sub {
         print "A";
