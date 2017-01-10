@@ -10,29 +10,28 @@ use Test2::API qw{
 };
 
 sub import {
-    my $class = shift;
-
     # Load and import UTF8 into the caller.
     require utf8;
     utf8->import;
 
     # Set the output formatters to use utf8
-    test2_add_callback_post_load(sub {
-        my $stack = test2_stack;
-        $stack->top; # Make sure we have at least 1 hub
+    test2_add_callback_post_load(
+        sub {
+            my $stack = test2_stack;
+            $stack->top;    # Make sure we have at least 1 hub
 
-        my $warned = 0;
-        for my $hub ($stack->all) {
-            my $format = $hub->format || next;
+            my $warned = 0;
+            for my $hub ($stack->all) {
+                my $format = $hub->format || next;
 
-            unless ($format->can('encoding')) {
-                warn "Could not apply UTF8 to unknown formatter ($format)\n" unless $warned++;
-                next;
+                unless ($format->can('encoding')) {
+                    warn "Could not apply UTF8 to unknown formatter ($format)\n" unless $warned++;
+                    next;
+                }
+
+                $format->encoding('utf8');
             }
-
-            $format->encoding('utf8');
-        }
-    });
+        });
 }
 
 1;

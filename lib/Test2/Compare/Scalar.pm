@@ -23,7 +23,7 @@ sub name     { '<SCALAR>' }
 sub operator { '${...}' }
 
 sub verify {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     my ($got, $exists) = @params{qw/got exists/};
 
@@ -35,11 +35,11 @@ sub verify {
 }
 
 sub deltas {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     my ($got, $convert, $seen) = @params{qw/got convert seen/};
 
-    my $item = $self->{+ITEM};
+    my $item  = $self->{+ITEM};
     my $check = $convert->($item);
 
     return (

@@ -12,8 +12,8 @@ ok(!$one->verify(exists => 1, got => sub { 1 }), "different ref");
 ok(!$one->verify(exists => 0, got => $ref), "value must exist");
 
 is(
-    [ 'a', $ref ],
-    [ 'a', $one ],
+    ['a', $ref],
+    ['a', $one],
     "Did a ref check"
 );
 

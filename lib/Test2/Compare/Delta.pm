@@ -16,30 +16,38 @@ use Carp qw/croak/;
 # using this class.
 BEGIN {
     no warnings 'once';
-    *check = \&chk;
+    *check     = \&chk;
     *set_check = \&set_chk;
 }
 
 my @COLUMN_ORDER = qw/PATH GLNs GOT OP CHECK CLNs/;
-my %COLUMNS = (
+my %COLUMNS      = (
     GOT   => {name => 'GOT',   value => sub { $_[0]->render_got },   no_collapse => 1},
     CHECK => {name => 'CHECK', value => sub { $_[0]->render_check }, no_collapse => 1},
-    OP    => {name => 'OP',    value => sub { $_[0]->table_op }                      },
-    PATH  => {name => 'PATH',  value => sub { $_[1] }                                },
+    OP    => {
+        name => 'OP', value => sub { $_[0]->table_op }
+    },
+    PATH => {
+        name => 'PATH', value => sub { $_[1] }
+    },
 
-    'GLNs' => {name => 'GLNs', alias => 'LNs', value => sub { $_[0]->table_got_lines }  },
-    'CLNs' => {name => 'CLNs', alias => 'LNs', value => sub { $_[0]->table_check_lines }},
+    'GLNs' => {
+        name => 'GLNs', alias => 'LNs', value => sub { $_[0]->table_got_lines }
+    },
+    'CLNs' => {
+        name => 'CLNs', alias => 'LNs', value => sub { $_[0]->table_check_lines }
+    },
 );
 
 sub remove_column {
-    my $class = shift;
+    shift;
     my $header = shift;
     @COLUMN_ORDER = grep { $_ ne $header } @COLUMN_ORDER;
     delete $COLUMNS{$header} ? 1 : 0;
 }
 
 sub add_column {
-    my $class = shift;
+    shift;
     my $name = shift;
 
     croak "Column name is required"
@@ -75,7 +83,8 @@ sub add_column {
 }
 
 sub set_column_alias {
-    my ($class, $name, $alias) = @_;
+    shift;
+    my ($name, $alias) = @_;
 
     croak "Tried to alias a non-existent column"
         unless exists $COLUMNS{$name};
@@ -138,9 +147,9 @@ sub _full_id {
     return $id     if $type eq 'SCALAR';
     return "{$id}" if $type eq 'HASH';
     return "{$id} <KEY>" if $type eq 'HASHKEY';
-    return "[$id]" if $type eq 'ARRAY';
-    return "$id()" if $type eq 'METHOD';
-    return "$id" if $type eq 'DEREF';
+    return "[$id]"       if $type eq 'ARRAY';
+    return "$id()"       if $type eq 'METHOD';
+    return "$id"         if $type eq 'DEREF';
     return "<$id>";
 }
 
@@ -165,9 +174,9 @@ sub _arrow_id {
 
 sub _join_id {
     my ($path, $parts) = @_;
-    my ($type, $key) = @$parts;
+    my ($type, $key)   = @$parts;
 
-    my $id   = _full_id($type, $key);
+    my $id = _full_id($type, $key);
     my $join = _arrow_id($path, $type);
 
     return "${path}${join}${id}";
@@ -180,7 +189,7 @@ sub should_show {
     return 0 unless $check->lines;
     my $file = $check->file || return 0;
 
-    my $ctx = context();
+    my $ctx   = context();
     my $cfile = $ctx->trace->file;
     $ctx->release;
     return 0 unless $file eq $cfile;
@@ -213,7 +222,9 @@ sub filter_visible {
     return \@deltas;
 }
 
-sub table_header { [map {$COLUMNS{$_}->{alias} || $_} @COLUMN_ORDER] }
+sub table_header {
+    [map { $COLUMNS{$_}->{alias} || $_ } @COLUMN_ORDER];
+}
 
 sub table_op {
     my $self = shift;

@@ -29,8 +29,7 @@ is(
 
 is(
     [$one->run(id => [META => 'xxx'], got => 'xxy', convert => sub { $_[-1] }, seen => {})],
-    [
-        {
+    [{
             verified => '',
             id       => [META => 'xxx'],
             got      => 'xxy',
@@ -45,10 +44,11 @@ $one = $CLASS->new;
 is($one->lines, [], "no lines");
 
 my $line1 = __LINE__ + 1;
-$one = $CLASS->new(builder => sub {
-    print "A";
-    print "B";
-});
+$one = $CLASS->new(
+    builder => sub {
+        print "A";
+        print "B";
+    });
 my $line2 = __LINE__ - 1;
 
 is($one->lines, [$line1, $line2], "got lines from builder.");

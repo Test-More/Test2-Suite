@@ -27,7 +27,7 @@ sub init {
 sub name { '<REF>' }
 
 sub verify {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     my ($got, $exists) = @params{qw/got exists/};
 
@@ -37,7 +37,7 @@ sub verify {
     return 0 unless ref $in;
     return 0 unless ref $got;
 
-    my $in_type = rtype($in);
+    my $in_type  = rtype($in);
     my $got_type = rtype($got);
 
     return 0 unless $in_type eq $got_type;
@@ -46,14 +46,12 @@ sub verify {
 }
 
 sub deltas {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     my ($got, $convert, $seen) = @params{qw/got convert seen/};
 
     my $in = $self->{+INPUT};
-    my $in_type = rtype($in);
-    my $got_type = rtype($got);
-    
+
     my $check = $convert->($$in);
 
     return $check->run(
@@ -64,8 +62,6 @@ sub deltas {
         exists  => 1,
     );
 }
-
-
 
 1;
 

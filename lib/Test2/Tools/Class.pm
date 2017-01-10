@@ -39,7 +39,8 @@ BEGIN {
             $name ||= @items == 1 ? "$thing_name\->$op('$items[0]')" : "$thing_name\->$op(...)";
 
             unless ($thing && (blessed($thing) || !ref($thing))) {
-                my $thing = defined($thing)
+                my $thing =
+                    defined($thing)
                     ? ref($thing) || "'$thing'"
                     : '<undef>';
 
@@ -49,7 +50,7 @@ BEGIN {
                 return 0;
             }
 
-            unless(UNIVERSAL->can($op) || $thing->can($op)) {
+            unless (UNIVERSAL->can($op) || $thing->can($op)) {
                 $ctx->skip($name, "'$op' is not supported on this platform");
                 $ctx->release;
                 return 1;
@@ -64,7 +65,7 @@ BEGIN {
 
                 {
                     local ($@, $!);
-                    $ok = eval qq/#line $line "$file"\n\$bool = \$thing->$op(\$item); 1/;
+                    $ok  = eval qq/#line $line "$file"\n\$bool = \$thing->$op(\$item); 1/;
                     $err = $@;
                 }
 
@@ -74,7 +75,7 @@ BEGIN {
                 push @bad => $item;
             }
 
-            $ctx->ok( !@bad, $name, [map { "Failed: $thing_name\->$op('$_')" } @bad]);
+            $ctx->ok(!@bad, $name, [map { "Failed: $thing_name\->$op('$_')" } @bad]);
 
             $ctx->release;
 

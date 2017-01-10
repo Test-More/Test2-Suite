@@ -59,7 +59,7 @@ use Test2::Compare::Wildcard();
     'Test2::Compare::OrderedSubset' => 1,
 );
 
-our @EXPORT = qw/is like/;
+our @EXPORT    = qw/is like/;
 our @EXPORT_OK = qw{
     is like isnt unlike
     match mismatch validator
@@ -81,9 +81,9 @@ sub is($$;$@) {
 
     if ($delta) {
         # Temporary thing.
-        my $count = 0;
+        my $count    = 0;
         my $implicit = 0;
-        my @deltas = ($delta);
+        my @deltas   = ($delta);
         while (my $d = shift @deltas) {
             my $add = $d->children;
             push @deltas => @$add if $add && @$add;
@@ -200,7 +200,7 @@ sub D() {
 sub DF() {
     my @caller = caller;
     Test2::Compare::Custom->new(
-        code => sub { defined $_ && ! $_ ? 1 : 0 }, name => 'DEFINED BUT FALSE', operator => 'DEFINED() && FALSE()',
+        code => sub { defined $_ && !$_ ? 1 : 0 }, name => 'DEFINED BUT FALSE', operator => 'DEFINED() && FALSE()',
         file => $caller[1],
         lines => [$caller[2]],
     );
@@ -280,9 +280,9 @@ sub mismatch($) {
 }
 
 sub validator {
-    my $code = pop;
+    my $code  = pop;
     my $cname = pop;
-    my $op = pop;
+    my $op    = pop;
 
     my @caller = caller;
     return Test2::Compare::Custom->new(
@@ -364,6 +364,7 @@ sub all_keys {
 }
 
 *all_vals = *all_values;
+
 sub all_values {
     my $build = get_build() or croak "No current build!";
 
@@ -375,7 +376,6 @@ sub all_values {
 
     $build->add_for_each_val(@_);
 }
-
 
 sub end() {
     my $build = get_build() or croak "No current build!";
@@ -424,9 +424,9 @@ my $_call = sub {
     );
 };
 
-sub call($$)      { $_call->(@_,'scalar','call') }
-sub call_list($$) { $_call->(@_,'list','call_list') }
-sub call_hash($$) { $_call->(@_,'hash','call_hash') }
+sub call($$)      { $_call->(@_, 'scalar', 'call') }
+sub call_list($$) { $_call->(@_, 'list',   'call_list') }
+sub call_hash($$) { $_call->(@_, 'hash',   'call_hash') }
 
 sub prop($$) {
     my ($name, $expect) = @_;
@@ -505,7 +505,7 @@ sub check($) {
         if defined wantarray;
 
     my @caller = caller;
-    my $wc = Test2::Compare::Wildcard->new(
+    my $wc     = Test2::Compare::Wildcard->new(
         expect => $check,
         file   => $caller[1],
         lines  => [$caller[2]],
@@ -519,9 +519,9 @@ sub in_set     { return _build_set('any'  => @_) }
 sub not_in_set { return _build_set('none' => @_) }
 
 sub _build_set {
-    my $redux = shift;
+    my $redux     = shift;
     my ($builder) = @_;
-    my $btype = reftype($builder) || '';
+    my $btype     = reftype($builder) || '';
 
     my $set;
     if ($btype eq 'CODE') {

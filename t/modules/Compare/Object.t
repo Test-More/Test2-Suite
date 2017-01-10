@@ -12,14 +12,14 @@ subtest simple => sub {
 
     is($one->object_base, 'UNIVERSAL', "Correct object base");
 
-    ok($CLASS->new(calls => []), "Can specify a calls array")
+    ok($CLASS->new(calls => []), "Can specify a calls array");
 };
 
 subtest verify => sub {
     my $one = $CLASS->new;
 
     ok(!$one->verify(exists => 0), "nothing to verify");
-    ok(!$one->verify(exists => 1, got => 1), "not a ref");
+    ok(!$one->verify(exists => 1, got => 1),  "not a ref");
     ok(!$one->verify(exists => 1, got => {}), "not blessed");
 
     ok($one->verify(exists => 1, got => bless({}, 'Foo')), "Blessed");
@@ -104,43 +104,48 @@ subtest add_call => sub {
 };
 
 {
+
     package Foo::Bar;
 
-    sub foo { 'foo' }
-    sub baz { 'baz' }
-    sub one { 1 }
-    sub many { return (1,2,3,4) }
+    sub foo  { 'foo' }
+    sub baz  { 'baz' }
+    sub one  { 1 }
+    sub many { return (1, 2, 3, 4) }
     sub args { shift; +{@_} }
 
     package Fake::Fake;
 
-    sub foo { 'xxx' }
-    sub one { 2 }
+    sub foo  { 'xxx' }
+    sub one  { 2 }
     sub args { shift; +[@_] }
 }
 
 subtest deltas => sub {
     my $convert = Test2::Compare->can('strict_convert');
 
-    my $good = bless { a => 1 }, 'Foo::Bar';
-    my $bad  = bless [ 'a', 1 ], 'Fake::Fake';
+    my $good = bless {a => 1}, 'Foo::Bar';
+    my $bad = bless ['a', 1], 'Fake::Fake';
 
     my $one = $CLASS->new;
     $one->add_field(a => 1);
     $one->add_prop(blessed => 'Foo::Bar');
 
-    $one->add_call(sub {
-        my $self = shift;
-        die "XXX" unless $self->isa('Foo::Bar');
-        'live';
-    }, 'live', 'maybe_throw');
+    $one->add_call(
+        sub {
+            my $self = shift;
+            die "XXX" unless $self->isa('Foo::Bar');
+            'live';
+        },
+        'live',
+        'maybe_throw'
+    );
 
-    $one->add_call('foo' => 'foo');
-    $one->add_call('baz' => 'baz');
-    $one->add_call('one' => 1);
-    $one->add_call('many' => [1,2,3,4],undef,'list');
-    $one->add_call('many' => {1=>2,3=>4},undef,'hash');
-    $one->add_call([args => 1,2] => {1=>2});
+    $one->add_call('foo'  => 'foo');
+    $one->add_call('baz'  => 'baz');
+    $one->add_call('one'  => 1);
+    $one->add_call('many' => [1, 2, 3, 4], undef, 'list');
+    $one->add_call('many' => {1 => 2, 3 => 4}, undef, 'hash');
+    $one->add_call([args => 1, 2] => {1 => 2});
 
     is(
         [$one->deltas(exists => 1, got => $good, convert => $convert, seen => {})],
@@ -150,8 +155,7 @@ subtest deltas => sub {
 
     like(
         [$one->deltas(got => $bad, convert => $convert, seen => {})],
-        [
-            {
+        [{
                 chk => T(),
                 got => 'Fake::Fake',
                 id  => ['META' => 'blessed'],
@@ -192,7 +196,7 @@ subtest deltas => sub {
             },
             {
                 chk => T(),
-                got => [1,2],
+                got => [1, 2],
                 id  => [METHOD => 'args'],
             },
             {
@@ -208,11 +212,9 @@ subtest deltas => sub {
     # 'run' instead of directly calling 'deltas'
     like(
         [$one->run(id => undef, got => $bad, convert => $convert, seen => {})],
-        [
-            {
+        [{
                 verified => 1,
-                children => [
-                    {
+                children => [{
                         chk => T(),
                         got => 'Fake::Fake',
                         id  => ['META' => 'blessed'],
@@ -253,7 +255,7 @@ subtest deltas => sub {
                     },
                     {
                         chk => T(),
-                        got => [1,2],
+                        got => [1, 2],
                         id  => [METHOD => 'args'],
                     },
                     {

@@ -35,7 +35,7 @@ sub init {
             return $event;
         },
         inherit => 1,
-        todo => $reason,
+        todo    => $reason,
     );
 }
 

@@ -18,7 +18,7 @@ sub init {
     test2_stack->top();
 
     my $hub = test2_stack->new_hub(
-        class => 'Test2::Hub::Interceptor',
+        class     => 'Test2::Hub::Interceptor',
         formatter => undef,
         no_ending => 1,
     );
@@ -36,7 +36,7 @@ sub init {
 
 sub flush {
     my $self = shift;
-    my $out = [@{$self->{+_EVENTS}}];
+    my $out  = [@{$self->{+_EVENTS}}];
     @{$self->{+_EVENTS}} = ();
     return $out;
 }
@@ -48,7 +48,7 @@ sub events {
 }
 
 sub finish {
-    my ($self) = @_; # Do not shift;
+    my ($self) = @_;    # Do not shift;
     $_[0] = undef;
 
     if (defined $self->{+TERM_SIZE}) {

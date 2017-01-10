@@ -1,6 +1,7 @@
 use Test2::Bundle::Extended -target => 'Test2::Tools::Exception';
 
 {
+
     package Foo;
     use Test2::Tools::Exception qw/dies lives try_ok/;
     ::imported_ok(qw/dies lives try_ok/);
@@ -29,7 +30,10 @@ try_ok { 0 } "No Exception from try_ok";
 
 my $err;
 is(
-    intercept { try_ok { die 'abc' } "foo"; $err = $@; },
+    intercept {
+        try_ok { die 'abc' } "foo";
+        $err = $@;
+    },
     array {
         fail_events Ok => sub {
             call name => "foo";

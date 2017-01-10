@@ -12,9 +12,11 @@ like(
         };
     },
     array {
-        filter_items { grep { !$_->isa('Test2::Event::Diag') } @_ };
-        event Ok => { name => "pass", pass => 1 };
-        event Ok => { name => "fail", pass => 0 };
+        filter_items {
+            grep { !$_->isa('Test2::Event::Diag') } @_
+        };
+        event Ok => {name => "pass", pass => 1};
+        event Ok => {name => "fail", pass => 0};
         end;
     },
     "Died after the failure"
@@ -45,10 +47,10 @@ like(
         };
     },
     array {
-        event Ok => { name => "pass", pass => 1 };
-        event Ok => { name => "fail", pass => 0 };
-        event Diag => {}; # Typical failure diag
-        event Diag => { message => "Should see this after failure" };
+        event Ok => {name => "pass", pass => 1};
+        event Ok => {name => "fail", pass => 0};
+        event Diag => {};                                             # Typical failure diag
+        event Diag => {message => "Should see this after failure"};
         end;
     },
     "Tool had time to output the diag"

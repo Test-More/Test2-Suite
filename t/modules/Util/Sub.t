@@ -12,7 +12,7 @@ imported_ok qw{
 
 sub named { 'named' }
 *unnamed = sub { 'unnamed' };
-like(sub_name(\&named), qr/named$/, "got sub name (named)");
+like(sub_name(\&named),   qr/named$/,    "got sub name (named)");
 like(sub_name(\&unnamed), qr/__ANON__$/, "got sub name (anon)");
 
 like(
@@ -34,19 +34,24 @@ like(
 );
 
 no warnings 'once';
-sub empty_named { };   my $empty_named = __LINE__;
-*empty_anon = sub { }; my $empty_anon  = __LINE__;
+sub empty_named { }
+my $empty_named = __LINE__;
+*empty_anon = sub { };
+my $empty_anon = __LINE__;
 
-sub one_line_named { 1 };   my $one_line_named = __LINE__;
-*one_line_anon = sub { 1 }; my $one_line_anon  = __LINE__;
+sub one_line_named { 1 }
+my $one_line_named = __LINE__;
+*one_line_anon = sub { 1 };
+my $one_line_anon = __LINE__;
 
 my $multi_line_named_start = __LINE__ + 1;
+
 sub multi_line_named {
     my $x = 1;
     $x++;
     return $x;
 }
-my $multi_line_named_end = __LINE__ - 1;
+my $multi_line_named_end  = __LINE__ - 1;
 my $multi_line_anon_start = __LINE__ + 1;
 *multi_line_anon = sub {
     my $x = 1;
@@ -67,7 +72,7 @@ like(
         start_line => in_set(undef, $empty_named),
         end_line   => in_set(undef, $empty_named),
         lines      => in_set([], [$empty_named, $empty_named]),
-        all_lines  => in_set([], [$empty_named]),
+        all_lines => in_set([], [$empty_named]),
     },
     "Got expected results for empty named sub"
 );
@@ -83,7 +88,7 @@ like(
         start_line => in_set(undef, $empty_anon),
         end_line   => in_set(undef, $empty_anon),
         lines      => in_set([], [$empty_anon, $empty_anon]),
-        all_lines  => in_set([], [$empty_anon]),
+        all_lines => in_set([], [$empty_anon]),
     },
     "Got expected results for empty anon sub"
 );

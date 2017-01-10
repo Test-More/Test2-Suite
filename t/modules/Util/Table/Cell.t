@@ -26,7 +26,7 @@ and some non-whitespace ones: 婧 ʶ ๖
     is(show_char("婧"), '\N{U+5A67}', "translated unicode 婧 (U+5A67)");
     is(show_char("ʶ"),  '\N{U+2B6}',  "translated unicode ʶ (U+2B6)");
     is(show_char("߃"),  '\N{U+7C3}',  "translated unicode ߃ (U+7C3)");
-    is(show_char("๖"),  '\N{U+E56}',  "translated unicode ๖ (U+E56)");
+    is(show_char("๖"), '\N{U+E56}',  "translated unicode ๖ (U+E56)");
 
     my $cell = CLASS->new(value => $unsanitary);
     $cell->sanitize;

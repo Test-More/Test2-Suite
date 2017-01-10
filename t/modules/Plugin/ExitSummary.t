@@ -16,12 +16,12 @@ use Test2::Plugin::ExitSummary;
 my $post_count = Test2::API::test2_list_exit_callbacks();
 
 is($initial_count, 0, "no hooks initially");
-is($post_count, 1, "Added the hook, but only once");
+is($post_count,    1, "Added the hook, but only once");
 
 my $summary = Test2::Plugin::ExitSummary->can('summary');
 
 my $exit = 0;
-my $new = 0;
+my $new  = 0;
 
 like(
     intercept {
@@ -41,7 +41,7 @@ like(
         $ctx->release;
     },
     array {
-        event Plan => { max => 1 };
+        event Plan => {max     => 1};
         event Diag => {message => 'No tests run!'};
         event Diag => {message => 'Did not follow plan: expected 1, ran 0.'};
         end
@@ -57,7 +57,7 @@ like(
         $ctx->release;
     },
     array {
-        event Ok => { pass => 1 };
+        event Ok   => {pass    => 1};
         event Diag => {message => 'Tests were run but no plan was declared and done_testing() was not seen.'};
         end
     },
@@ -65,7 +65,7 @@ like(
 );
 
 $exit = 123;
-$new = 123;
+$new  = 123;
 like(
     intercept {
         plan 1;
@@ -75,8 +75,8 @@ like(
         $ctx->release;
     },
     array {
-        event Plan => { max => 1 };
-        event Ok => { pass => 1 };
+        event Plan => {max     => 1};
+        event Ok   => {pass    => 1};
         event Diag => {message => 'Looks like your test exited with 123 after test #1.'};
         end
     },

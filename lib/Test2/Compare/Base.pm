@@ -21,7 +21,7 @@ use Test2::Util::HashBase qw{builder _file _lines _info called};
 }
 
 sub clone {
-    my $self = shift;
+    my $self  = shift;
     my $class = blessed($self);
 
     # Shallow copy is good enough for all the current compare types.
@@ -65,7 +65,7 @@ sub lines {
 
 sub delta_class { 'Test2::Compare::Delta' }
 
-sub deltas { () }
+sub deltas    { () }
 sub got_lines { () }
 
 sub stringify_got { 0 }
@@ -80,7 +80,7 @@ sub render {
 }
 
 sub run {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
 
     my $id      = $params{id};

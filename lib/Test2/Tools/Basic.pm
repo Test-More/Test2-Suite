@@ -39,13 +39,13 @@ sub fail {
 
 sub diag {
     my $ctx = context();
-    $ctx->diag( join '', @_ );
+    $ctx->diag(join '', @_);
     $ctx->release;
 }
 
 sub note {
     my $ctx = context();
-    $ctx->note( join '', @_ );
+    $ctx->note(join '', @_);
     $ctx->release;
 }
 
@@ -76,7 +76,7 @@ sub skip {
 
 sub plan {
     my $plan = shift;
-    my $ctx = context();
+    my $ctx  = context();
 
     if ($plan && $plan =~ m/[^0-9]/) {
         if ($plan eq 'tests') {

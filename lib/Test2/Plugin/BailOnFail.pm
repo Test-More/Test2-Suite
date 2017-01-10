@@ -7,14 +7,16 @@ our $VERSION = '0.000064';
 use Test2::API qw/test2_add_callback_context_release/;
 
 my $LOADED = 0;
+
 sub import {
     return if $LOADED++;
 
-    test2_add_callback_context_release(sub {
-        my $ctx = shift;
-        return if $ctx->hub->is_passing;
-        $ctx->bail("(Bail On Fail)");
-    });
+    test2_add_callback_context_release(
+        sub {
+            my $ctx = shift;
+            return if $ctx->hub->is_passing;
+            $ctx->bail("(Bail On Fail)");
+        });
 }
 
 1;

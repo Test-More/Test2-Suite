@@ -30,6 +30,7 @@ sub operator  { $_[0]->{+_REDUCTION} }
 sub reduction { $_[0]->{+_REDUCTION} }
 
 my %VALID = (any => 1, all => 1, none => 1);
+
 sub set_reduction {
     my $self = shift;
     my ($redu) = @_;
@@ -41,8 +42,6 @@ sub set_reduction {
 }
 
 sub verify {
-    my $self = shift;
-    my %params = @_;
     return 1;
 }
 
@@ -52,7 +51,7 @@ sub add_check {
 }
 
 sub deltas {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
 
     my $checks    = $self->{+CHECKS};
@@ -60,12 +59,12 @@ sub deltas {
     my $convert   = $params{convert};
 
     unless ($checks && @$checks) {
-        my $file = $self->file;
+        my $file  = $self->file;
         my $lines = $self->lines;
 
         my $extra = "";
         if ($file and $lines and @$lines) {
-            my $lns = (@$lines > 1 ? 'lines ' : 'line ' ) .  join ', ', @$lines;
+            my $lns = (@$lines > 1 ? 'lines ' : 'line ') . join ', ', @$lines;
             $extra = " (Set defined in $file $lns)";
         }
 
@@ -75,9 +74,9 @@ sub deltas {
     my @deltas;
     my $i = 0;
     for my $check (@$checks) {
-        my $c = $convert->($check);
+        my $c  = $convert->($check);
         my $id = [META => "Check " . $i++];
-        my @d = $c->run(%params, id => $id);
+        my @d  = $c->run(%params, id => $id);
 
         if ($reduction eq 'any') {
             return () unless @d;

@@ -16,7 +16,7 @@ sub import {
 }
 
 sub import_into {
-    my $class = shift;
+    shift;
     my $into = shift or croak "no destination package provided";
 
     croak "No targets specified" unless @_;

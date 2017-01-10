@@ -42,14 +42,14 @@ use Test2::Tools::Warnings qw{
 use Test2::Tools::ClassicCompare qw/cmp_ok/;
 
 use Importer 0.024 'Test2::Tools::Subtest' => (
-    subtest_buffered => { -as => 'subtest' },
+    subtest_buffered => {-as => 'subtest'},
 );
 
-use Test2::Tools::Class     qw/can_ok isa_ok DOES_ok/;
-use Test2::Tools::Encoding  qw/set_encoding/;
-use Test2::Tools::Exports   qw/imported_ok not_imported_ok/;
-use Test2::Tools::Ref       qw/ref_ok ref_is ref_is_not/;
-use Test2::Tools::Mock      qw/mock mocked/;
+use Test2::Tools::Class qw/can_ok isa_ok DOES_ok/;
+use Test2::Tools::Encoding qw/set_encoding/;
+use Test2::Tools::Exports qw/imported_ok not_imported_ok/;
+use Test2::Tools::Ref qw/ref_ok ref_is ref_is_not/;
+use Test2::Tools::Mock qw/mock mocked/;
 use Test2::Tools::Exception qw/try_ok dies lives/;
 
 our @EXPORT = qw{
@@ -90,6 +90,7 @@ our %EXPORT_TAGS = (
 );
 
 my $SRAND;
+
 sub import {
     my $class = shift;
 

@@ -29,7 +29,7 @@ sub operator { '==' }
 sub name { render_ref($_[0]->{+INPUT}) }
 
 sub verify {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     my ($got, $exists) = @params{qw/got exists/};
 
@@ -39,7 +39,7 @@ sub verify {
     return 0 unless ref $in;
     return 0 unless ref $got;
 
-    my $in_type = rtype($in);
+    my $in_type  = rtype($in);
     my $got_type = rtype($got);
 
     return 0 unless $in_type eq $got_type;

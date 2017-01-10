@@ -22,7 +22,7 @@ sub init {
 sub name { '<META CHECKS>' }
 
 sub verify {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     return $params{exists} ? 1 : 0;
 }
@@ -45,7 +45,7 @@ sub add_prop {
 }
 
 sub deltas {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     my ($got, $convert, $seen) = @params{qw/got convert seen/};
 
@@ -82,7 +82,7 @@ sub get_prop_size {
 
     my $type = reftype($it) || '';
 
-    return scalar @$it      if $type eq 'ARRAY';
+    return scalar @$it if $type eq 'ARRAY';
     return scalar keys %$it if $type eq 'HASH';
     return undef;
 }

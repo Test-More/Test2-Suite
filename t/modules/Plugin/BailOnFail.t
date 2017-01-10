@@ -9,10 +9,12 @@ like(
         ok(1, "Should not see");
     },
     array {
-        filter_items { grep { !$_->isa('Test2::Event::Diag') } @_ };
-        event Ok => { name => "pass", pass => 1 };
-        event Ok => { name => "fail", pass => 0 };
-        event Bail => { reason => "(Bail On Fail)" };
+        filter_items {
+            grep { !$_->isa('Test2::Event::Diag') } @_
+        };
+        event Ok => {name => "pass", pass => 1};
+        event Ok => {name => "fail", pass => 0};
+        event Bail => {reason => "(Bail On Fail)"};
         end;
     },
     "Bailed after the failure"
@@ -34,11 +36,11 @@ like(
         ok(1, "Should not see");
     },
     array {
-        event Ok => { name => "pass", pass => 1 };
-        event Ok => { name => "fail", pass => 0 };
-        event Diag => {}; # Typical failure diag
-        event Diag => { message => "Should see this after failure" };
-        event Bail => { reason => "(Bail On Fail)" };
+        event Ok => {name => "pass", pass => 1};
+        event Ok => {name => "fail", pass => 0};
+        event Diag => {};                                             # Typical failure diag
+        event Diag => {message => "Should see this after failure"};
+        event Bail => {reason => "(Bail On Fail)"};
         end;
     },
     "Tool had time to output the diag"

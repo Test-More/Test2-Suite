@@ -25,7 +25,7 @@ sub init {
 
 sub name {
     my $self = shift;
-    my $in = $self->{+INPUT};
+    my $in   = $self->{+INPUT};
     return "$in";
 }
 
@@ -42,7 +42,7 @@ sub operator {
 }
 
 sub verify {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     my ($got, $exists) = @params{qw/got exists/};
 

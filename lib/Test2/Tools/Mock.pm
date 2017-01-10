@@ -13,8 +13,8 @@ use base 'Exporter';
 
 our $VERSION = '0.000064';
 
-our @CARP_NOT = (__PACKAGE__, 'Test2::Mock');
-our @EXPORT = qw/mock mocked/;
+our @CARP_NOT  = (__PACKAGE__, 'Test2::Mock');
+our @EXPORT    = qw/mock mocked/;
 our @EXPORT_OK = qw{
     mock_obj mock_class
     mock_do  mock_build
@@ -29,7 +29,7 @@ my %MOCKS;
 my @BUILD;
 
 sub add_handler {
-    my $class = shift;
+    shift;
     my ($for, $code) = @_;
 
     croak "Must specify a package for the mock handler"
@@ -189,8 +189,8 @@ sub _generate_class {
 
     for (1 .. 100) {
         my $postfix = join '', map { chr(rand(26) + 65) } 1 .. 32;
-        my $class = $prefix . '::__TEMP__::' . $postfix;
-        my $file = $class;
+        my $class   = $prefix . '::__TEMP__::' . $postfix;
+        my $file    = $class;
         $file =~ s{::}{/}g;
         $file .= '.pm';
         next if $INC{$file};
@@ -205,9 +205,9 @@ sub _generate_class {
 sub mock_class {
     my $proto = shift;
     my $class = blessed($proto) || $proto;
-    my @args = @_;
+    my @args  = @_;
 
-    my $void   = !defined(wantarray);
+    my $void = !defined(wantarray);
 
     my $callback = sub {
         my ($parent) = reverse mocked($class);
@@ -258,7 +258,7 @@ sub mock_class {
 }
 
 sub mock_accessors {
-    return map {( $_ => gen_accessor($_) )} @_;
+    return map { ($_ => gen_accessor($_)) } @_;
 }
 
 sub mock_accessor {
@@ -268,7 +268,7 @@ sub mock_accessor {
 
 sub mock_getters {
     my ($prefix, @list) = @_;
-    return map {( "$prefix$_" => gen_reader($_) )} @list;
+    return map { ("$prefix$_" => gen_reader($_)) } @list;
 }
 
 sub mock_getter {
@@ -278,7 +278,7 @@ sub mock_getter {
 
 sub mock_setters {
     my ($prefix, @list) = @_;
-    return map {( "$prefix$_" => gen_writer($_) )} @list;
+    return map { ("$prefix$_" => gen_writer($_)) } @list;
 }
 
 sub mock_setter {

@@ -30,7 +30,7 @@ sub operator { 'eq' }
 sub name { "" . $_[0]->{+INPUT} }
 
 sub verify {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     my ($got, $exists) = @params{qw/got exists/};
 

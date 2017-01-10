@@ -14,7 +14,7 @@ use Scalar::Util qw/reftype/;
 sub init {
     my $self = shift;
 
-    if(my $ref = $self->{+INREF}) {
+    if (my $ref = $self->{+INREF}) {
         croak "Cannot specify both 'inref' and 'items'" if $self->{+ITEMS};
         croak "'inref' must be an array reference, got '$ref'" unless reftype($ref) eq 'ARRAY';
         $self->{+ITEMS} = [@{$self->{+INREF}}];
@@ -28,7 +28,7 @@ sub init {
 sub name { '<ORDERED SUBSET>' }
 
 sub verify {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
 
     return 0 unless $params{exists};
@@ -39,19 +39,18 @@ sub verify {
 }
 
 sub add_item {
-    my $self = shift;
+    my $self  = shift;
     my $check = pop;
 
     push @{$self->{+ITEMS}} => $check;
 }
 
 sub deltas {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     my ($got, $convert, $seen) = @params{qw/got convert seen/};
 
     my @deltas;
-    my $state = 0;
     my $items = $self->{+ITEMS};
 
     my $idx = 0;
@@ -61,7 +60,7 @@ sub deltas {
 
         my $i = $idx;
         my $found;
-        while($i < @$got) {
+        while ($i < @$got) {
             my $val = $got->[$i++];
             next if $check->run(
                 id      => [ARRAY => $i],

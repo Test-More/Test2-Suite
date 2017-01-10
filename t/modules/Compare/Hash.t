@@ -10,7 +10,7 @@ subtest simple => sub {
 subtest verify => sub {
     my $one = $CLASS->new();
 
-    ok(!$one->verify(exists => 0),      "nothing to verify");
+    ok(!$one->verify(exists => 0), "nothing to verify");
     ok(!$one->verify(exists => 1, got => undef), "undef is not a hashref");
     ok(!$one->verify(exists => 1, got => 1),     "1 is not a hashref");
     ok(!$one->verify(exists => 1, got => []),    "An arrayref is not a hashref");
@@ -24,15 +24,15 @@ subtest init => sub {
     is($one->items, {}, "got the items hash");
     is($one->order, [], "got order array");
 
-    $one = $CLASS->new(inref => { a => 1, b => 2 });
+    $one = $CLASS->new(inref => {a => 1, b => 2});
     is($one->items, {a => 1, b => 2}, "got the items hash");
     is($one->order, ['a', 'b'], "generated order (ascii sort)");
 
-    $one = $CLASS->new(items => { a => 1, b => 2 }, order => [ 'b', 'a' ]);
+    $one = $CLASS->new(items => {a => 1, b => 2}, order => ['b', 'a']);
     is($one->items, {a => 1, b => 2}, "got the items hash");
     is($one->order, ['b', 'a'], "got specified order");
 
-    $one = $CLASS->new(items => { a => 1, b => 2 });
+    $one = $CLASS->new(items => {a => 1, b => 2});
     is($one->items, {a => 1, b => 2}, "got the items hash");
     is($one->order, ['a', 'b'], "generated order (ascii sort)");
 
@@ -49,7 +49,7 @@ subtest init => sub {
     );
 
     like(
-        dies { $CLASS->new(items => { a => 1, b => 2, c => 3 }, order => ['a']) },
+        dies { $CLASS->new(items => {a => 1, b => 2, c => 3}, order => ['a']) },
         qr/Keys are missing from the 'order' array: b, c/,
         "Missing fields in order"
     );
@@ -74,8 +74,8 @@ subtest add_field => sub {
         "Cannot add field twice"
     );
 
-    is($one->items, { a => 1, b => 2, c => 3 }, "added items");
-    is($one->order, [ 'a', 'c', 'b' ], "order preserved");
+    is($one->items, {a => 1, b => 2, c => 3}, "added items");
+    is($one->order, ['a', 'c', 'b'], "order preserved");
 };
 
 subtest deltas => sub {
@@ -100,8 +100,7 @@ subtest deltas => sub {
     $one->set_ending(1);
     is(
         [$one->deltas(got => {a => 1, b => 2, c => 3, e => 4, f => 5}, %params)],
-        [
-            {
+        [{
                 dne      => 'check',
                 verified => F(),
                 id       => [HASH => 'e'],
@@ -121,8 +120,7 @@ subtest deltas => sub {
 
     is(
         [$one->deltas(got => {a => 1}, %params)],
-        [
-            {
+        [{
                 children => [],
                 dne      => 'got',
                 verified => F(),
@@ -144,8 +142,7 @@ subtest deltas => sub {
 
     is(
         [$one->deltas(got => {a => 1, b => 1, c => 1}, %params)],
-        [
-            {
+        [{
                 children => [],
                 verified => F(),
                 id       => [HASH => 'b'],
@@ -165,8 +162,7 @@ subtest deltas => sub {
 
     like(
         [$one->deltas(got => {a => 1, b => 2, c => 3, x => 'oops'}, %params)],
-        [
-            {
+        [{
                 verified => F(),
                 id       => [HASH => 'x'],
                 got      => 'oops',

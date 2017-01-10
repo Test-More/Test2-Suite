@@ -21,7 +21,7 @@ sub seed { $SEED }
 sub from { $FROM }
 
 sub import {
-    my $class = shift;
+    shift;
 
     carp "SRand loaded multiple times, re-seeding rand"
         if defined $SEED;
@@ -30,7 +30,7 @@ sub import {
         ($SEED) = @_;
         $FROM = 'import arg';
     }
-    elsif(exists $ENV{T2_RAND_SEED}) {
+    elsif (exists $ENV{T2_RAND_SEED}) {
         $SEED = $ENV{T2_RAND_SEED};
         $FROM = 'environment variable';
     }
@@ -51,16 +51,16 @@ sub import {
         # If the harness is verbose then just display the message for all to
         # see. It is nice info and they already asked for noisy output.
 
-        test2_add_callback_post_load(sub {
-            test2_stack()->top; # Ensure we have at least 1 hub.
-            my ($hub) = test2_stack()->all;
-            $hub->send(
-                Test2::Event::Note->new(
-                    trace => Test2::Util::Trace->new(frame => [__PACKAGE__, __FILE__, __LINE__, 'SRAND']),
-                    message => "Seeded srand with seed '$SEED' from $FROM.",
-                )
-            );
-        });
+        test2_add_callback_post_load(
+            sub {
+                test2_stack()->top;    # Ensure we have at least 1 hub.
+                my ($hub) = test2_stack()->all;
+                $hub->send(
+                    Test2::Event::Note->new(
+                        trace   => Test2::Util::Trace->new(frame => [__PACKAGE__, __FILE__, __LINE__, 'SRAND']),
+                        message => "Seeded srand with seed '$SEED' from $FROM.",
+                    ));
+            });
     }
     elsif (!$ADDED_HOOK++) {
         # The seed can be important for debugging, so if anything is wrong we
@@ -74,8 +74,7 @@ sub import {
                     if $real
                     || ($new && $$new)
                     || !$ctx->hub->is_passing;
-            }
-        );
+            });
     }
 }
 

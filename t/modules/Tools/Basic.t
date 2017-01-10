@@ -1,13 +1,16 @@
 use Test2::Bundle::Extended -target => 'Test2::Tools::Basic';
 
 {
+
     package Temp;
     use Test2::Tools::Basic;
 
-    main::imported_ok(qw{
+    main::imported_ok(
+        qw{
         ok pass fail diag note todo skip
         plan skip_all done_testing bail_out
-    });
+    }
+    );
 }
 
 pass('Testing Pass');
@@ -15,9 +18,12 @@ pass('Testing Pass');
 my @lines;
 like(
     intercept {
-        pass('pass');               push @lines => __LINE__;
-        fail('fail');               push @lines => __LINE__;
-        fail('fail', 'added diag'); push @lines => __LINE__;
+        pass('pass');
+        push @lines => __LINE__;
+        fail('fail');
+        push @lines => __LINE__;
+        fail('fail', 'added diag');
+        push @lines => __LINE__;
     },
     array {
         event Ok => sub {
@@ -84,9 +90,12 @@ ok(1, 'Testing ok');
 @lines = ();
 like(
     intercept {
-        ok(1, 'pass', 'invisible diag'); push @lines => __LINE__;
-        ok(0, 'fail');                   push @lines => __LINE__;
-        ok(0, 'fail', 'added diag');     push @lines => __LINE__;
+        ok(1, 'pass', 'invisible diag');
+        push @lines => __LINE__;
+        ok(0, 'fail');
+        push @lines => __LINE__;
+        ok(0, 'fail', 'added diag');
+        push @lines => __LINE__;
     },
     array {
         event Ok => sub {
@@ -96,27 +105,27 @@ like(
         };
 
         event Ok => sub {
-            call pass => 0;
-            call name => 'fail';
+            call pass  => 0;
+            call name  => 'fail';
             prop debug => 'at ' . __FILE__ . " line $lines[1]";
         };
         event Diag => sub {
             call message => qr/Failed test 'fail'.*line $lines[1]/s;
-            prop debug => 'at ' . __FILE__ . " line $lines[1]";
+            prop debug   => 'at ' . __FILE__ . " line $lines[1]";
         };
 
         event Ok => sub {
-            call pass => 0;
-            call name => 'fail';
+            call pass  => 0;
+            call name  => 'fail';
             prop debug => 'at ' . __FILE__ . " line $lines[2]";
         };
         event Diag => sub {
             call message => qr/Failed test 'fail'.*line $lines[2]/s;
-            prop debug => 'at ' . __FILE__ . " line $lines[2]";
+            prop debug   => 'at ' . __FILE__ . " line $lines[2]";
         };
         event Diag => sub {
             call message => 'added diag';
-            prop debug => 'at ' . __FILE__ . " line $lines[2]";
+            prop debug   => 'at ' . __FILE__ . " line $lines[2]";
         };
 
         end;
@@ -132,8 +141,8 @@ like(
         diag "foo", ' ', "bar";
     },
     array {
-        event Diag => { message => 'foo' };
-        event Diag => { message => 'foo bar' };
+        event Diag => {message => 'foo'};
+        event Diag => {message => 'foo bar'};
     },
     "Got expected events for diag"
 );
@@ -146,8 +155,8 @@ like(
         note "foo", ' ', "bar";
     },
     array {
-        event Note => { message => 'foo' };
-        event Note => { message => 'foo bar' };
+        event Note => {message => 'foo'};
+        event Note => {message => 'foo bar'};
     },
     "Got expected events for note"
 );
@@ -160,7 +169,7 @@ like(
         exit 255;
     },
     array {
-        event Bail => { reason => 'oops' };
+        event Bail => {reason => 'oops'};
         end;
     },
     "Got bail event"
@@ -174,7 +183,7 @@ like(
         exit 255;
     },
     array {
-        event Plan => { max => 0, directive => 'SKIP', reason => 'oops' };
+        event Plan => {max => 0, directive => 'SKIP', reason => 'oops'};
         end;
     },
     "Got plan (skip_all) event"
@@ -188,19 +197,18 @@ like(
         exit 255;
     },
     array {
-        event Plan => { max => 0, directive => 'SKIP', reason => 'oops' };
+        event Plan => {max => 0, directive => 'SKIP', reason => 'oops'};
         end;
     },
     "Got plan 'skip_all' prefix"
 );
-
 
 like(
     intercept {
         plan(5);
     },
     array {
-        event Plan => { max => 5 };
+        event Plan => {max => 5};
         end;
     },
     "Got plan"
@@ -211,12 +219,11 @@ like(
         plan(tests => 5);
     },
     array {
-        event Plan => { max => 5 };
+        event Plan => {max => 5};
         end;
     },
     "Got plan 'tests' prefix"
 );
-
 
 like(
     intercept {
@@ -225,9 +232,9 @@ like(
         done_testing;
     },
     array {
-        event Ok => { pass => 1 };
-        event Ok => { pass => 1 };
-        event Plan => { max => 2 };
+        event Ok   => {pass => 1};
+        event Ok   => {pass => 1};
+        event Plan => {max  => 2};
         end;
     },
     "Done Testing works"
@@ -259,21 +266,21 @@ like(
     array {
         for my $id (1 .. 3) {
             event Ok => sub {
-                call pass => 0;
+                call pass           => 0;
                 call effective_pass => 0;
-                call todo => undef;
+                call todo           => undef;
             };
-            event Diag => { message => qr/Failed/ };
+            event Diag => {message => qr/Failed/};
 
             event Ok => sub {
-                call pass => 0;
+                call pass           => 0;
                 call effective_pass => 1;
-                call todo => "todo $id";
+                call todo           => "todo $id";
             };
-            event Note => { message => qr/Failed/ };
+            event Note => {message => qr/Failed/};
         }
-        event Ok => { pass => 0, effective_pass => 0 };
-        event Diag => { message => qr/Failed/ };
+        event Ok => {pass => 0, effective_pass => 0};
+        event Diag => {message => qr/Failed/};
         end;
     },
     "Got todo events"
@@ -289,12 +296,13 @@ like(
         }
     },
     array {
-        event Ok => { pass => 1 };
+        event Ok => {pass => 1};
 
         event Skip => sub {
-            call pass => 1;
+            call pass   => 1;
             call reason => 'oops';
-        } for 1 .. 5;
+            }
+            for 1 .. 5;
 
         end;
     },

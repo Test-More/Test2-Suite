@@ -27,7 +27,7 @@ sub meta_class  { 'Test2::Compare::Meta' }
 sub object_base { 'UNIVERSAL' }
 
 sub verify {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     my ($got, $exists) = @params{qw/got exists/};
 
@@ -68,14 +68,15 @@ sub add_item {
 sub add_call {
     my $self = shift;
     my ($meth, $check, $name, $context) = @_;
-    $name ||= ref $meth eq 'ARRAY' ? $meth->[0]
-        : ref $meth eq 'CODE' ? '\&CODE'
-        : $meth;
+    $name ||=
+          ref $meth eq 'ARRAY' ? $meth->[0]
+        : ref $meth eq 'CODE'  ? '\&CODE'
+        :                        $meth;
     push @{$self->{+CALLS}} => [$meth, $check, $name, $context || 'scalar'];
 }
 
 sub deltas {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     my ($got, $convert, $seen) = @params{qw/got convert seen/};
 
@@ -86,24 +87,25 @@ sub deltas {
     push @deltas => $meta->deltas(%params) if $meta;
 
     for my $call (@{$self->{+CALLS}}) {
-        my ($meth, $check, $name, $context)= @$call;
+        my ($meth, $check, $name, $context) = @$call;
         $context ||= 'scalar';
 
         $check = $convert->($check);
 
         my @args;
         if (ref($meth) eq 'ARRAY') {
-            ($meth,@args) = @{$meth};
+            ($meth, @args) = @{$meth};
         }
 
         my $exists = ref($meth) || $got->can($meth);
         my $val;
         my ($ok, $err) = try {
-            $val = $exists
-                ? ( $context eq 'list' ? [ $got->$meth(@args) ] :
-                    $context eq 'hash' ? { $got->$meth(@args) } :
-                    $got->$meth(@args)
-                )
+            $val =
+                $exists
+                ? (
+                  $context eq 'list' ? [$got->$meth(@args)]
+                : $context eq 'hash' ? {$got->$meth(@args)}
+                :                      $got->$meth(@args))
                 : undef;
         };
 

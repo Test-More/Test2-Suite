@@ -27,7 +27,7 @@ my %SIGMAP = (
 my %SLOTMAP = reverse %SIGMAP;
 
 sub slot_to_sig { $SLOTMAP{$_[0]} || croak "unsupported slot: '$_[0]'" }
-sub sig_to_slot { $SIGMAP{$_[0]}  || croak "unsupported sigil: $_[0]"  }
+sub sig_to_slot { $SIGMAP{$_[0]}  || croak "unsupported sigil: $_[0]" }
 
 sub get_stash {
     my $package = shift || caller;
@@ -62,7 +62,8 @@ sub _parse_symbol {
         or croak "Invalid symbol: '$symbol'";
 
     # Normalize package, '::' becomes 'main', 'Foo::' becomes 'Foo'
-    $pkg = $pkg
+    $pkg =
+          $pkg
         ? $pkg eq '::'
             ? 'main'
             : substr($pkg, 0, -2)

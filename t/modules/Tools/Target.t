@@ -2,7 +2,7 @@ use Test2::Bundle::Extended;
 
 use Test2::Tools::Target 'Test2::Tools::Target';
 
-is($CLASS, 'Test2::Tools::Target', "set default var");
+is($CLASS,  'Test2::Tools::Target', "set default var");
 is(CLASS(), 'Test2::Tools::Target', "set default const");
 
 use Test2::Tools::Target FOO => 'Test2::Tools::Target';

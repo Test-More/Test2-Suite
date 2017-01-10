@@ -9,37 +9,37 @@ subtest construction => sub {
     is($one->items, {}, "created items as a hash");
     is($one->order, [], "created order as an array");
 
-    $one = $CLASS->new(items => { 1 => 'a', 2 => 'b' });
-    is($one->items, { 1 => 'a', 2 => 'b' }, "used items as specified");
-    is($one->order, [ 1, 2 ], "generated order");
+    $one = $CLASS->new(items => {1 => 'a', 2 => 'b'});
+    is($one->items, {1 => 'a', 2 => 'b'}, "used items as specified");
+    is($one->order, [1, 2], "generated order");
 
     like(
-        dies { $CLASS->new(items => { a => 1, b => 2 }) },
+        dies { $CLASS->new(items => {a => 1, b => 2}) },
         qr/All indexes listed in the 'items' hashref must be numeric/,
         "Indexes must be numeric"
     );
     like(
-        dies { $CLASS->new(items => {}, order => [ 'a' ]) },
+        dies { $CLASS->new(items => {}, order => ['a']) },
         qr/All indexes listed in the 'order' arrayref must be numeric/,
         "Indexes must be numeric"
     );
 
     $one = $CLASS->new(inref => ['a', 'b']);
-    is($one->items, { 0 => 'a', 1 => 'b' }, "Generated items");
-    is($one->order, [ 0, 1 ], "generated order");
+    is($one->items, {0 => 'a', 1 => 'b'}, "Generated items");
+    is($one->order, [0, 1], "generated order");
 
     like(
-        dies { $CLASS->new(inref => [ 'a' ], items => { 0 => 'a' }) },
+        dies { $CLASS->new(inref => ['a'], items => {0 => 'a'}) },
         qr/Cannot specify both 'inref' and 'items'/,
         "Cannot specify inref and items"
     );
     like(
-        dies { $CLASS->new(inref => [ 'a' ], order => [ 0 ]) },
+        dies { $CLASS->new(inref => ['a'], order => [0]) },
         qr/Cannot specify both 'inref' and 'order'/,
         "Cannot specify inref and order"
     );
     like(
-        dies { $CLASS->new(inref => { 1 => 'a' }) },
+        dies { $CLASS->new(inref => {1 => 'a'}) },
         qr/'inref' must be an array reference, got 'HASH\(.+\)'/,
         "inref must be an array"
     );
@@ -49,28 +49,28 @@ subtest verify => sub {
     my $one = $CLASS->new;
 
     is($one->verify(exists => 0), 0, "did not get anything");
-    is($one->verify(exists => 1, got => undef), 0, "undef is not an array");
-    is($one->verify(exists => 1, got => 0), 0, "0 is not an array");
-    is($one->verify(exists => 1, got => 1), 0, "1 is not an array");
+    is($one->verify(exists => 1, got => undef),    0, "undef is not an array");
+    is($one->verify(exists => 1, got => 0),        0, "0 is not an array");
+    is($one->verify(exists => 1, got => 1),        0, "1 is not an array");
     is($one->verify(exists => 1, got => 'string'), 0, "'string' is not an array");
-    is($one->verify(exists => 1, got => {}), 0, "a hash is not an array");
-    is($one->verify(exists => 1, got => []), 1, "an array is an array");
+    is($one->verify(exists => 1, got => {}),       0, "a hash is not an array");
+    is($one->verify(exists => 1, got => []),       1, "an array is an array");
 };
 
 subtest top_index => sub {
     my $one = $CLASS->new;
     is($one->top_index, undef, "no indexes");
 
-    $one = $CLASS->new(inref => [ 'a', 'b', 'c' ]);
+    $one = $CLASS->new(inref => ['a', 'b', 'c']);
     is($one->top_index, 2, "got top index");
 
-    $one = $CLASS->new(inref => [ 'a' ]);
+    $one = $CLASS->new(inref => ['a']);
     is($one->top_index, 0, "got top index");
 
-    $one = $CLASS->new(inref => [ ]);
+    $one = $CLASS->new(inref => []);
     is($one->top_index, undef, "no indexes");
 
-    $one = $CLASS->new(order => [ 0, 1, 2, sub { 1 }], items => { 0 => 'a', 1 => 'b', 2 => 'c' });
+    $one = $CLASS->new(order => [0, 1, 2, sub { 1 }], items => {0 => 'a', 1 => 'b', 2 => 'c'});
     is($one->top_index, 2, "got top index, despite ref");
 };
 
@@ -92,7 +92,7 @@ subtest add_item => sub {
 
     is(
         $one->items,
-        { 0 => 'a', 1 => 'b', 3 => 'd', 8 => 'x', 9 => 'y' },
+        {0 => 'a', 1 => 'b', 3 => 'd', 8 => 'x', 9 => 'y'},
         "Expected items"
     );
 
@@ -103,7 +103,9 @@ subtest add_filter => sub {
     my $one = $CLASS->new;
 
     $one->add_item('a');
-    my $f = sub { grep { m/[a-z]/ } @_ };
+    my $f = sub {
+        grep { m/[a-z]/ } @_;
+    };
     $one->add_filter($f);
     $one->add_item('b');
 
@@ -123,7 +125,9 @@ subtest add_filter => sub {
         "Filter must be defined"
     );
     like(
-        dies { $one->add_filter(sub { 1 }, sub { 2 }) },
+        dies {
+            $one->add_filter(sub { 1 }, sub { 2 })
+        },
         qr/A single coderef is required/,
         "Too many filters"
     );
@@ -133,7 +137,7 @@ subtest add_filter => sub {
         "Not a coderef"
     );
 
-    is( $one->order, [0, $f, 1], "added filter to order array");
+    is($one->order, [0, $f, 1], "added filter to order array");
 };
 
 subtest deltas => sub {
@@ -152,8 +156,7 @@ subtest deltas => sub {
 
     like(
         [$one->deltas(%params, got => ['a'])],
-        [
-            {
+        [{
                 dne => 'got',
                 id  => [ARRAY => 1],
                 got => undef,
@@ -164,8 +167,7 @@ subtest deltas => sub {
 
     like(
         [$one->deltas(%params, got => ['a', 'a'])],
-        [
-            {
+        [{
                 dne => DNE,
                 id  => [ARRAY => 1],
                 got => 'a',
@@ -207,8 +209,7 @@ subtest deltas => sub {
     $one->add_filter(
         sub {
             grep { m/[a-z]/ } @_;
-        }
-    );
+        });
     $one->add_item('b');
 
     is(
@@ -219,8 +220,7 @@ subtest deltas => sub {
 
     like(
         [$one->deltas(%params, got => ['a', 1, 2, 'a'])],
-        [
-            {
+        [{
                 dne => DNE,
                 id  => [ARRAY => 1],
                 got => 'a',

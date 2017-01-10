@@ -7,7 +7,6 @@ use base 'Test2::Require';
 our $VERSION = '0.000064';
 
 sub skip {
-    my $class = shift;
     return undef if $ENV{'AUTHOR_TESTING'};
     return 'Author test, set the $AUTHOR_TESTING environment variable to run it';
 }

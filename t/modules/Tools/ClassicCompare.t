@@ -1,6 +1,7 @@
 use Test2::Bundle::Extended -target => 'Test2::Tools::ClassicCompare';
 
 use Test2::Util::Stash qw/purge_symbol/;
+
 BEGIN {
     purge_symbol('&is');
     purge_symbol('&like');
@@ -19,24 +20,24 @@ my $ref = {};
 
 is(undef, undef, "undef is undef");
 
-is("foo", "foo", 'foo check');
+is("foo",  "foo",  'foo check');
 is($ref,   "$ref", "flat check, ref as string right");
 is("$ref", $ref,   "flat check, ref as string left");
 
-isnt("bar", "foo", 'not foo check');
-isnt({},   "$ref", "negated flat check, ref as string right");
-isnt("$ref", {},   "negated flat check, ref as string left");
+isnt("bar", "foo",  'not foo check');
+isnt({},    "$ref", "negated flat check, ref as string right");
+isnt("$ref", {}, "negated flat check, ref as string left");
 
 like('aaa', qr/a/, "have an a");
-like('aaa', 'a', "have an a, not really a regex");
+like('aaa', 'a',   "have an a, not really a regex");
 
 unlike('bbb', qr/a/, "do not have an a");
-unlike('bbb', 'a', "do not have an a, not really a regex");
+unlike('bbb', 'a',   "do not have an a, not really a regex");
 
 # Failures
 my $events = intercept {
     def ok => (!is('foo', undef, "undef check"),     "undef check");
-    def ok => (!is(undef, 'foo',   "undef check"),     "undef check");
+    def ok => (!is(undef, 'foo', "undef check"),     "undef check");
     def ok => (!is('foo', 'bar', "string mismatch"), "string mismatch");
     def ok => (!isnt('foo', 'foo', "undesired match"), "undesired match");
     def ok => (!like('foo', qr/a/, "no match"), "no match");
@@ -48,7 +49,9 @@ do_def;
 is_deeply(
     $events,
     array {
-        filter_items { grep { !$_->isa('Test2::Event::Diag') } @_ };
+        filter_items {
+            grep { !$_->isa('Test2::Event::Diag') } @_
+        };
         event Ok => sub { field pass => 0; etc };
         event Ok => sub { field pass => 0; etc };
         event Ok => sub { field pass => 0; etc };
@@ -69,6 +72,7 @@ is_deeply(
 );
 
 {
+
     package Foo;
     use overload '""' => sub { 'xxx' };
 }
@@ -88,8 +92,8 @@ sub table { join "\n" => Test2::Util::Table::table(@_) }
 use Test2::Util::Ref qw/render_ref/;
 
 cmp_ok('x', 'eq', 'x', 'string pass');
-cmp_ok(5, '==', 5, 'number pass');
-cmp_ok(5, '==', 5.0, 'float pass');
+cmp_ok(5,   '==', 5,   'number pass');
+cmp_ok(5,   '==', 5.0, 'float pass');
 
 my $file = __FILE__;
 my $line = __LINE__ + 2;
@@ -125,7 +129,7 @@ like(
                 ],
             );
         };
-        event Diag => { message => 'extra diag' };
+        event Diag => {message => 'extra diag'};
         end;
     },
     "Got 1 string fail event"
@@ -146,7 +150,7 @@ like(
                 ],
             );
         };
-        event Diag => { message => 'extra diag' };
+        event Diag => {message => 'extra diag'};
 
         end;
     },
@@ -156,9 +160,11 @@ like(
 my $warning;
 $line = __LINE__ + 2;
 like(
-    intercept { $warning = main::warning { cmp_ok(5, '&& die', 42, 'number fail', 'extra diag') } },
+    intercept {
+        $warning = main::warning { cmp_ok(5, '&& die', 42, 'number fail', 'extra diag') }
+    },
     array {
-        event Exception => { error => qr/42 at \(eval in cmp_ok\) \Q$file\E line $line/ };
+        event Exception => {error => qr/42 at \(eval in cmp_ok\) \Q$file\E line $line/};
         fail_events Ok => sub {
             call pass => 0;
             call name => 'number fail';
@@ -172,7 +178,7 @@ like(
                 ],
             );
         };
-        event Diag => { message => 'extra diag' };
+        event Diag => {message => 'extra diag'};
 
         end;
     },
@@ -185,16 +191,17 @@ like(
 );
 
 {
+
     package Overloaded::Foo42;
     use overload
         'fallback' => 1,
-        '0+' => sub { 42    },
-        '""' => sub { 'foo' };
+        '0+'       => sub { 42 },
+        '""'       => sub { 'foo' };
 }
 
 $foo = bless {}, 'Overloaded::Foo42';
 
-cmp_ok($foo, '==', 42, "numeric compare with overloading");
+cmp_ok($foo, '==', 42,    "numeric compare with overloading");
 cmp_ok($foo, 'eq', 'foo', "string compare with overloading");
 
 like(
@@ -212,12 +219,12 @@ like(
             call message => table(
                 header => [qw/TYPE GOT OP CHECK/],
                 rows   => [
-                    ['str', 'foo', 'ne', 'foo'],
-                    ['orig', render_ref($foo), '', render_ref($foo)],
+                    ['str',  'foo',            'ne', 'foo'],
+                    ['orig', render_ref($foo), '',   render_ref($foo)],
                 ],
             );
         };
-        event Diag => { message => 'extra diag' };
+        event Diag => {message => 'extra diag'};
 
         end;
     },
@@ -239,12 +246,12 @@ like(
             call message => table(
                 header => [qw/TYPE GOT OP CHECK/],
                 rows   => [
-                    ['num', '42', '!=', '42'],
-                    ['orig', render_ref($foo), '', render_ref($foo)],
+                    ['num',  '42',             '!=', '42'],
+                    ['orig', render_ref($foo), '',   render_ref($foo)],
                 ],
             );
         };
-        event Diag => { message => 'extra diag' };
+        event Diag => {message => 'extra diag'};
 
         end;
     },
@@ -260,7 +267,7 @@ like(
         }
     },
     array {
-        event Exception => { error => T() };
+        event Exception => {error => T()};
         fail_events Ok => sub {
             call pass => 0;
             call name => 'overload exception';
@@ -270,20 +277,20 @@ like(
             call message => table(
                 header => [qw/TYPE GOT OP CHECK/],
                 rows   => [
-                    ['unsupported', 'foo', '&& die', '<EXCEPTION>'],
-                    ['orig', render_ref($foo), '', render_ref($foo)],
+                    ['unsupported', 'foo',            '&& die', '<EXCEPTION>'],
+                    ['orig',        render_ref($foo), '',       render_ref($foo)],
                 ],
             );
         };
-        event Diag => { message => 'extra diag' };
+        event Diag => {message => 'extra diag'};
 
         end;
     },
     "Got exception in test"
 );
 
-
-note "cmp_ok() displaying good numbers"; {
+note "cmp_ok() displaying good numbers";
+{
     my $have = 1.23456;
     my $want = 4.5678;
     like(
@@ -299,7 +306,7 @@ note "cmp_ok() displaying good numbers"; {
                 call message => table(
                     header => [qw/GOT OP CHECK/],
                     rows   => [
-                      [$have, '>', $want],
+                        [$have, '>', $want],
                     ],
                 );
             };
@@ -309,8 +316,8 @@ note "cmp_ok() displaying good numbers"; {
     );
 }
 
-
-note "cmp_ok() displaying bad numbers"; {
+note "cmp_ok() displaying bad numbers";
+{
     my $have = "zero";
     my $want = "3point5";
     like(
@@ -326,8 +333,8 @@ note "cmp_ok() displaying bad numbers"; {
                 call message => table(
                     header => [qw/TYPE GOT OP CHECK/],
                     rows   => [
-                      ['num',   0,      '>',    '3'],
-                      ['orig',  $have,  '',     $want],
+                        ['num',  0,     '>', '3'],
+                        ['orig', $have, '',  $want],
                     ],
                 );
             };
@@ -336,6 +343,5 @@ note "cmp_ok() displaying bad numbers"; {
         },
     );
 }
-
 
 done_testing;

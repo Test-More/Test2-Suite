@@ -15,7 +15,7 @@ subtest construction => sub {
     is($one->items, [qw/a b/], "Generated items");
 
     like(
-        dies { $CLASS->new(inref => { 1 => 'a' }) },
+        dies { $CLASS->new(inref => {1 => 'a'}) },
         qr/'inref' must be an array reference, got 'HASH\(.+\)'/,
         "inref must be an array"
     );
@@ -25,12 +25,12 @@ subtest verify => sub {
     my $one = $CLASS->new;
 
     is($one->verify(exists => 0), 0, "did not get anything");
-    is($one->verify(exists => 1, got => undef), 0, "undef is not an array");
-    is($one->verify(exists => 1, got => 0), 0, "0 is not an array");
-    is($one->verify(exists => 1, got => 1), 0, "1 is not an array");
+    is($one->verify(exists => 1, got => undef),    0, "undef is not an array");
+    is($one->verify(exists => 1, got => 0),        0, "0 is not an array");
+    is($one->verify(exists => 1, got => 1),        0, "1 is not an array");
     is($one->verify(exists => 1, got => 'string'), 0, "'string' is not an array");
-    is($one->verify(exists => 1, got => {}), 0, "a hash is not an array");
-    is($one->verify(exists => 1, got => []), 1, "an array is an array");
+    is($one->verify(exists => 1, got => {}),       0, "a hash is not an array");
+    is($one->verify(exists => 1, got => []),       1, "an array is an array");
 };
 
 subtest add_item => sub {
@@ -45,7 +45,7 @@ subtest add_item => sub {
 
     is(
         $one->items,
-        [ 'a', 'b', 'd', 'x', 'y' ],
+        ['a', 'b', 'd', 'x', 'y'],
         "Expected items"
     );
 };
@@ -66,8 +66,7 @@ subtest deltas => sub {
 
     like(
         [$one->deltas(%params, got => ['a'])],
-        [
-            {
+        [{
                 dne => 'got',
                 id  => [ARRAY => '?'],
             }
@@ -77,8 +76,7 @@ subtest deltas => sub {
 
     like(
         [$one->deltas(%params, got => ['a', 'a'])],
-        [
-            {
+        [{
                 dne => 'got',
                 id  => [ARRAY => '?'],
             }

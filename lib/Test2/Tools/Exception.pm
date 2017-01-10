@@ -44,7 +44,7 @@ sub lives(&) {
 sub try_ok(&;$) {
     my ($code, $name) = @_;
 
-    my $ok = &lives($code);
+    my $ok  = &lives($code);
     my $err = $@;
 
     # Context should be obtained AFTER code is run so that events inside the

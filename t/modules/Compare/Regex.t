@@ -5,10 +5,10 @@ my $one = $CLASS->new(input => qr/abc/i);
 is(qr/abc/i, $one, "same regex");
 
 ok(!$one->verify(got => qr/xyz/i, exists => 1), "Different regex");
-ok(!$one->verify(got => qr/abc/, exists => 1), "Different flags");
+ok(!$one->verify(got => qr/abc/,  exists => 1), "Different flags");
 ok(!$one->verify(exists => 0), "Must exist");
 
-ok(!$one->verify(exists => 1, got => {}), "Must be regex");
+ok(!$one->verify(exists => 1, got => {}),    "Must be regex");
 ok(!$one->verify(exists => 1, got => undef), "Must be defined");
 ok(!$one->verify(exists => 1, got => 'aaa'), "String is not valid");
 

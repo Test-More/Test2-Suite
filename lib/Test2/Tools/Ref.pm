@@ -46,7 +46,7 @@ sub ref_is($$;$@) {
     if (!ref($got)) {
         $ctx->ok(0, $name, ["First argument '$got' is not a reference", @diag]);
     }
-    elsif(!ref($exp)) {
+    elsif (!ref($exp)) {
         $ctx->ok(0, $name, ["Second argument '$exp' is not a reference", @diag]);
     }
     else {
@@ -70,7 +70,7 @@ sub ref_is_not($$;$) {
     if (!ref($got)) {
         $ctx->ok(0, $name, ["First argument '$got' is not a reference", @diag]);
     }
-    elsif(!ref($exp)) {
+    elsif (!ref($exp)) {
         $ctx->ok(0, $name, ["Second argument '$exp' is not a reference", @diag]);
     }
     else {

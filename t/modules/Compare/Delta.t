@@ -14,11 +14,11 @@ my $check1 = Test2::Compare::String->new(input => 'x');
 my $check2 = Test2::Compare::String->new(input => 'y');
 
 $one = $CLASS->new(check => $check1);
-ref_is($one->chk, $check1, "Got our check");
+ref_is($one->chk,   $check1, "Got our check");
 ref_is($one->check, $check1, "Got our check aliased");
 
 $one = $CLASS->new(chk => $check2);
-ref_is($one->chk, $check2, "Got our check");
+ref_is($one->chk,   $check2, "Got our check");
 ref_is($one->check, $check2, "Got our check aliased");
 
 like(
@@ -51,7 +51,7 @@ subtest render_got => sub {
 };
 
 subtest render_check => sub {
-    my $one   = $CLASS->new;
+    my $one = $CLASS->new;
     my $check = Test2::Compare::String->new(input => 'xyz');
 
     is($one->render_check, '<UNDEF>', "check is undef");
@@ -161,7 +161,7 @@ subtest should_show => sub {
     $one->set_chk($check);
     ok(!$one->should_show, "verified, check is uninteresting");
 
-    $check->set_lines([1,2]);
+    $check->set_lines([1, 2]);
     ok(!$one->should_show, "verified, check has lines but no file");
 
     $check->set_file('foo');
@@ -244,7 +244,7 @@ subtest table_got_lines => sub {
 
     my $c = mock 'Test2::Compare::Base' => (
         override => [
-            got_lines => sub {(2, 4, 6)},
+            got_lines => sub { (2, 4, 6) },
         ],
     );
 
@@ -257,10 +257,10 @@ subtest table_rows => sub {
     # These are tested above, mocking here for simplicity
     my $mock = mock $CLASS => (
         override => [
-            filter_visible    => sub { [['{foo}', $one], ['{bar}', $one]] },
-            render_check      => sub { 'CHECK!' },
-            render_got        => sub { 'GOT!' },
-            table_op          => sub { 'OP!' },
+            filter_visible => sub { [['{foo}', $one], ['{bar}', $one]] },
+            render_check   => sub { 'CHECK!' },
+            render_got     => sub { 'GOT!' },
+            table_op       => sub { 'OP!' },
             table_check_lines => sub { 'CHECK LINES!' },
             table_got_lines   => sub { 'GOT LINES!' },
         ],
@@ -367,20 +367,21 @@ subtest custom_columns => sub {
     my $comp = Test2::Compare->can('compare');
 
     my $cmp = sub {
-        my $ctx = context();
+        my $ctx   = context();
         my $delta = $comp->(@_, $conv);
         my $table = [$delta->table];
         $ctx->release;
         return $table;
     };
 
-    $CLASS->add_column('V' => sub {
-        my ($d) = @_;
-        return $d->verified ? '*' : '';
-    });
+    $CLASS->add_column(
+        'V' => sub {
+            my ($d) = @_;
+            return $d->verified ? '*' : '';
+        });
 
     my $table = $cmp->(
-        { foo => ['x', 'y'] },
+        {foo => ['x', 'y']},
         hash {
             field foo => array {
                 item 'a';
@@ -421,13 +422,13 @@ subtest custom_columns => sub {
             my ($d) = @_;
             return $d->verified ? '*' : '';
         },
-        alias => '?',
+        alias       => '?',
         no_collapse => 1,
-        prefix => 1,
+        prefix      => 1,
     );
 
     $table = $cmp->(
-        { foo => ['x', 'y'] },
+        {foo => ['x', 'y']},
         hash {
             field foo => array {
                 item 'a';
@@ -494,7 +495,9 @@ subtest custom_columns => sub {
 
     $CLASS->add_column('FOO' => sub { '' });
     like(
-        dies { $CLASS->add_column('FOO' => sub { '' }) },
+        dies {
+            $CLASS->add_column('FOO' => sub { '' })
+        },
         qr/Column 'FOO' is already defined/,
         "No duplicates"
     );
@@ -541,6 +544,7 @@ subtest set_column_alias => sub {
 subtest overload => sub {
     no warnings 'once';
     {
+
         package Overload::Foo;
         use overload
             '""' => sub { 'FOO' },
@@ -555,15 +559,15 @@ subtest overload => sub {
     my $foo = bless \*FOO, 'Overload::Foo';
     my $bar = bless \*BAR, 'Overload::Bar';
 
-    is("$foo", "FOO", "overloaded string form FOO");
-    is("$bar", "BAR", "overloaded string form BAR");
-    is(int($foo), 42, "overloaded number form FOO");
-    is(int($bar), 99, "overloaded number form BAR");
+    is("$foo",    "FOO", "overloaded string form FOO");
+    is("$bar",    "BAR", "overloaded string form BAR");
+    is(int($foo), 42,    "overloaded number form FOO");
+    is(int($bar), 99,    "overloaded number form BAR");
 
     my $conv = Test2::Compare->can('strict_convert');
     my $comp = Test2::Compare->can('compare');
-    my $cmp = sub {
-        my $ctx = context();
+    my $cmp  = sub {
+        my $ctx   = context();
         my $delta = $comp->(@_, $conv);
         my @table = $delta->table;
         $ctx->release;
@@ -589,12 +593,12 @@ subtest overload => sub {
     like(
         $table,
         [
-            T(), # Border
-            T(), # Header
-            T(), # Border
+            T(),    # Border
+            T(),    # Header
+            T(),    # Border
             @checks,
-            T(), # Border
-            DNE(), # END
+            T(),      # Border
+            DNE(),    # END
         ],
         "Showed type+mem address, despire overloading"
     );

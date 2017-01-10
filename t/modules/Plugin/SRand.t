@@ -18,10 +18,11 @@ sub intercept_2(&) {
 
     my @events;
 
-    my $l = $root->listen(sub {
-        my ($h, $e) = @_;
-        push @events => $e;
-    });
+    my $l = $root->listen(
+        sub {
+            my ($h, $e) = @_;
+            push @events => $e;
+        });
 
     $code->();
 
@@ -35,27 +36,29 @@ sub intercept_2(&) {
 {
     local %ENV = %ENV;
     $ENV{HARNESS_IS_VERBOSE} = 1;
-    $ENV{T2_RAND_SEED} = 1234;
+    $ENV{T2_RAND_SEED}       = 1234;
 
     my $caller = [__PACKAGE__, __FILE__, __LINE__, 'xxx'];
 
     like(
         intercept_2 { $CLASS->import('5555') },
         array {
-            event Note => { message => "Seeded srand with seed '5555' from import arg." };
+            event Note => {message => "Seeded srand with seed '5555' from import arg."};
         },
         "got the event"
     );
-    is($CLASS->seed, 5555, "set seed");
+    is($CLASS->seed, 5555,         "set seed");
     is($CLASS->from, 'import arg', "set from");
 
     my ($events, $warning);
-    $warning = warning { $events = intercept_2 { $CLASS->import() } };
+    $warning = warning {
+        $events = intercept_2 { $CLASS->import() }
+    };
 
     like(
         $events,
         array {
-            event Note => { message => "Seeded srand with seed '1234' from environment variable." };
+            event Note => {message => "Seeded srand with seed '1234' from environment variable."};
         },
         "got the event"
     );
@@ -69,12 +72,14 @@ sub intercept_2(&) {
     );
 
     delete $ENV{T2_RAND_SEED};
-    $warning = warning { $events = intercept_2 { $CLASS->import() } };
+    $warning = warning {
+        $events = intercept_2 { $CLASS->import() }
+    };
 
     like(
         $events,
         array {
-            event Note => { message => qr/Seeded srand with seed '\d{8}' from local date\./ };
+            event Note => {message => qr/Seeded srand with seed '\d{8}' from local date\./};
         },
         "got the event"
     );
@@ -90,12 +95,16 @@ sub intercept_2(&) {
     my $hooks = Test2::API::test2_list_exit_callbacks();
     delete $ENV{HARNESS_IS_VERBOSE};
     $ENV{HARNESS_ACTIVE} = 1;
-    warning { $events = intercept { $CLASS->import() } };
-    warning { $events = intercept { $CLASS->import() } };
+    warning {
+        $events = intercept { $CLASS->import() }
+    };
+    warning {
+        $events = intercept { $CLASS->import() }
+    };
     is(Test2::API::test2_list_exit_callbacks, $hooks + 1, "added hook, but only once");
 
     warning { $CLASS->import(undef) };
-    is($CLASS->seed, 0 , "set seed");
+    is($CLASS->seed, 0,            "set seed");
     is($CLASS->from, 'import arg', "set from");
 }
 

@@ -32,7 +32,7 @@ sub init {
 }
 
 sub char_id {
-    my $class = shift;
+    shift;
     my ($char) = @_;
     return "\\N{U+" . sprintf("\%X", ord($char)) . "}";
 }
@@ -46,7 +46,7 @@ sub show_char {
 
 sub sanitize {
     my $self = shift;
-    $self->{+VALUE} =~ s/([\s\t\p{Zl}\p{C}\p{Zp}])/$self->show_char($1)/ge; # All whitespace except normal space
+    $self->{+VALUE} =~ s/([\s\t\p{Zl}\p{C}\p{Zp}])/$self->show_char($1)/ge;    # All whitespace except normal space
 }
 
 sub mark_tail {
@@ -66,7 +66,7 @@ sub value_width {
     while (@parts) {
         my $text = shift @parts;
         my $sep  = shift @parts || '';
-        my $len = uni_length("$text$sep");
+        my $len  = uni_length("$text$sep");
         $max = $len if $len > $max;
     }
 

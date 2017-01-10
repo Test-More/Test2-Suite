@@ -9,8 +9,8 @@ isa_ok($fail, $CLASS, 'Test2::Compare::Base');
 ok($pass->verify(got => "anything"), "always passes");
 ok(!$fail->verify(got => "anything"), "always fails");
 
-is($pass->operator, 'CODE(...)', "default operator");
-is($pass->name, '<Custom Code>', "default name");
+is($pass->operator, 'CODE(...)',     "default operator");
+is($pass->name,     '<Custom Code>', "default name");
 
 my $args;
 my $under;

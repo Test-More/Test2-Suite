@@ -67,7 +67,7 @@ sub _verify {
 
     my $not_ok = 0;
     for my $pkg (keys %TODO) {
-        my $tests = delete $TODO{$pkg};
+        my $tests  = delete $TODO{$pkg};
         my $caller = $tests->[0]->[-1];
         print STDOUT "not ok - deferred tests were not run!\n" unless $not_ok++;
         print STDERR "# '$pkg' has deferred tests that were never run!\n";

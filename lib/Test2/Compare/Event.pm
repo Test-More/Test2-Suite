@@ -13,7 +13,7 @@ our $VERSION = '0.000064';
 use Test2::Util::HashBase qw/etype/;
 
 sub name {
-    my $self = shift;
+    my $self  = shift;
     my $etype = $self->etype;
     return "<EVENT: $etype>";
 }

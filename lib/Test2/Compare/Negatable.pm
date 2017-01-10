@@ -19,12 +19,12 @@ sub { overload->import('!' => 'clone_negate', fallback => 1); Test2::Util::HashB
     $sub->();
 
     no strict 'refs';
-    *{"$pkg\::clone_negate"} = \&clone_negate;
+    *{"$pkg\::clone_negate"}  = \&clone_negate;
     *{"$pkg\::toggle_negate"} = \&toggle_negate;
 }
 
 sub clone_negate {
-    my $self = shift;
+    my $self  = shift;
     my $clone = $self->clone;
     $clone->toggle_negate;
     return $clone;

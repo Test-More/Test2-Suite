@@ -33,7 +33,7 @@ sub compare {
 
 my @BUILD;
 
-sub get_build  { @BUILD ? $BUILD[-1] : undef }
+sub get_build { @BUILD ? $BUILD[-1] : undef }
 sub push_build { push @BUILD => $_[0] }
 
 sub pop_build {
@@ -61,15 +61,16 @@ sub build {
     return $build;
 }
 
-sub strict_convert  { convert($_[0], { implicit_end => 1, use_regex => 0, use_code => 0 }) }
-sub relaxed_convert { convert($_[0], { implicit_end => 0, use_regex => 1, use_code => 1 }) }
+sub strict_convert  { convert($_[0], {implicit_end => 1, use_regex => 0, use_code => 0}) }
+sub relaxed_convert { convert($_[0], {implicit_end => 0, use_regex => 1, use_code => 1}) }
 
 my $CONVERT_LOADED = 0;
-my %ALLOWED_KEYS = ( implicit_end => 1, use_regex => 1, use_code => 1 );
+my %ALLOWED_KEYS = (implicit_end => 1, use_regex => 1, use_code => 1);
+
 sub convert {
     my ($thing, $config) = @_;
 
-    unless($CONVERT_LOADED) {
+    unless ($CONVERT_LOADED) {
         require Test2::Compare::Array;
         require Test2::Compare::Base;
         require Test2::Compare::Custom;
@@ -92,19 +93,19 @@ sub convert {
         $config->{use_regex}    = 1 unless defined $config->{use_regex};
         $config->{use_code}     = 0 unless defined $config->{use_code};
     }
-    else { # Legacy...
+    else {    # Legacy...
         if ($config) {
             $config = {
                 implicit_end => 1,
-                use_regex  => 0,
-                use_code   => 0,
+                use_regex    => 0,
+                use_code     => 0,
             };
         }
         else {
             $config = {
                 implicit_end => 0,
-                use_regex  => 1,
-                use_code   => 1,
+                use_regex    => 1,
+                use_code     => 1,
             };
         }
     }

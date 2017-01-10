@@ -5,7 +5,7 @@ subtest with_unicode_linebreak => sub {
     my $one = Test2::Util::Table::LineBreak->new(string => 'aaaa婧bbbb');
     $one->break(3);
     is(
-        [ map { $one->next } 1 .. 5 ],
+        [map { $one->next } 1 .. 5],
         [
             'aaa',
             'a婧',
@@ -19,7 +19,7 @@ subtest with_unicode_linebreak => sub {
     $one = Test2::Util::Table::LineBreak->new(string => 'a婧bb');
     $one->break(2);
     is(
-        [ map { $one->next } 1 .. 4 ],
+        [map { $one->next } 1 .. 4],
         [
             'a ',
             '婧',
@@ -29,7 +29,8 @@ subtest with_unicode_linebreak => sub {
         "Padded the problem"
     );
 
-} if $INC{'Unicode/LineBreak.pm'};
+    }
+    if $INC{'Unicode/LineBreak.pm'};
 
 subtest without_unicode_linebreak => sub {
     my @parts;
@@ -58,7 +59,7 @@ subtest without_unicode_linebreak => sub {
     my $one = Test2::Util::Table::LineBreak->new(string => 'aaabbbx');
     $one->break(2);
     is(
-        [ map { $one->next } 1 .. 5 ],
+        [map { $one->next } 1 .. 5],
         [
             'aa',
             'ab',

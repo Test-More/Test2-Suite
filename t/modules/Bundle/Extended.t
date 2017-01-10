@@ -33,7 +33,7 @@ imported_ok qw{
     exact_ref
 };
 
-ok(Test2::Plugin::ExitSummary->active, "Exit Summary is loaded");
+ok(Test2::Plugin::ExitSummary->active,  "Exit Summary is loaded");
 ok(defined(Test2::Plugin::SRand->seed), "SRand is loaded");
 
 subtest strictures => sub {
@@ -66,16 +66,17 @@ subtest utf8 => sub {
     ok(utf8::is_utf8("癸"), "utf8 pragma is on");
 
     # -2 cause the subtest adds to the stack
-    my $format = test2_stack()->[-2]->format;
+    my $format  = test2_stack()->[-2]->format;
     my $handles = $format->handles;
     for my $hn (0 .. @$handles) {
         my $h = $handles->[$hn] || next;
-        my $layers = { map {$_ => 1} PerlIO::get_layers($h) };
+        my $layers = {map { $_ => 1 } PerlIO::get_layers($h)};
         ok($layers->{utf8}, "utf8 is on for formatter handle $hn");
     }
 };
 
 subtest "rename imports" => sub {
+
     package A::Consumer;
     use Test2::Bundle::Extended ':v1', '!subtest', subtest => {-as => 'a_subtest'};
     imported_ok('a_subtest');
@@ -83,6 +84,7 @@ subtest "rename imports" => sub {
 };
 
 subtest "no meta" => sub {
+
     package B::Consumer;
     use Test2::Bundle::Extended '!meta';
     imported_ok('meta_check');

@@ -44,8 +44,8 @@ sub init {
     $self->{+SANITIZE}  = 1 unless defined $self->{+SANITIZE};
     $self->{+MARK_TAIL} = 1 unless defined $self->{+MARK_TAIL};
 
-    if($self->{+HEADER}) {
-        $self->{+SHOW_HEADER}  = 1 unless defined $self->{+SHOW_HEADER};
+    if ($self->{+HEADER}) {
+        $self->{+SHOW_HEADER} = 1 unless defined $self->{+SHOW_HEADER};
     }
     else {
         $self->{+HEADER}       = [];
@@ -68,14 +68,17 @@ sub regen_columns {
     my $has_header = $self->{+SHOW_HEADER} && @{$self->{+HEADER}};
     my %new_row = (width => 0, count => $has_header ? -1 : 0);
 
-    my $cols = [map { {%new_row} } @{$self->{+HEADER}}];
+    my $cols = [
+        map {
+            { %new_row }
+        } @{$self->{+HEADER}}];
     my @rows = @{$self->{+ROWS}};
 
     for my $row ($has_header ? ($self->{+HEADER}, @rows) : (@rows)) {
         for my $ci (0 .. (@$row - 1)) {
             $cols->[$ci] ||= {%new_row} if $self->{+AUTO_COLUMNS};
             my $c = $cols->[$ci] or next;
-            $c->{idx} ||= $ci;
+            $c->{idx}  ||= $ci;
             $c->{rows} ||= [];
 
             my $r = $row->[$ci];
@@ -95,15 +98,15 @@ sub regen_columns {
     }
 
     # Remove any empty columns we can
-    @$cols = grep {$_->{count} > 0 || $self->{+NO_COLLAPSE}->{$_->{idx}}} @$cols
+    @$cols = grep { $_->{count} > 0 || $self->{+NO_COLLAPSE}->{$_->{idx}} } @$cols
         if $self->{+COLLAPSE};
 
-    my $current = sum(map {$_->{width}} @$cols);
+    my $current = sum(map { $_->{width} } @$cols);
     my $border = sum(BORDER_SIZE, PAD_SIZE, DIV_SIZE * @$cols);
     my $total = $current + $border;
 
     if ($total > $self->{+MAX_WIDTH}) {
-        my $fair = ($self->{+MAX_WIDTH} - $border) / @$cols;
+        my $fair  = ($self->{+MAX_WIDTH} - $border) / @$cols;
         my $under = 0;
         my @fix;
         for my $c (@$cols) {
@@ -129,22 +132,21 @@ sub render {
     my $self = shift;
 
     my $cols = $self->columns;
-    my $width = sum(BORDER_SIZE, PAD_SIZE, DIV_SIZE * @$cols, map { $_->{width} } @$cols);
 
     #<<< NO-TIDY
-    my $border   = '+' . join('+', map { '-' x ($_->{width}  + CELL_PAD_SIZE) }      @$cols) . '+';
-    my $template = '|' . join('|', map { my $w = $_->{width} + CELL_PAD_SIZE; '%s' } @$cols) . '|';
-    my $spacer   = '|' . join('|', map { ' ' x ($_->{width}  + CELL_PAD_SIZE) }      @$cols) . '|';
+    my $border   = '+' . join('+', map { '-' x ($_->{width}  + CELL_PAD_SIZE) } @$cols) . '+';
+    my $template = '|' . join('|', map { '%s' }                                 @$cols) . '|';
+    my $spacer   = '|' . join('|', map { ' ' x ($_->{width}  + CELL_PAD_SIZE) } @$cols) . '|';
     #>>>
 
     my @out = ($border);
     my ($row, $split, $found) = (0, 0, 0);
-    while(1) {
+    while (1) {
         my @row;
 
         for my $col (@$cols) {
             my $r = $col->{rows}->[$row];
-            unless($r) {
+            unless ($r) {
                 push @row => '';
                 next;
             }
@@ -152,7 +154,7 @@ sub render {
             my $lw = $r->border_left_width;
             my $rw = $r->border_right_width;
             my $vw = $col->{width} - $lw - $rw;
-            my $v = $r->break->next($vw);
+            my $v  = $r->break->next($vw);
 
             if (defined $v) {
                 $found++;
@@ -172,7 +174,7 @@ sub render {
             }
         }
 
-        if (!grep {$_ && m/\S/} @row) {
+        if (!grep { $_ && m/\S/ } @row) {
             last unless $found;
 
             push @out => $border if $row == 0 && $self->{+SHOW_HEADER} && @{$self->{+HEADER}};
@@ -197,10 +199,8 @@ sub render {
     pop @out while @out && $out[-1] eq $spacer;
 
     unless (USE_GCS) {
-        for my $row (@out) {
-            next unless $row =~ m/[^\x00-\x7F]/;
+        if (grep { m/[^\x00-\x7F]/ } @out) {
             unshift @out => "Unicode::GCString is not installed, table may not display all unicode characters properly";
-            last;
         }
     }
 

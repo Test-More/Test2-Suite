@@ -13,7 +13,7 @@ our $VERSION = '0.000064';
 our @EXPORT = qw/set_encoding/;
 
 sub set_encoding {
-    my $enc = shift;
+    my $enc    = shift;
     my $format = test2_stack->top->format;
 
     unless ($format && eval { $format->can('encoding') }) {

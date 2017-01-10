@@ -5,15 +5,15 @@ subtest construction => sub {
     isa_ok($one, 'Test2::Compare::Base', $CLASS);
     is($one->reduction, 'any', "default to 'any'");
     is($one->checks, [], "default to empty list of checks");
-    is($one->name, '<CHECK-SET>', "got name");
-    is($one->operator, 'any', "got op");
+    is($one->name,     '<CHECK-SET>', "got name");
+    is($one->operator, 'any',         "got op");
 
-    $one = $CLASS->new(checks => [ 'a', 'b' ], reduction => 'all');
+    $one = $CLASS->new(checks => ['a', 'b'], reduction => 'all');
     isa_ok($one, 'Test2::Compare::Base', $CLASS);
     is($one->reduction, 'all', "specified reduction");
     is($one->checks, ['a', 'b'], "specified checks");
-    is($one->name, '<CHECK-SET>', "got name");
-    is($one->operator, 'all', "got op");
+    is($one->name,     '<CHECK-SET>', "got name");
+    is($one->operator, 'all',         "got op");
 
     like(
         dies { $CLASS->new(reduction => 'fake') },
@@ -51,7 +51,7 @@ subtest add_check => sub {
 
     is(
         $one->checks,
-        [ 'a', 'b', meta { prop blessed => 'Test2::Compare::Pattern' } ],
+        ['a', 'b', meta { prop blessed => 'Test2::Compare::Pattern' }],
         "Added the checks"
     );
 };
@@ -68,7 +68,8 @@ subtest deltas => sub {
         );
 
         $one->set_checks([]);
-        $one->set_file(__FILE__); my $file = __FILE__;
+        $one->set_file(__FILE__);
+        my $file = __FILE__;
         is(
             dies { $one->deltas() },
             "No checks defined for set\n",
@@ -76,7 +77,8 @@ subtest deltas => sub {
         );
 
         $one->set_checks(undef);
-        $one->set_lines([__LINE__]); my $line1 = __LINE__;
+        $one->set_lines([__LINE__]);
+        my $line1 = __LINE__;
         is(
             dies { $one->deltas() },
             "No checks defined for set (Set defined in $file line $line1)\n",
@@ -84,7 +86,8 @@ subtest deltas => sub {
         );
 
         $one->set_checks([]);
-        push @{$one->lines} => __LINE__; my $line2 = __LINE__;
+        push @{$one->lines} => __LINE__;
+        my $line2 = __LINE__;
         is(
             dies { $one->deltas() },
             "No checks defined for set (Set defined in $file lines $line1, $line2)\n",
@@ -108,7 +111,7 @@ subtest deltas => sub {
 
         like(
             [$one->deltas(got => 'x', exists => 1, seen => {}, convert => sub { $_[0] })],
-            [{ got => 'x' }, { got => 'x' }, { got => 'x' }, DNE],
+            [{got => 'x'}, {got => 'x'}, {got => 'x'}, DNE],
             "no matches, 3 deltas, one per check"
         );
 
@@ -127,13 +130,13 @@ subtest deltas => sub {
 
         like(
             [$one->deltas(got => 'oo', exists => 1, seen => {}, convert => sub { $_[0] })],
-            [{ got => 'oo' }, DNE],
+            [{got => 'oo'}, DNE],
             "1 delta, one failed check"
         );
 
         like(
             [$one->deltas(got => 'fox', exists => 1, seen => {}, convert => sub { $_[0] })],
-            [{ got => 'fox' }, { got => 'fox' }, DNE],
+            [{got => 'fox'}, {got => 'fox'}, DNE],
             "2 deltas, one per failed check"
         );
 

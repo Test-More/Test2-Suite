@@ -5,6 +5,7 @@ use Test2::Tools::Defer;
 my $file = __FILE__;
 
 my $START_LINE;
+
 BEGIN {
     $START_LINE = __LINE__;
     def ok => (1, "truth");
@@ -28,12 +29,13 @@ sub capture(&) {
         local *STDOUT;
         local *STDERR;
 
-        ($ok, $e) = Test2::Util::try(sub {
-            open(STDOUT, '>', \$out) or die "Failed to open a temporary STDOUT: $!";
-            open(STDERR, '>', \$err) or die "Failed to open a temporary STDERR: $!";
+        ($ok, $e) = Test2::Util::try(
+            sub {
+                open(STDOUT, '>', \$out) or die "Failed to open a temporary STDOUT: $!";
+                open(STDERR, '>', \$err) or die "Failed to open a temporary STDERR: $!";
 
-            $code->();
-        });
+                $code->();
+            });
     }
 
     die $e unless $ok;
@@ -47,53 +49,55 @@ sub capture(&) {
 is(
     intercept { do_def },
     array {
-        filter_items { grep { $_->isa('Test2::Event::Ok') } @_ };
+        filter_items {
+            grep { $_->isa('Test2::Event::Ok') } @_
+        };
 
         event Ok => sub {
-            call pass => 1;
-            call name => 'truth';
-            prop file => "(eval in Test2::Tools::Defer) " . __FILE__;
-            prop line => $START_LINE + 1;
+            call pass    => 1;
+            call name    => 'truth';
+            prop file    => "(eval in Test2::Tools::Defer) " . __FILE__;
+            prop line    => $START_LINE + 1;
             prop package => __PACKAGE__;
         };
 
         event Ok => sub {
-            call pass => 1;
-            call name => '1 is 1';
-            prop file => "(eval in Test2::Tools::Defer) " . __FILE__;
-            prop line => $START_LINE + 2;
+            call pass    => 1;
+            call name    => '1 is 1';
+            prop file    => "(eval in Test2::Tools::Defer) " . __FILE__;
+            prop line    => $START_LINE + 2;
             prop package => __PACKAGE__;
         };
 
         event Ok => sub {
-            call pass => 1;
-            call name => 'hash is hash';
-            prop file => "(eval in Test2::Tools::Defer) " . __FILE__;
-            prop line => $START_LINE + 3;
+            call pass    => 1;
+            call name    => 'hash is hash';
+            prop file    => "(eval in Test2::Tools::Defer) " . __FILE__;
+            prop line    => $START_LINE + 3;
             prop package => __PACKAGE__;
         };
 
         event Ok => sub {
-            call pass => 0;
-            call name => 'lies';
-            prop file => "(eval in Test2::Tools::Defer) " . __FILE__;
-            prop line => $START_LINE + 5;
+            call pass    => 0;
+            call name    => 'lies';
+            prop file    => "(eval in Test2::Tools::Defer) " . __FILE__;
+            prop line    => $START_LINE + 5;
             prop package => __PACKAGE__;
         };
 
         event Ok => sub {
-            call pass => 0;
-            call name => '1 is not 0';
-            prop file => "(eval in Test2::Tools::Defer) " . __FILE__;
-            prop line => $START_LINE + 6;
+            call pass    => 0;
+            call name    => '1 is not 0';
+            prop file    => "(eval in Test2::Tools::Defer) " . __FILE__;
+            prop line    => $START_LINE + 6;
             prop package => __PACKAGE__;
         };
 
         event Ok => sub {
-            call pass => 0;
-            call name => 'a hash is not an array';
-            prop file => "(eval in Test2::Tools::Defer) " . __FILE__;
-            prop line => $START_LINE + 7;
+            call pass    => 0;
+            call name    => 'a hash is not an array';
+            prop file    => "(eval in Test2::Tools::Defer) " . __FILE__;
+            prop line    => $START_LINE + 7;
             prop package => __PACKAGE__;
         };
 
@@ -120,7 +124,7 @@ sub oops { die 'oops' }
 
 my $line2 = __LINE__ + 1;
 def oops => (1);
-like( dies { do_def() }, <<EOT, "Exceptions in the test are propogated");
+like(dies { do_def() }, <<EOT, "Exceptions in the test are propogated");
 Exception: oops at $file line $line1.
 --eval--
 package main;
@@ -135,9 +139,9 @@ Caller: main, $file, $line2
         ];
 EOT
 
-
 {
     {
+
         package Foo;
         main::def ok => (1, "pass");
     }

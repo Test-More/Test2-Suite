@@ -37,8 +37,6 @@ sub is($$;$@) {
     my ($got, $exp, $name, @diag) = @_;
     my $ctx = context();
 
-    my @caller = caller;
-
     my $delta = compare($got, $exp, \&is_convert);
 
     if ($delta) {
@@ -55,8 +53,6 @@ sub is($$;$@) {
 sub isnt($$;$@) {
     my ($got, $exp, $name, @diag) = @_;
     my $ctx = context();
-
-    my @caller = caller;
 
     my $delta = compare($got, $exp, \&isnt_convert);
 
@@ -140,15 +136,13 @@ sub is_deeply($$;$@) {
     my ($got, $exp, $name, @diag) = @_;
     my $ctx = context();
 
-    my @caller = caller;
-
     my $delta = compare($got, $exp, \&strict_convert);
 
     if ($delta) {
         # Temporary thing.
-        my $count = 0;
+        my $count    = 0;
         my $implicit = 0;
-        my @deltas = ($delta);
+        my @deltas   = ($delta);
         while (my $d = shift @deltas) {
             my $add = $d->children;
             push @deltas => @$add if $add && @$add;
@@ -215,6 +209,7 @@ our %OPS = (
 
     '~~' => 'match',
 );
+
 sub cmp_ok($$$;$@) {
     my ($got, $op, $exp, $name, @diag) = @_;
 
@@ -253,15 +248,15 @@ sub cmp_ok($$$;$@) {
     # Test::More only unoverloaded strings.
 
     my ($display_got, $display_exp);
-    if($type eq 'str') {
+    if ($type eq 'str') {
         $display_got = defined($got) ? "$got" : undef;
         $display_exp = defined($exp) ? "$exp" : undef;
     }
-    elsif($type eq 'num') {
+    elsif ($type eq 'num') {
         $display_got = defined($got) ? $got + 0 : undef;
         $display_exp = defined($exp) ? $exp + 0 : undef;
     }
-    else { # Well, we did what we could.
+    else {    # Well, we did what we could.
         $display_got = $got;
         $display_exp = $exp;
     }
@@ -270,11 +265,8 @@ sub cmp_ok($$$;$@) {
     my $exp_ref = ref($exp) ? render_ref($exp) : $exp;
 
     my @table;
-    my $show_both = (
-        (defined($got) && $got_ref ne "$display_got")
-        ||
-        (defined($exp) && $exp_ref ne "$display_exp")
-    );
+    my $show_both =
+        ((defined($got) && $got_ref ne "$display_got") || (defined($exp) && $exp_ref ne "$display_exp"));
 
     if ($show_both) {
         @table = table(
@@ -288,7 +280,7 @@ sub cmp_ok($$$;$@) {
     else {
         @table = table(
             header => ['GOT', 'OP', 'CHECK'],
-            rows   => [[$display_got, $op, $lived ? $display_exp : '<EXCEPTION>']],
+            rows => [[$display_got, $op, $lived ? $display_exp : '<EXCEPTION>']],
         );
     }
 
@@ -296,7 +288,6 @@ sub cmp_ok($$$;$@) {
     $ctx->release;
     return 0;
 }
-
 
 1;
 

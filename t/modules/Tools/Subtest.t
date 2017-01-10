@@ -2,7 +2,6 @@ use Test2::Bundle::Extended -target => 'Test2::Tools::Subtest';
 
 use Test2::Tools::Subtest qw/subtest_streamed subtest_buffered/;
 
-
 use File::Temp qw/tempfile/;
 
 # A bug in older perls causes a strange error AFTER the program appears to be
@@ -26,14 +25,14 @@ if ($] > 5.020000) {
             };
         },
         subset {
-            event Note => { message => 'Subtest: foo' };
+            event Note => {message => 'Subtest: foo'};
             event Subtest => sub {
-                field pass => 1;
-                field name => 'Subtest: foo';
+                field pass      => 1;
+                field name      => 'Subtest: foo';
                 field subevents => subset {
-                    event Plan => { directive => 'SKIP', reason => 'because' };
+                    event Plan => {directive => 'SKIP', reason => 'because'};
                 };
-            }
+                }
         },
         "skip_all in BEGIN inside a subtest works"
     );
@@ -59,14 +58,14 @@ like(
         };
     },
     subset {
-        event Note => { message => 'Subtest: foo' };
+        event Note => {message => 'Subtest: foo'};
         event Subtest => sub {
-            field pass => 1;
-            field name => 'Subtest: foo';
+            field pass      => 1;
+            field name      => 'Subtest: foo';
             field subevents => subset {
                 event Subtest => sub {
-                    field pass => 1;
-                    field name => 'bar';
+                    field pass      => 1;
+                    field name      => 'bar';
                     field subevents => subset {
                         event Ok => sub {
                             field name => 'pass';
@@ -83,23 +82,23 @@ like(
 my @lines = ();
 like(
     intercept {
-        push @lines => __LINE__ + 4;
+        push @lines            => __LINE__ + 4;
         subtest_streamed 'foo' => sub {
             push @lines => __LINE__ + 1;
             ok(1, "pass");
         };
     },
     subset {
-        event Note => { message => 'Subtest: foo' };
+        event Note => {message => 'Subtest: foo'};
         event Subtest => sub {
-            prop file => __FILE__;
-            prop line => $lines[0];
-            field pass => 1;
-            field name => 'Subtest: foo';
+            prop file       => __FILE__;
+            prop line       => $lines[0];
+            field pass      => 1;
+            field name      => 'Subtest: foo';
             field subevents => subset {
                 event Ok => sub {
-                    prop file => __FILE__;
-                    prop line => $lines[1];
+                    prop file  => __FILE__;
+                    prop line  => $lines[1];
                     field name => 'pass';
                     field pass => 1;
                 };
@@ -112,23 +111,23 @@ like(
 @lines = ();
 like(
     intercept {
-        push @lines => __LINE__ + 4;
+        push @lines            => __LINE__ + 4;
         subtest_streamed 'foo' => sub {
             push @lines => __LINE__ + 1;
             ok(0, "fail");
         };
     },
     subset {
-        event Note => { message => 'Subtest: foo' };
+        event Note => {message => 'Subtest: foo'};
         event Subtest => sub {
-            prop file => __FILE__;
-            prop line => $lines[0];
-            field pass => 0;
-            field name => 'Subtest: foo';
+            prop file       => __FILE__;
+            prop line       => $lines[0];
+            field pass      => 0;
+            field name      => 'Subtest: foo';
             field subevents => subset {
                 event Ok => sub {
-                    prop file => __FILE__;
-                    prop line => $lines[1];
+                    prop file  => __FILE__;
+                    prop line  => $lines[1];
                     field name => 'fail';
                     field pass => 0;
                 };
@@ -141,7 +140,7 @@ like(
 @lines = ();
 like(
     intercept {
-        push @lines => __LINE__ + 5;
+        push @lines            => __LINE__ + 5;
         subtest_streamed 'foo' => sub {
             push @lines => __LINE__ + 1;
             ok(1, "pass");
@@ -149,20 +148,20 @@ like(
         };
     },
     subset {
-        event Note => { message => 'Subtest: foo' };
+        event Note => {message => 'Subtest: foo'};
         event Subtest => sub {
-            prop file => __FILE__;
-            prop line => $lines[0];
-            field pass => 1;
-            field name => 'Subtest: foo';
+            prop file       => __FILE__;
+            prop line       => $lines[0];
+            field pass      => 1;
+            field name      => 'Subtest: foo';
             field subevents => subset {
                 event Ok => sub {
-                    prop file => __FILE__;
-                    prop line => $lines[1];
+                    prop file  => __FILE__;
+                    prop line  => $lines[1];
                     field name => 'pass';
                     field pass => 1;
                 };
-                event Plan => { max => 1 };
+                event Plan => {max => 1};
             };
         };
     },
@@ -172,7 +171,7 @@ like(
 @lines = ();
 like(
     intercept {
-        push @lines => __LINE__ + 5;
+        push @lines            => __LINE__ + 5;
         subtest_streamed 'foo' => sub {
             plan 1;
             push @lines => __LINE__ + 1;
@@ -180,17 +179,17 @@ like(
         };
     },
     subset {
-        event Note => { message => 'Subtest: foo' };
+        event Note => {message => 'Subtest: foo'};
         event Subtest => sub {
-            prop file => __FILE__;
-            prop line => $lines[0];
-            field pass => 1;
-            field name => 'Subtest: foo';
+            prop file       => __FILE__;
+            prop line       => $lines[0];
+            field pass      => 1;
+            field name      => 'Subtest: foo';
             field subevents => subset {
-                event Plan => { max => 1 };
+                event Plan => {max => 1};
                 event Ok => sub {
-                    prop file => __FILE__;
-                    prop line => $lines[1];
+                    prop file  => __FILE__;
+                    prop line  => $lines[1];
                     field name => 'pass';
                     field pass => 1;
                 };
@@ -203,7 +202,7 @@ like(
 @lines = ();
 like(
     intercept {
-        push @lines => __LINE__ + 5;
+        push @lines            => __LINE__ + 5;
         subtest_streamed 'foo' => sub {
             skip_all 'bleh';
             push @lines => __LINE__ + 1;
@@ -211,14 +210,14 @@ like(
         };
     },
     subset {
-        event Note => { message => 'Subtest: foo' };
+        event Note => {message => 'Subtest: foo'};
         event Subtest => sub {
-            prop file => __FILE__;
-            prop line => $lines[0];
-            field pass => 1;
-            field name => 'Subtest: foo';
+            prop file       => __FILE__;
+            prop line       => $lines[0];
+            field pass      => 1;
+            field name      => 'Subtest: foo';
             field subevents => subset {
-                event Plan => { directive => 'SKIP', reason => 'bleh' };
+                event Plan => {directive => 'SKIP', reason => 'bleh'};
             };
         };
     },
@@ -234,8 +233,8 @@ like(
         };
     },
     subset {
-        event Note => { message => 'Subtest: foo' };
-        event Bail => { reason => 'cause' };
+        event Note => {message => 'Subtest: foo'};
+        event Bail => {reason  => 'cause'};
     },
     "Can bail out"
 );
@@ -243,7 +242,7 @@ like(
 @lines = ();
 like(
     intercept {
-        push @lines => __LINE__ + 4;
+        push @lines            => __LINE__ + 4;
         subtest_buffered 'foo' => sub {
             push @lines => __LINE__ + 1;
             ok(1, "pass");
@@ -251,14 +250,14 @@ like(
     },
     subset {
         event Subtest => sub {
-            prop file => __FILE__;
-            prop line => $lines[0];
-            field pass => 1;
-            field name => 'foo';
+            prop file       => __FILE__;
+            prop line       => $lines[0];
+            field pass      => 1;
+            field name      => 'foo';
             field subevents => subset {
                 event Ok => sub {
-                    prop file => __FILE__;
-                    prop line => $lines[1];
+                    prop file  => __FILE__;
+                    prop line  => $lines[1];
                     field name => 'pass';
                     field pass => 1;
                 };
@@ -271,7 +270,7 @@ like(
 @lines = ();
 like(
     intercept {
-        push @lines => __LINE__ + 4;
+        push @lines            => __LINE__ + 4;
         subtest_buffered 'foo' => sub {
             push @lines => __LINE__ + 1;
             ok(0, "fail");
@@ -279,14 +278,14 @@ like(
     },
     subset {
         event Subtest => sub {
-            prop file => __FILE__;
-            prop line => $lines[0];
-            field pass => 0;
-            field name => 'foo';
+            prop file       => __FILE__;
+            prop line       => $lines[0];
+            field pass      => 0;
+            field name      => 'foo';
             field subevents => subset {
                 event Ok => sub {
-                    prop file => __FILE__;
-                    prop line => $lines[1];
+                    prop file  => __FILE__;
+                    prop line  => $lines[1];
                     field name => 'fail';
                     field pass => 0;
                 };
@@ -299,7 +298,7 @@ like(
 @lines = ();
 like(
     intercept {
-        push @lines => __LINE__ + 5;
+        push @lines            => __LINE__ + 5;
         subtest_buffered 'foo' => sub {
             push @lines => __LINE__ + 1;
             ok(1, "pass");
@@ -308,18 +307,18 @@ like(
     },
     subset {
         event Subtest => sub {
-            prop file => __FILE__;
-            prop line => $lines[0];
-            field pass => 1;
-            field name => 'foo';
+            prop file       => __FILE__;
+            prop line       => $lines[0];
+            field pass      => 1;
+            field name      => 'foo';
             field subevents => subset {
                 event Ok => sub {
-                    prop file => __FILE__;
-                    prop line => $lines[1];
+                    prop file  => __FILE__;
+                    prop line  => $lines[1];
                     field name => 'pass';
                     field pass => 1;
                 };
-                event Plan => { max => 1 };
+                event Plan => {max => 1};
             };
         };
     },
@@ -329,7 +328,7 @@ like(
 @lines = ();
 like(
     intercept {
-        push @lines => __LINE__ + 5;
+        push @lines            => __LINE__ + 5;
         subtest_buffered 'foo' => sub {
             plan 1;
             push @lines => __LINE__ + 1;
@@ -338,15 +337,15 @@ like(
     },
     subset {
         event Subtest => sub {
-            prop file => __FILE__;
-            prop line => $lines[0];
-            field pass => 1;
-            field name => 'foo';
+            prop file       => __FILE__;
+            prop line       => $lines[0];
+            field pass      => 1;
+            field name      => 'foo';
             field subevents => subset {
-                event Plan => { max => 1 };
+                event Plan => {max => 1};
                 event Ok => sub {
-                    prop file => __FILE__;
-                    prop line => $lines[1];
+                    prop file  => __FILE__;
+                    prop line  => $lines[1];
                     field name => 'pass';
                     field pass => 1;
                 };
@@ -359,7 +358,7 @@ like(
 @lines = ();
 like(
     intercept {
-        push @lines => __LINE__ + 5;
+        push @lines            => __LINE__ + 5;
         subtest_buffered 'foo' => sub {
             skip_all 'bleh';
             push @lines => __LINE__ + 1;
@@ -368,12 +367,12 @@ like(
     },
     subset {
         event Subtest => sub {
-            prop file => __FILE__;
-            prop line => $lines[0];
-            field pass => 1;
-            field name => 'foo';
+            prop file       => __FILE__;
+            prop line       => $lines[0];
+            field pass      => 1;
+            field name      => 'foo';
             field subevents => subset {
-                event Plan => { directive => 'SKIP', reason => 'bleh' };
+                event Plan => {directive => 'SKIP', reason => 'bleh'};
             };
         };
     },
@@ -389,7 +388,7 @@ like(
         };
     },
     subset {
-        event Bail => { reason => 'cause' };
+        event Bail => {reason => 'cause'};
     },
     "Can bail out"
 );
@@ -407,12 +406,12 @@ like(
     },
     subset {
         event Subtest => sub {
-            prop file => __FILE__;
-            prop line => $lines[0];
-            field pass => 1;
-            field name => 'foo';
+            prop file       => __FILE__;
+            prop line       => $lines[0];
+            field pass      => 1;
+            field name      => 'foo';
             field subevents => subset {
-                event Plan => { directive => 'SKIP', reason => 'bleh' };
+                event Plan => {directive => 'SKIP', reason => 'bleh'};
             };
         };
     },

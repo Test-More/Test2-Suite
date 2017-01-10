@@ -12,6 +12,7 @@ like(
 my $x;
 
 {
+
     package Require::Foo;
     use base 'Test2::Require';
     sub skip { $x }

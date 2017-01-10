@@ -22,7 +22,7 @@ sub init {
 sub name { '<BAG>' }
 
 sub verify {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
 
     return 0 unless $params{exists};
@@ -33,25 +33,23 @@ sub verify {
 }
 
 sub add_item {
-    my $self = shift;
+    my $self  = shift;
     my $check = pop;
-    my ($idx) = @_;
 
     push @{$self->{+ITEMS}}, $check;
 }
 
 sub deltas {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     my ($got, $convert, $seen) = @params{qw/got convert seen/};
 
     my @deltas;
-    my $state = 0;
     my @items = @{$self->{+ITEMS}};
 
     # Make a copy that we can munge as needed.
     my @list = @$got;
-    my %unmatched = map { $_ => $list[$_] } 0..$#list;
+    my %unmatched = map { $_ => $list[$_] } 0 .. $#list;
 
     while (@items) {
         my $item = shift @items;
@@ -59,8 +57,8 @@ sub deltas {
         my $check = $convert->($item);
 
         my $match = 0;
-        for my $idx (0..$#list) {
-            my $val = $list[$idx];
+        for my $idx (0 .. $#list) {
+            my $val    = $list[$idx];
             my $deltas = $check->run(
                 id      => [ARRAY => $idx],
                 convert => $convert,
@@ -87,7 +85,7 @@ sub deltas {
     }
 
     # if elements are left over, and ending is true, we have a problem!
-    if($self->{+ENDING} && keys %unmatched) {
+    if ($self->{+ENDING} && keys %unmatched) {
         for my $idx (sort keys %unmatched) {
             my $elem = $list[$idx];
             push @deltas => $self->delta_class->new(

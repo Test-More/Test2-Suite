@@ -10,19 +10,20 @@ subtest unicode_display_width => sub {
     my $have_gcstring = eval { require Unicode::GCString; 1 };
 
     subtest no_unicode_linebreak => sub {
-        my @table = table('header' => [ 'a', 'b'], 'rows'   => [[ '婧', '߃' ]]);
+        my @table = table('header' => ['a', 'b'], 'rows' => [['婧', '߃']]);
 
         like(
             \@table,
             ["Unicode::GCString is not installed, table may not display all unicode characters properly"],
             "got unicode note"
         );
-    } unless USE_GCS;
+        }
+        unless USE_GCS;
 
     subtest with_unicode_linebreak => sub {
         my @table = table(
-            'header' => [ 'a', 'b'],
-            'rows'   => [[ 'a婧b', '߃' ]],
+            'header'    => ['a',      'b'],
+            'rows'      => [['a婧b', '߃']],
             'max_width' => 80,
         );
         is(
@@ -36,16 +37,17 @@ subtest unicode_display_width => sub {
             ],
             "Support for unicode characters that use multiple columns"
         );
-    } if USE_GCS;
+        }
+        if USE_GCS;
 };
 
 subtest width => sub {
     my @table = table(
         max_width => 40,
-        header => [ 'a', 'b', 'c', 'd' ],
-        rows => [
-            [ qw/aaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbb ccccccccccccccccccccccc ddddddddddddddddddddddddddddd/ ],
-            [ qw/AAAAAAAAAAAAAAAAAAAAAAAAAA BBBBBBBBBBBBBBBBBBBBB CCCCCCCCCCCCCCCCCCCCCCC DDDDDDDDDDDDDDDDDDDDDDDDDDDDD/ ],
+        header    => ['a', 'b', 'c', 'd'],
+        rows      => [
+            [qw/aaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbb ccccccccccccccccccccccc ddddddddddddddddddddddddddddd/],
+            [qw/AAAAAAAAAAAAAAAAAAAAAAAAAA BBBBBBBBBBBBBBBBBBBBB CCCCCCCCCCCCCCCCCCCCCCC DDDDDDDDDDDDDDDDDDDDDDDDDDDDD/],
         ],
     );
 
@@ -77,10 +79,10 @@ subtest width => sub {
 
     @table = table(
         max_width => 60,
-        header => [ 'a', 'b', 'c', 'd' ],
-        rows => [
-            [ qw/aaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbb ccccccccccccccccccccccc ddddddddddddddddddddddddddddd/ ],
-            [ qw/AAAAAAAAAAAAAAAAAAAAAAAAAA BBBBBBBBBBBBBBBBBBBBB CCCCCCCCCCCCCCCCCCCCCCC DDDDDDDDDDDDDDDDDDDDDDDDDDDDD/ ],
+        header    => ['a', 'b', 'c', 'd'],
+        rows      => [
+            [qw/aaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbb ccccccccccccccccccccccc ddddddddddddddddddddddddddddd/],
+            [qw/AAAAAAAAAAAAAAAAAAAAAAAAAA BBBBBBBBBBBBBBBBBBBBB CCCCCCCCCCCCCCCCCCCCCCC DDDDDDDDDDDDDDDDDDDDDDDDDDDDD/],
         ],
     );
 
@@ -106,10 +108,10 @@ subtest width => sub {
 
     @table = table(
         max_width => 60,
-        header => [ 'a', 'b', 'c', 'd' ],
-        rows => [
-            [ qw/aaaa bbbb cccc dddd/ ],
-            [ qw/AAAA BBBB CCCC DDDD/ ],
+        header    => ['a', 'b', 'c', 'd'],
+        rows      => [
+            [qw/aaaa bbbb cccc dddd/],
+            [qw/AAAA BBBB CCCC DDDD/],
         ],
     );
 
@@ -132,11 +134,11 @@ subtest width => sub {
 subtest collapse => sub {
     my @table = table(
         max_width => 60,
-        collapse => 1,
-        header => [ 'a', 'b', 'c', 'd' ],
-        rows => [
-            [ qw/aaaa bbbb/, undef, qw/dddd/ ],
-            [ qw/AAAA BBBB/, '', qw/DDDD/ ],
+        collapse  => 1,
+        header    => ['a', 'b', 'c', 'd'],
+        rows      => [
+            [qw/aaaa bbbb/, undef, qw/dddd/],
+            [qw/AAAA BBBB/, '',    qw/DDDD/],
         ],
     );
 
@@ -155,10 +157,10 @@ subtest collapse => sub {
 
     @table = table(
         max_width => 60,
-        header => [ 'a', 'b', 'c', 'd' ],
-        rows => [
-            [ qw/aaaa bbbb/, undef, qw/dddd/ ],
-            [ qw/AAAA BBBB/, '', qw/DDDD/ ],
+        header    => ['a', 'b', 'c', 'd'],
+        rows      => [
+            [qw/aaaa bbbb/, undef, qw/dddd/],
+            [qw/AAAA BBBB/, '',    qw/DDDD/],
         ],
     );
 
@@ -177,11 +179,11 @@ subtest collapse => sub {
 
     @table = table(
         max_width => 60,
-        collapse => 1,
-        header => [ 'a', 'b', 'c', 'd' ],
-        rows => [
-            [ qw/aaaa bbbb/, undef, qw/dddd/ ],
-            [ qw/AAAA BBBB/, 0, qw/DDDD/ ],
+        collapse  => 1,
+        header    => ['a', 'b', 'c', 'd'],
+        rows      => [
+            [qw/aaaa bbbb/, undef, qw/dddd/],
+            [qw/AAAA BBBB/, 0,     qw/DDDD/],
         ],
     );
 
@@ -203,10 +205,10 @@ subtest collapse => sub {
 subtest header => sub {
     my @table = table(
         max_width => 60,
-        header => [ 'a', 'b', 'c', 'd' ],
-        rows => [
-            [ qw/aaaa bbbb cccc dddd/ ],
-            [ qw/AAAA BBBB CCCC DDDD/ ],
+        header    => ['a', 'b', 'c', 'd'],
+        rows      => [
+            [qw/aaaa bbbb cccc dddd/],
+            [qw/AAAA BBBB CCCC DDDD/],
         ],
     );
 
@@ -227,9 +229,9 @@ subtest header => sub {
 subtest no_header => sub {
     my @table = table(
         max_width => 60,
-        rows => [
-            [ qw/aaaa bbbb cccc dddd/ ],
-            [ qw/AAAA BBBB CCCC DDDD/ ],
+        rows      => [
+            [qw/aaaa bbbb cccc dddd/],
+            [qw/AAAA BBBB CCCC DDDD/],
         ],
     );
 
@@ -248,17 +250,17 @@ subtest no_header => sub {
 subtest sanitize => sub {
     my @table = table(
         max_width => 60,
-        sanitize => 1,
-        header => [ 'data1' ],
-        rows => [["a\t\n\r\b\a          　‌﻿\N{U+000B}bф"]],
+        sanitize  => 1,
+        header    => ['data1'],
+        rows      => [["a\t\n\r\b\a          　‌﻿\N{U+000B}bф"]],
     );
 
     my $have_gcstring = eval { require Unicode::GCString; 1 } || 0;
 
     is(
         \@table,
-        [
-            ( $have_gcstring
+        [(
+                $have_gcstring
                 ? ()
                 : ("Unicode::GCString is not installed, table may not display all unicode characters properly")
             ),
@@ -279,8 +281,8 @@ subtest mark_tail => sub {
     my @table = table(
         max_width => 60,
         mark_tail => 1,
-        header => [ 'data1', 'data2' ],
-        rows => [["  abc  def   ", "  abc  def  \t"]],
+        header    => ['data1', 'data2'],
+        rows      => [["  abc  def   ", "  abc  def  \t"]],
     );
 
     is(

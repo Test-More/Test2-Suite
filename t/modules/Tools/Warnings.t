@@ -1,16 +1,17 @@
 use Test2::Bundle::Extended -target => 'Test2::Tools::Warnings';
 
 {
+
     package Foo;
     use Test2::Tools::Warnings qw/warns warning warnings no_warnings/;
     ::imported_ok(qw/warns warning warnings no_warnings/);
 }
 
-is(warns { 0 }, 0, "no warnings");
+is(warns { 0 },        0, "no warnings");
 is(warns { warn 'a' }, 1, "1 warning");
 is(warns { warn 'a' for 1 .. 4 }, 4, "4 warnings");
 
-ok(no_warnings { 0 }, "no warnings");
+ok(no_warnings  { 0 },        "no warnings");
 ok(!no_warnings { warn 'a' }, "warnings");
 
 is(
@@ -21,7 +22,7 @@ is(
 
 is(
     warnings { warn "a\n" for 1 .. 4 },
-    [ map "a\n", 1 .. 4 ],
+    [map "a\n", 1 .. 4],
     "4 warnings in arrayref"
 );
 
@@ -53,8 +54,8 @@ like(
 like(
     $events,
     array {
-        event Note => { message => "a\n" };
-        event Note => { message => "b\n" };
+        event Note => {message => "a\n"};
+        event Note => {message => "b\n"};
     },
     "Got warnings as notes."
 );

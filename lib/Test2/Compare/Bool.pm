@@ -15,7 +15,7 @@ use Test2::Compare::Negatable;
 
 sub name {
     my $self = shift;
-    my $in = $self->{+INPUT};
+    my $in   = $self->{+INPUT};
     return _render_bool($in);
 }
 
@@ -26,7 +26,7 @@ sub operator {
 }
 
 sub verify {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     my ($got, $exists) = @params{qw/got exists/};
 
@@ -56,7 +56,7 @@ sub run {
 sub _render_bool {
     my $bool = shift;
     my $name = $bool ? 'TRUE' : 'FALSE';
-    my $val = defined $bool ? $bool : 'undef';
+    my $val  = defined $bool ? $bool : 'undef';
     $val = "''" unless length($val);
 
     return "<$name ($val)>";

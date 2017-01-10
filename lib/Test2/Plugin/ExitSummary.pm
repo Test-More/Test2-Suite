@@ -12,12 +12,11 @@ sub import { test2_add_callback_exit(\&summary) unless $ADDED_HOOK++ }
 sub active { $ADDED_HOOK }
 
 sub summary {
-    my ($ctx, $real, $new) = @_;
+    my ($ctx, $real) = @_;
 
-    my $hub    = $ctx->hub;
-    my $plan   = $hub->plan;
-    my $count  = $hub->count;
-    my $failed = $hub->failed;
+    my $hub   = $ctx->hub;
+    my $plan  = $hub->plan;
+    my $count = $hub->count;
 
     $ctx->diag('No tests run!') if !$count && (!$plan || $plan ne 'SKIP');
     $ctx->diag('Tests were run but no plan was declared and done_testing() was not seen.')

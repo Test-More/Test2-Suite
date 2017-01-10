@@ -14,7 +14,7 @@ use Scalar::Util qw/reftype/;
 sub init {
     my $self = shift;
 
-    if(my $ref = $self->{+INREF}) {
+    if (my $ref = $self->{+INREF}) {
         croak "Cannot specify both 'inref' and 'items'" if $self->{+ITEMS};
         croak "Cannot specify both 'inref' and 'order'" if $self->{+ORDER};
         $self->{+ITEMS} = {%$ref};
@@ -24,8 +24,8 @@ sub init {
         # Clone the ref to be safe
         $self->{+ITEMS} = $self->{+ITEMS} ? {%{$self->{+ITEMS}}} : {};
         if ($self->{+ORDER}) {
-            my @all = keys %{$self->{+ITEMS}};
-            my %have = map { $_ => 1 } @{$self->{+ORDER}};
+            my @all     = keys %{$self->{+ITEMS}};
+            my %have    = map { $_ => 1 } @{$self->{+ORDER}};
             my @missing = grep { !$have{$_} } @all;
             croak "Keys are missing from the 'order' array: " . join(', ', sort @missing)
                 if @missing;
@@ -44,7 +44,7 @@ sub init {
 sub name { '<HASH>' }
 
 sub verify {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     my ($got, $exists) = @params{qw/got exists/};
 
@@ -80,12 +80,12 @@ sub add_for_each_val {
 }
 
 sub deltas {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     my ($got, $convert, $seen) = @params{qw/got convert seen/};
 
     my @deltas;
-    my $items = $self->{+ITEMS};
+    my $items    = $self->{+ITEMS};
     my $each_key = $self->{+FOR_EACH_KEY};
     my $each_val = $self->{+FOR_EACH_VAL};
 

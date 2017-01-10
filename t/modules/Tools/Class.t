@@ -1,6 +1,7 @@
 use Test2::Bundle::Extended -target => 'Test2::Tools::Class';
 
 {
+
     package Temp;
     use Test2::Tools::Class;
 
@@ -8,6 +9,7 @@ use Test2::Bundle::Extended -target => 'Test2::Tools::Class';
 }
 
 {
+
     package X;
 
     sub can {
@@ -28,14 +30,16 @@ use Test2::Bundle::Extended -target => 'Test2::Tools::Class';
 }
 
 {
+
     package XYZ;
     use Carp qw/croak/;
-    sub isa { croak 'oops' };
-    sub can { croak 'oops' };
-    sub DOES { croak 'oops' };
+    sub isa  { croak 'oops' }
+    sub can  { croak 'oops' }
+    sub DOES { croak 'oops' }
 }
 
 {
+
     package My::String;
     use overload '""' => sub { "xxx\nyyy" };
 
@@ -51,8 +55,8 @@ like(
         DOES_ok('X', qw/axe box fox/);
         isa_ok($str, 'My::String');
 
-        isa_ok('X',  qw/foo bar axe box/);
-        can_ok('X',  qw/foo bar axe box/);
+        isa_ok('X', qw/foo bar axe box/);
+        can_ok('X', qw/foo bar axe box/);
         DOES_ok('X', qw/foo bar axe box/);
 
         isa_ok($str, 'X');
@@ -60,50 +64,50 @@ like(
         DOES_ok($str, 'X');
 
         isa_ok(undef, 'X');
-        isa_ok('', 'X');
-        isa_ok({}, 'X');
+        isa_ok('',    'X');
+        isa_ok({},    'X');
 
-        isa_ok('X',  [qw/axe box fox/], 'alt name');
-        can_ok('X',  [qw/axe box fox/], 'alt name');
+        isa_ok('X', [qw/axe box fox/], 'alt name');
+        can_ok('X', [qw/axe box fox/], 'alt name');
         DOES_ok('X', [qw/axe box fox/], 'alt name');
 
-        isa_ok('X',  [qw/foo bar axe box/], 'alt name');
-        can_ok('X',  [qw/foo bar axe box/], 'alt name');
+        isa_ok('X', [qw/foo bar axe box/], 'alt name');
+        can_ok('X', [qw/foo bar axe box/], 'alt name');
         DOES_ok('X', [qw/foo bar axe box/], 'alt name');
     },
     array {
-        event Ok => { pass => 1, name => 'X->isa(...)' };
-        event Ok => { pass => 1, name => 'X->can(...)' };
-        event Ok => { pass => 1, name => 'X->DOES(...)' };
-        event Ok => { pass => 1, name => qr/My::String=.*->isa\('My::String'\)/ };
+        event Ok => {pass => 1, name => 'X->isa(...)'};
+        event Ok => {pass => 1, name => 'X->can(...)'};
+        event Ok => {pass => 1, name => 'X->DOES(...)'};
+        event Ok => {pass => 1, name => qr/My::String=.*->isa\('My::String'\)/};
 
         fail_events Ok => sub { call pass => 0 };
         event Diag => {message => "Failed: X->isa('foo')"};
         event Diag => {message => "Failed: X->isa('bar')"};
         fail_events Ok => sub { call pass => 0 };
-        event Diag => { message => "Failed: X->can('foo')" };
-        event Diag => { message => "Failed: X->can('bar')" };
+        event Diag => {message => "Failed: X->can('foo')"};
+        event Diag => {message => "Failed: X->can('bar')"};
         fail_events Ok => sub { call pass => 0 };
-        event Diag => { message => "Failed: X->DOES('foo')" };
-        event Diag => { message => "Failed: X->DOES('bar')" };
+        event Diag => {message => "Failed: X->DOES('foo')"};
+        event Diag => {message => "Failed: X->DOES('bar')"};
 
         fail_events Ok => sub { call pass => 0 };
-        event Diag => { message => qr/Failed: My::String=HASH->isa\('X'\)/ };
+        event Diag => {message => qr/Failed: My::String=HASH->isa\('X'\)/};
         fail_events Ok => sub { call pass => 0 };
-        event Diag => { message => qr/Failed: My::String=HASH->can\('X'\)/ };
+        event Diag => {message => qr/Failed: My::String=HASH->can\('X'\)/};
         fail_events Ok => sub { call pass => 0 };
-        event Diag => { message => qr/Failed: My::String=HASH->DOES\('X'\)/ };
+        event Diag => {message => qr/Failed: My::String=HASH->DOES\('X'\)/};
 
         fail_events Ok => sub { call pass => 0 };
-        event Diag => { message => qr/<undef> is neither a blessed reference or a package name/ };
+        event Diag => {message => qr/<undef> is neither a blessed reference or a package name/};
         fail_events Ok => sub { call pass => 0 };
-        event Diag => { message => qr/'' is neither a blessed reference or a package name/ };
+        event Diag => {message => qr/'' is neither a blessed reference or a package name/};
         fail_events Ok => sub { call pass => 0 };
-        event Diag => { message => qr/HASH is neither a blessed reference or a package name/ };
+        event Diag => {message => qr/HASH is neither a blessed reference or a package name/};
 
-        event Ok => { pass => 1, name => 'alt name' };
-        event Ok => { pass => 1, name => 'alt name' };
-        event Ok => { pass => 1, name => 'alt name' };
+        event Ok => {pass => 1, name => 'alt name'};
+        event Ok => {pass => 1, name => 'alt name'};
+        event Ok => {pass => 1, name => 'alt name'};
 
         fail_events Ok => sub { call pass => 0; call name => 'alt name' };
         event Diag => {message => "Failed: X->isa('foo')"};
@@ -132,7 +136,8 @@ my $events = intercept {
         my ($thing, $sub) = @_;
         return undef if $sub eq 'DOES';
         $thing->$can($sub);
-    } if $override;
+        }
+        if $override;
 
     DOES_ok('A::Fake::Package', 'xxx');
 };

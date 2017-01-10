@@ -10,7 +10,7 @@ our @EXPORT = qw/warns warning warnings no_warnings/;
 use base 'Exporter';
 
 sub warns(&) {
-    my $code = shift;
+    my $code     = shift;
     my $warnings = 0;
     local $SIG{__WARN__} = sub { $warnings++ };
     $code->();
@@ -49,7 +49,6 @@ sub warnings(&) {
 }
 
 1;
-
 
 # ABSTRACT: Tools to verify warnings
 

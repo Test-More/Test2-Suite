@@ -11,9 +11,9 @@ our @EXPORT = qw/subtest_streamed subtest_buffered/;
 use base 'Exporter';
 
 sub subtest_streamed {
-    my $name = shift;
+    my $name   = shift;
     my $params = ref($_[0]) eq 'HASH' ? shift(@_) : {};
-    my $code = shift;
+    my $code   = shift;
 
     $params->{buffered} = 0 unless defined $params->{buffered};
 
@@ -24,9 +24,9 @@ sub subtest_streamed {
 }
 
 sub subtest_buffered {
-    my $name = shift;
+    my $name   = shift;
     my $params = ref($_[0]) eq 'HASH' ? shift(@_) : {};
-    my $code = shift;
+    my $code   = shift;
 
     $params->{buffered} = 1 unless defined $params->{buffered};
 

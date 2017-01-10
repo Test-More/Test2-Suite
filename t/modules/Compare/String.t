@@ -8,10 +8,10 @@ my $untru2 = $CLASS->new(input => 0);
 isa_ok($_, $CLASS, 'Test2::Compare::Base') for $number, $string, $untru1, $untru2;
 
 subtest name => sub {
-    is($number->name, '22.0',    "got expected name");
-    is($string->name, 'hello',   "got expected name");
-    is($untru1->name, '',        "got expected name");
-    is($untru2->name, '0',       "got expected name");
+    is($number->name, '22.0',  "got expected name");
+    is($string->name, 'hello', "got expected name");
+    is($untru1->name, '',      "got expected name");
+    is($untru2->name, '0',     "got expected name");
 };
 
 subtest operator => sub {
@@ -42,7 +42,7 @@ subtest verify => sub {
     ok(!$number->verify(exists => 1, got => undef), 'looking for a number, not undef');
     ok(!$number->verify(exists => 1, got => 'x'),   'not looking for a string');
     ok(!$number->verify(exists => 1, got => 1),     'wrong number');
-    ok(!$number->verify(exists => 1, got => 22),     '22.0 ne 22');
+    ok(!$number->verify(exists => 1, got => 22),    '22.0 ne 22');
     ok($number->verify(exists => 1, got => '22.0'), 'exact match with decimal');
 
     ok(!$string->verify(exists => 0, got => undef), 'does not verify against DNE');
@@ -59,14 +59,14 @@ subtest verify => sub {
     ok(!$untru1->verify(exists => 1, got => 1),     'not a number');
     ok($untru1->verify(exists => 1, got => ''), 'exact match, empty string');
 
-    ok(!$untru2->verify(exists => 0, got => undef), 'does not verify against DNE');
-    ok(!$untru2->verify(exists => 1, got => {}),    'ref will not verify');
-    ok(!$untru2->verify(exists => 1, got => undef), 'undef is not 0 for this test');
-    ok(!$untru2->verify(exists => 1, got => 'x'),   'x is not 0');
-    ok(!$untru2->verify(exists => 1, got => 1),     '1 is not 0');
+    ok(!$untru2->verify(exists => 0, got => undef),  'does not verify against DNE');
+    ok(!$untru2->verify(exists => 1, got => {}),     'ref will not verify');
+    ok(!$untru2->verify(exists => 1, got => undef),  'undef is not 0 for this test');
+    ok(!$untru2->verify(exists => 1, got => 'x'),    'x is not 0');
+    ok(!$untru2->verify(exists => 1, got => 1),      '1 is not 0');
     ok(!$untru2->verify(exists => 1, got => '0.0'),  '0.0 ne 0');
     ok(!$untru2->verify(exists => 1, got => '-0.0'), '-0.0 ne 0');
-    ok($untru2->verify(exists => 1, got => 0),      'got 0');
+    ok($untru2->verify(exists => 1, got => 0), 'got 0');
 };
 
 like(

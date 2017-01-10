@@ -9,7 +9,7 @@ my %Layers;
 
 sub get_layers {
     my $fh = shift;
-    return { map {$_ => 1} PerlIO::get_layers($fh) };
+    return {map { $_ => 1 } PerlIO::get_layers($fh)};
 }
 
 BEGIN {
@@ -22,17 +22,20 @@ use Test2::Tools::Basic;
 use Test2::Tools::Compare;
 use Test2::API qw(test2_stack);
 
-note "pragma"; {
+note "pragma";
+{
     ok(utf8::is_utf8("癸"), "utf8 pragma is on");
 }
 
-note "io_layers"; {
+note "io_layers";
+{
     is get_layers(*STDOUT), $Layers{STDOUT}, "STDOUT encoding is untouched";
     is get_layers(*STDERR), $Layers{STDERR}, "STDERR encoding is untouched";
 }
 
-note "format_handles"; {
-    my $format = test2_stack()->top->format;
+note "format_handles";
+{
+    my $format  = test2_stack()->top->format;
     my $handles = $format->handles;
     for my $hn (0 .. @$handles) {
         my $h = $handles->[$hn] || next;

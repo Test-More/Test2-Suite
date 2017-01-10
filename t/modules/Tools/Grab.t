@@ -10,13 +10,13 @@ my $one = $grab->events;
 ok(0, "fail");
 my $events = $grab->finish;
 
-is(@$one, 1, "Captured 1 event");
+is(@$one,    1, "Captured 1 event");
 is(@$events, 3, "Captured 3 events");
 
 like(
     $one,
     array {
-        event Ok => { pass => 1 };
+        event Ok => {pass => 1};
     },
     "Got expected event"
 );
@@ -24,9 +24,9 @@ like(
 like(
     $events,
     array {
-        event Ok => { pass => 1 };
-        event Ok => { pass => 0 };
-        event Diag => { };
+        event Ok => {pass => 1};
+        event Ok => {pass => 0};
+        event Diag => {};
         end;
     },
     "Got expected events"

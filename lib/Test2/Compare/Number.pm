@@ -14,7 +14,7 @@ use Test2::Util::HashBase qw/input/;
 use Test2::Compare::Negatable;
 
 sub init {
-    my $self = shift;
+    my $self  = shift;
     my $input = $self->{+INPUT};
 
     confess "input must be defined for 'Number' check"
@@ -29,7 +29,7 @@ sub init {
 
 sub name {
     my $self = shift;
-    my $in = $self->{+INPUT};
+    my $in   = $self->{+INPUT};
     return $in;
 }
 
@@ -46,7 +46,7 @@ sub operator {
 }
 
 sub verify {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     my ($got, $exists) = @params{qw/got exists/};
 
@@ -68,7 +68,7 @@ sub verify {
     for my $warn (@warnings) {
         if ($warn =~ m/numeric/) {
             $out = 0;
-            next; # This warning won't help anyone.
+            next;    # This warning won't help anyone.
         }
         warn $warn;
     }

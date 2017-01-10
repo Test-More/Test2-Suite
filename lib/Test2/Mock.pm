@@ -12,7 +12,7 @@ use Test2::Util qw/pkg_to_file/;
 use Test2::Util::Stash qw/parse_symbol slot_to_sig get_symbol get_stash purge_symbol/;
 use Test2::Util::Sub qw/gen_accessor gen_reader gen_writer/;
 
-sub new; # Prevent hashbase from giving us 'new';
+sub new;    # Prevent hashbase from giving us 'new';
 use Test2::Util::HashBase qw/class parent child _purge_on_destroy _blocked_load _symbols/;
 
 sub new {
@@ -48,14 +48,14 @@ sub new {
         if (!$type) {
             $self->$meth($val);
         }
-        elsif($type eq 'HASH') {
+        elsif ($type eq 'HASH') {
             $self->$meth(%$val);
         }
-        elsif($type eq 'ARRAY') {
+        elsif ($type eq 'ARRAY') {
             $self->$meth(@$val);
         }
         else {
-            croak "'$val' is not a valid argument for '$meth'"
+            croak "'$val' is not a valid argument for '$meth'";
         }
     }
 
@@ -80,7 +80,6 @@ sub stash {
 
 sub file {
     my $self = shift;
-    my $file = $self->class;
     return pkg_to_file($self->class);
 }
 
@@ -218,27 +217,29 @@ sub after {
     my ($name, $sub) = @_;
     $self->_check();
     my $orig = $self->current($name);
-    $self->_inject(0, $name => sub {
-        my @out;
+    $self->_inject(
+        0,
+        $name => sub {
+            my @out;
 
-        my $want = wantarray;
+            my $want = wantarray;
 
-        if ($want) {
-            @out = $orig->(@_);
-        }
-        elsif(defined $want) {
-            $out[0] = $orig->(@_);
-        }
-        else {
-            $orig->(@_);
-        }
+            if ($want) {
+                @out = $orig->(@_);
+            }
+            elsif (defined $want) {
+                $out[0] = $orig->(@_);
+            }
+            else {
+                $orig->(@_);
+            }
 
-        $sub->(@_);
+            $sub->(@_);
 
-        return @out    if $want;
-        return $out[0] if defined $want;
-        return;
-    });
+            return @out if $want;
+            return $out[0] if defined $want;
+            return;
+        });
 }
 
 sub around {
@@ -304,7 +305,7 @@ sub _parse_inject {
     my ($is, $field, $val);
 
     if (!ref($arg)) {
-        $is    = $arg if $arg =~ m/^(rw|ro|wo)$/;
+        $is = $arg if $arg =~ m/^(rw|ro|wo)$/;
         $field = $param;
     }
     elsif (reftype($arg) eq 'HASH') {
@@ -334,7 +335,7 @@ sub _parse_inject {
     elsif ($is eq 'wo') {
         $sub = gen_writer($field);
     }
-    else { # val
+    else {    # val
         $sub = sub { $val };
     }
 
@@ -360,11 +361,12 @@ sub _inject {
 
         # Cannot be too sure about scalars in globs
         croak "Cannot add '$sig$class\::$sym', symbol is already defined"
-            if $add && $orig
+            if $add
+            && $orig
             && (reftype($orig) ne 'SCALAR' || defined($$orig));
 
         $syms->{"$sig$sym"} ||= [];
-        push @{$syms->{"$sig$sym"}} => $orig; # Might be undef, thats expected
+        push @{$syms->{"$sig$sym"}} => $orig;    # Might be undef, thats expected
 
         no strict 'refs';
         no warnings 'redefine';
@@ -442,7 +444,7 @@ sub reset_all {
 }
 
 sub _purge {
-    my $self = shift;
+    my $self  = shift;
     my $stash = $self->stash;
     delete $stash->{$_} for keys %$stash;
 }

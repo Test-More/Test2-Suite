@@ -9,7 +9,7 @@ our $VERSION = '0.000064';
 use Test2::Util qw/pkg_to_file/;
 
 sub skip {
-    my $class = shift;
+    shift;
     my ($module, $ver) = @_;
 
     return "Module '$module' is not installed"

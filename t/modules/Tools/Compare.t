@@ -3,11 +3,13 @@ use Test2::Util::Table();
 sub table { join "\n" => Test2::Util::Table::table(@_) }
 
 {
+
     package My::Boolean;
     use overload bool => sub { ${$_[0]} };
 }
 
 {
+
     package My::String;
     use overload '""' => sub { "xxx" };
 }
@@ -77,7 +79,7 @@ subtest is => sub {
                     rows   => [[qw/a eq b/]],
                 );
             };
-            event Diag => { message => 'diag' };
+            event Diag => {message => 'diag'};
 
             event Ok => sub {
                 call pass => T();
@@ -97,7 +99,7 @@ subtest is => sub {
                     ],
                 );
             };
-            event Diag => { message => 'diag' };
+            event Diag => {message => 'diag'};
 
             event Ok => sub {
                 call pass => T();
@@ -138,7 +140,7 @@ subtest is => sub {
                 call name => 'Ref-Ref check 3';
             };
 
-            event Diag => { message => match qr/\$\*->\$\*->\[0\] \| 123 \| eq \| 124/ };
+            event Diag => {message => match qr/\$\*->\$\*->\[0\] \| 123 \| eq \| 124/};
 
             end;
         },
@@ -189,7 +191,7 @@ subtest like => sub {
                     rows   => [[qw/b =~/, "$rx"]],
                 );
             };
-            event Diag => { message => 'diag' };
+            event Diag => {message => 'diag'};
 
             event Ok => sub {
                 call pass => T();
@@ -206,7 +208,7 @@ subtest like => sub {
                     rows   => [[qw/[0]{a} 2 eq 1/]],
                 );
             };
-            event Diag => { message => 'diag' };
+            event Diag => {message => 'diag'};
 
             event Ok => sub {
                 call pass => T();
@@ -239,14 +241,19 @@ subtest shortcuts => sub {
 
     my @lines;
     my $events = intercept {
-        is(0, T(), "not true");     push @lines => __LINE__;
-        is('', T(), "not true");    push @lines => __LINE__;
-        is(undef, T(), "not true"); push @lines => __LINE__;
+        is(0, T(), "not true");
+        push @lines => __LINE__;
+        is('', T(), "not true");
+        push @lines => __LINE__;
+        is(undef, T(), "not true");
+        push @lines => __LINE__;
     };
     like(
         $events,
         array {
-            filter_items { grep { !$_->isa('Test2::Event::Diag') } @_ };
+            filter_items {
+                grep { !$_->isa('Test2::Event::Diag') } @_
+            };
             event Ok => sub { call pass => 0; prop line => $lines[0]; prop file => __FILE__; };
             event Ok => sub { call pass => 0; prop line => $lines[1]; prop file => __FILE__; };
             event Ok => sub { call pass => 0; prop line => $lines[2]; prop file => __FILE__; };
@@ -267,7 +274,9 @@ subtest shortcuts => sub {
     like(
         $events,
         array {
-            filter_items { grep { !$_->isa('Test2::Event::Diag') } @_ };
+            filter_items {
+                grep { !$_->isa('Test2::Event::Diag') } @_
+            };
             event Ok => {pass => 0};
             event Ok => {pass => 0};
             event Ok => {pass => 0};
@@ -280,7 +289,7 @@ subtest shortcuts => sub {
 
     like(
         intercept { is(0, U(), "not defined") },
-        array { event Ok => { pass => 0 } },
+        array { event Ok => {pass => 0} },
         "0 is defined"
     );
 
@@ -292,26 +301,28 @@ subtest shortcuts => sub {
 
     like(
         intercept { is(undef, D(), "not defined") },
-        array { event Ok => { pass => 0 } },
+        array { event Ok => {pass => 0} },
         "undef is not defined"
     );
 
-    is(0,            DF(), "defined but false");
-    is('',           DF(), "defined but false");
+    is(0,  DF(), "defined but false");
+    is('', DF(), "defined but false");
 
     like(
         intercept {
-          is(undef,        DF());
-          is(1,            DF());
-          is(' ',          DF());
-          is('0 but true', DF());
+            is(undef,        DF());
+            is(1,            DF());
+            is(' ',          DF());
+            is('0 but true', DF());
         },
         array {
-          filter_items { grep { !$_->isa('Test2::Event::Diag') } @_ };
-          event Ok => { pass => 0 };
-          event Ok => { pass => 0 };
-          event Ok => { pass => 0 };
-          event Ok => { pass => 0 };
+            filter_items {
+                grep { !$_->isa('Test2::Event::Diag') } @_
+            };
+            event Ok => {pass => 0};
+            event Ok => {pass => 0};
+            event Ok => {pass => 0};
+            event Ok => {pass => 0};
         },
         "got fail for DF"
     );
@@ -327,10 +338,12 @@ subtest shortcuts => sub {
     like(
         $events,
         array {
-            filter_items { grep { !$_->isa('Test2::Event::Diag') } @_ };
-            event Ok => { pass => 0 };
-            event Ok => { pass => 0 };
-            event Ok => { pass => 0 };
+            filter_items {
+                grep { !$_->isa('Test2::Event::Diag') } @_
+            };
+            event Ok => {pass => 0};
+            event Ok => {pass => 0};
+            event Ok => {pass => 0};
         },
         "got failed event"
     );
@@ -347,9 +360,11 @@ subtest shortcuts => sub {
     like(
         $events,
         array {
-            filter_items { grep { !$_->isa('Test2::Event::Diag') } @_ };
-            event Ok => { pass => 0 };
-            event Ok => { pass => 0 };
+            filter_items {
+                grep { !$_->isa('Test2::Event::Diag') } @_
+            };
+            event Ok => {pass => 0};
+            event Ok => {pass => 0};
         },
         "got failed event"
     );
@@ -358,10 +373,11 @@ subtest shortcuts => sub {
 subtest exact_ref => sub {
     my $ref = {};
 
-    my $check = exact_ref($ref); my $line  = __LINE__;
+    my $check = exact_ref($ref);
+    my $line  = __LINE__;
     is($check->lines, [$line], "correct line");
 
-    my $hash = {};
+    my $hash   = {};
     my $events = intercept {
         is($ref,  $check, "pass");
         is($hash, $check, "fail");
@@ -370,9 +386,9 @@ subtest exact_ref => sub {
     like(
         $events,
         array {
-            event Ok => {pass => 1};
+            event Ok       => {pass => 1};
             fail_events Ok => {pass => 0};
-            event Diag => sub {
+            event Diag     => sub {
                 call message => table(
                     header => [qw/GOT OP CHECK LNs/],
                     rows   => [["$hash", '==', "$ref", $line]],
@@ -386,7 +402,8 @@ subtest exact_ref => sub {
 };
 
 subtest string => sub {
-    my $check = string "foo"; my $line = __LINE__;
+    my $check = string "foo";
+    my $line  = __LINE__;
     is($check->lines, [$line], "Got line number");
 
     my $events = intercept {
@@ -397,9 +414,9 @@ subtest string => sub {
     like(
         $events,
         array {
-            event Ok => {pass => 1};
-            fail_events Ok => { pass => 0 };
-            event Diag => sub {
+            event Ok       => {pass => 1};
+            fail_events Ok => {pass => 0};
+            event Diag     => sub {
                 call message => table(
                     header => [qw/GOT OP CHECK LNs/],
                     rows   => [[qw/bar eq foo/, $line]],
@@ -424,9 +441,9 @@ subtest string => sub {
         like(
             $events,
             array {
-                event Ok => {pass => 1};
+                event Ok       => {pass => 1};
                 fail_events Ok => {pass => 0};
-                event Diag => sub {
+                event Diag     => sub {
                     call message => table(
                         header => [qw/GOT OP CHECK LNs/],
                         rows   => [[qw/foo ne foo/, $line]],
@@ -440,30 +457,31 @@ subtest string => sub {
 };
 
 subtest number => sub {
-    my $check = number "22.0"; my $line = __LINE__;
+    my $check = number "22.0";
+    my $line  = __LINE__;
     is($check->lines, [$line], "Got line number");
 
     my $events = intercept {
-        is(22, $check, "pass");
+        is(22,     $check, "pass");
         is("22.0", $check, "pass");
-        is(12, $check, "fail");
-        is('xxx', $check, "fail");
+        is(12,     $check, "fail");
+        is('xxx',  $check, "fail");
     };
 
     like(
         $events,
         array {
-            event Ok => {pass => 1};
-            event Ok => {pass => 1};
+            event Ok       => {pass => 1};
+            event Ok       => {pass => 1};
             fail_events Ok => {pass => 0};
-            event Diag => sub {
+            event Diag     => sub {
                 call message => table(
                     header => [qw/GOT OP CHECK LNs/],
                     rows   => [[qw/12 == 22.0/, $line]],
                 );
             };
 
-            fail_events Ok => { pass => 0 };
+            fail_events Ok => {pass => 0};
             event Diag => sub {
                 call message => table(
                     header => [qw/GOT OP CHECK LNs/],
@@ -482,25 +500,25 @@ subtest number => sub {
         is($check->lines, [$line], "Got line number");
 
         $events = intercept {
-            is(12, $check, "pass");
-            is(22, $check, "fail");
+            is(12,     $check, "pass");
+            is(22,     $check, "fail");
             is("22.0", $check, "fail");
-            is('xxx', $check, "fail");
+            is('xxx',  $check, "fail");
         };
 
         like(
             $events,
             array {
-                event Ok => {pass => 1};
-                fail_events Ok => { pass => 0 };
-                event Diag => sub {
+                event Ok       => {pass => 1};
+                fail_events Ok => {pass => 0};
+                event Diag     => sub {
                     call message => table(
                         header => [qw/GOT OP CHECK LNs/],
                         rows   => [[qw/22 != 22.0/, $line]],
                     );
                 };
 
-                fail_events Ok => { pass => 0 };
+                fail_events Ok => {pass => 0};
                 event Diag => sub {
                     call message => table(
                         header => [qw/GOT OP CHECK LNs/],
@@ -508,7 +526,7 @@ subtest number => sub {
                     );
                 };
 
-                fail_events Ok => { pass => 0 };
+                fail_events Ok => {pass => 0};
                 event Diag => sub {
                     call message => table(
                         header => [qw/GOT OP CHECK LNs/],
@@ -636,9 +654,9 @@ subtest bool => sub {
     );
 };
 
-
 subtest match => sub {
-    my $check = match qr/xyz/; my $line = __LINE__;
+    my $check = match qr/xyz/;
+    my $line  = __LINE__;
     is($check->lines, [$line], "Got line number");
 
     my $events = intercept {
@@ -650,9 +668,9 @@ subtest match => sub {
     like(
         $events,
         array {
-            event Ok => {pass => 1};
+            event Ok       => {pass => 1};
             fail_events Ok => {pass => 0};
-            event Diag => sub {
+            event Diag     => sub {
                 call message => table(
                     header => [qw/GOT OP CHECK LNs/],
                     rows   => [[qw/abcde =~/, "$rx", $line]],
@@ -665,7 +683,8 @@ subtest match => sub {
 };
 
 subtest '!match' => sub {
-    my $check = !match qr/xyz/; my $line = __LINE__;
+    my $check = !match qr/xyz/;
+    my $line  = __LINE__;
     is($check->lines, [$line], "Got line number");
 
     my $events = intercept {
@@ -677,9 +696,9 @@ subtest '!match' => sub {
     like(
         $events,
         array {
-            event Ok => {pass => 1};
+            event Ok       => {pass => 1};
             fail_events Ok => {pass => 0};
-            event Diag => sub {
+            event Diag     => sub {
                 call message => table(
                     header => [qw/GOT OP CHECK LNs/],
                     rows   => [[qw/axyzb !~/, "$rx", $line]],
@@ -692,7 +711,8 @@ subtest '!match' => sub {
 };
 
 subtest '!mismatch' => sub {
-    my $check = !mismatch qr/xyz/; my $line = __LINE__;
+    my $check = !mismatch qr/xyz/;
+    my $line  = __LINE__;
     is($check->lines, [$line], "Got line number");
 
     my $events = intercept {
@@ -704,9 +724,9 @@ subtest '!mismatch' => sub {
     like(
         $events,
         array {
-            event Ok => {pass => 1};
+            event Ok       => {pass => 1};
             fail_events Ok => {pass => 0};
-            event Diag => sub {
+            event Diag     => sub {
                 call message => table(
                     header => [qw/GOT OP CHECK LNs/],
                     rows   => [[qw/abcde =~/, "$rx", $line]],
@@ -719,7 +739,8 @@ subtest '!mismatch' => sub {
 };
 
 subtest mismatch => sub {
-    my $check = mismatch qr/xyz/; my $line = __LINE__;
+    my $check = mismatch qr/xyz/;
+    my $line  = __LINE__;
     is($check->lines, [$line], "Got line number");
 
     my $events = intercept {
@@ -731,9 +752,9 @@ subtest mismatch => sub {
     like(
         $events,
         array {
-            event Ok => {pass => 1};
+            event Ok       => {pass => 1};
             fail_events Ok => {pass => 0};
-            event Diag => sub {
+            event Diag     => sub {
                 call message => table(
                     header => [qw/GOT OP CHECK LNs/],
                     rows   => [[qw/axyzb !~/, "$rx", $line]],
@@ -747,9 +768,12 @@ subtest mismatch => sub {
 
 subtest check => sub {
     my @lines;
-    my $one = validator sub { $_ ? 1 : 0 }; push @lines => __LINE__;
-    my $two = validator two => sub { $_ ? 1 : 0 }; push @lines => __LINE__;
-    my $thr = validator 't', thr => sub { $_ ? 1 : 0 }; push @lines => __LINE__;
+    my $one = validator sub { $_ ? 1 : 0 };
+    push @lines => __LINE__;
+    my $two = validator two => sub { $_ ? 1 : 0 };
+    push @lines => __LINE__;
+    my $thr = validator 't', thr => sub { $_ ? 1 : 0 };
+    push @lines => __LINE__;
 
     is($one->lines, [$lines[0]], "line 1");
     is($two->lines, [$lines[1]], "line 2");
@@ -809,13 +833,17 @@ subtest prop => sub {
     );
 
     like(
-        dies { [meta { my $x = prop x => 1 }] },
+        dies {
+            [meta { my $x = prop x => 1 }]
+        },
         qr/'prop' should only ever be called in void context/,
         "restricted context"
     );
 
     like(
-        dies { [array { prop x => 1 }] },
+        dies {
+            [array { prop x => 1 }]
+        },
         qr/'Test2::Compare::Array.*' does not support meta-checks/,
         "not everything supports properties"
     );
@@ -829,13 +857,17 @@ subtest end => sub {
     );
 
     like(
-        dies { [meta { end() }] },
+        dies {
+            [meta { end() }]
+        },
         qr/'Test2::Compare::Meta.*' does not support 'ending'/,
         "Build does not support end"
     );
 
     like(
-        dies { [array { [end()] }] },
+        dies {
+            [array { [end()] }]
+        },
         qr/'end' should only ever be called in void context/,
         "end context"
     );
@@ -849,13 +881,17 @@ subtest field => sub {
     );
 
     like(
-        dies { [array { field a => 1 }] },
+        dies {
+            [array { field a => 1 }]
+        },
         qr/'Test2::Compare::Array.*' does not support hash field checks/,
         "Build does not take fields"
     );
 
     like(
-        dies { [hash { [field a => 1] }] },
+        dies {
+            [hash { [field a => 1] }]
+        },
         qr/'field' should only ever be called in void context/,
         "field context"
     );
@@ -863,19 +899,33 @@ subtest field => sub {
 
 subtest filter_items => sub {
     like(
-        dies { filter_items {1} },
+        dies {
+            filter_items { 1 }
+        },
         qr/No current build/,
         "Need a build"
     );
 
     like(
-        dies { [hash { filter_items {1} }] },
+        dies {
+            [
+                hash {
+                    filter_items { 1 }
+                }
+            ]
+        },
         qr/'Test2::Compare::Hash.*' does not support filters/,
         "Build does not take filters"
     );
 
     like(
-        dies { [array { [filter_items {1}] }] },
+        dies {
+            [
+                array {
+                    [filter_items { 1 }]
+                }
+            ]
+        },
         qr/'filter_items' should only ever be called in void context/,
         "filter context"
     );
@@ -889,13 +939,17 @@ subtest item => sub {
     );
 
     like(
-        dies { [hash { item 0 => 'a' }] },
+        dies {
+            [hash { item 0 => 'a' }]
+        },
         qr/'Test2::Compare::Hash.*' does not support array item checks/,
         "Build does not take items"
     );
 
     like(
-        dies { [array { [ item 0 => 'a' ] }] },
+        dies {
+            [array { [item 0 => 'a'] }]
+        },
         qr/'item' should only ever be called in void context/,
         "item context"
     );
@@ -909,13 +963,17 @@ subtest call => sub {
     );
 
     like(
-        dies { [hash { call foo => 1 }] },
+        dies {
+            [hash { call foo => 1 }]
+        },
         qr/'Test2::Compare::Hash.*' does not support method calls/,
         "Build does not take methods"
     );
 
     like(
-        dies { [object { [ call foo => 1 ] }] },
+        dies {
+            [object { [call foo => 1] }]
+        },
         qr/'call' should only ever be called in void context/,
         "call context"
     );
@@ -929,13 +987,17 @@ subtest check => sub {
     );
 
     like(
-        dies { [hash { check 'a' }] },
+        dies {
+            [hash { check 'a' }]
+        },
         qr/'Test2::Compare::Hash.*' is not a check-set/,
         "Build must support checks"
     );
 
     like(
-        dies { [in_set(sub { [ check 'a' ] })] },
+        dies {
+            [in_set(sub { [check 'a'] })]
+        },
         qr/'check' should only ever be called in void context/,
         "check context"
     );
@@ -962,10 +1024,10 @@ subtest meta => sub {
                 call message => table(
                     header => [qw/PATH GOT OP CHECK LNs/],
                     rows   => [
-                        ["", $array, '', '<META CHECKS>', "$lines[0], $lines[4]"],
-                        ['<blessed>', '<UNDEF>', '',   'Foo',  $lines[1]],
-                        ['<reftype>', 'ARRAY',   'eq', 'HASH', $lines[2]],
-                        ['<this>', $array, '', '<HASH>', $lines[3]],
+                        ["",          $array,    '',   '<META CHECKS>', "$lines[0], $lines[4]"],
+                        ['<blessed>', '<UNDEF>', '',   'Foo',           $lines[1]],
+                        ['<reftype>', 'ARRAY',   'eq', 'HASH',          $lines[2]],
+                        ['<this>',    $array,    '',   '<HASH>',        $lines[3]],
                     ],
                 );
             };
@@ -995,14 +1057,14 @@ subtest hash => sub {
     is({a => 1}, $empty, "unclosed empty matches anything");
 
     is({a => 1, b => 2}, $full, "full exact match");
-    is({a => 1, b => 2, c => 3 }, $full, "full with extra");
+    is({a => 1, b => 2, c => 3}, $full, "full with extra");
 
     is({a => 1, b => 2}, $closed, "closed");
 
     my $events = intercept {
-        is([], $empty);
-        is(undef, $empty);
-        is(1, $empty);
+        is([],     $empty);
+        is(undef,  $empty);
+        is(1,      $empty);
         is('HASH', $empty);
 
         is({}, $full);
@@ -1011,7 +1073,7 @@ subtest hash => sub {
         is({a => 1, b => 2, c => 3}, $closed);
     };
 
-    @$events = grep {$_->isa('Test2::Event::Ok')} @$events;
+    @$events = grep { $_->isa('Test2::Event::Ok') } @$events;
 
     is(@$events, 7, '7 events');
     is($_->pass, 0, "event failed") for @$events;
@@ -1028,7 +1090,9 @@ subtest array => sub {
     };
 
     my $filtered = array {
-        filter_items { grep { m/a/ } @_ };
+        filter_items {
+            grep { m/a/ } @_
+        };
         item 0 => 'a';
         item 1 => 'a';
         item 2 => 'a';
@@ -1048,10 +1112,10 @@ subtest array => sub {
         end;
     };
 
-    is([], $empty, "empty array");
+    is([],    $empty, "empty array");
     is(['a'], $empty, "any array matches empty");
 
-    is([qw/a b c/], $simple, "simple exact match");
+    is([qw/a b c/],     $simple, "simple exact match");
     is([qw/a b c d e/], $simple, "simple with extra");
 
     is([qw/x a b c a v a t t/], $filtered, "filtered out unwanted values");
@@ -1061,9 +1125,9 @@ subtest array => sub {
     is([qw/a b c/], $closed, "closed array");
 
     my $events = intercept {
-        is({}, $empty);
-        is(undef, $empty);
-        is(1, $empty);
+        is({},      $empty);
+        is(undef,   $empty);
+        is(1,       $empty);
         is('ARRAY', $empty);
 
         is([qw/x y z/], $simple);
@@ -1077,7 +1141,7 @@ subtest array => sub {
         is([qw/a b c d/], $closed);
     };
 
-    @$events = grep {$_->isa('Test2::Event::Ok')} @$events;
+    @$events = grep { $_->isa('Test2::Event::Ok') } @$events;
     is(@$events, 10, "10 events");
     is($_->pass, 0, "event failed") for @$events;
 };
@@ -1099,20 +1163,20 @@ subtest bag => sub {
         end;
     };
 
-    is([], $empty, "empty array");
+    is([],    $empty, "empty array");
     is(['a'], $empty, "any array matches empty");
 
-    is([qw/a b c/], $simple, "simple exact match");
-    is([qw/b c a/], $simple, "simple out of order");
+    is([qw/a b c/],     $simple, "simple exact match");
+    is([qw/b c a/],     $simple, "simple out of order");
     is([qw/a b c d e/], $simple, "simple with extra");
     is([qw/b a d e c/], $simple, "simple with extra, out of order");
 
     is([qw/a b c/], $closed, "closed array");
 
     my $events = intercept {
-        is({}, $empty);
-        is(undef, $empty);
-        is(1, $empty);
+        is({},      $empty);
+        is(undef,   $empty);
+        is(1,       $empty);
         is('ARRAY', $empty);
 
         is([qw/x y z/], $simple);
@@ -1122,103 +1186,105 @@ subtest bag => sub {
         is([qw/a b c d/], $closed);
     };
 
-    @$events = grep {$_->isa('Test2::Event::Ok')} @$events;
+    @$events = grep { $_->isa('Test2::Event::Ok') } @$events;
     is(@$events, 8, "8 events");
     is($_->pass, 0, "event failed") for @$events;
 };
 
 subtest object => sub {
-    my $empty = object { };
+    my $empty = object {};
 
     my $simple = object {
-        call foo => 'foo';
-        call bar => 'bar';
-        call_list many => [1,2,3,4];
-        call_hash many => {1=>2,3=>4};
-        call [args => qw(a b)] => {a=>'b'};
+        call foo       => 'foo';
+        call bar       => 'bar';
+        call_list many => [1, 2, 3, 4];
+        call_hash many => {1 => 2, 3 => 4};
+        call [args => qw(a b)] => {a => 'b'};
     };
 
     my $array = object {
-        call foo => 'foo';
-        call bar => 'bar';
-        call_list many => [1,2,3,4];
-        call_hash many => {1=>2,3=>4};
-        call [args => qw(a b)] => {a=>'b'};
+        call foo       => 'foo';
+        call bar       => 'bar';
+        call_list many => [1, 2, 3, 4];
+        call_hash many => {1 => 2, 3 => 4};
+        call [args => qw(a b)] => {a => 'b'};
         item 0 => 'x';
         item 1 => 'y';
         etc;
     };
 
     my $closed_array = object {
-        call foo => 'foo';
-        call bar => 'bar';
-        call_list many => [1,2,3,4];
-        call_hash many => {1=>2,3=>4};
-        call [args => qw(a b)] => {a=>'b'};
+        call foo       => 'foo';
+        call bar       => 'bar';
+        call_list many => [1, 2, 3, 4];
+        call_hash many => {1 => 2, 3 => 4};
+        call [args => qw(a b)] => {a => 'b'};
         item 0 => 'x';
         item 1 => 'y';
         end();
     };
 
     my $hash = object {
-        call foo => 'foo';
-        call bar => 'bar';
-        call_list many => [1,2,3,4];
-        call_hash many => {1=>2,3=>4};
-        call [args => qw(a b)] => {a=>'b'};
+        call foo       => 'foo';
+        call bar       => 'bar';
+        call_list many => [1, 2, 3, 4];
+        call_hash many => {1 => 2, 3 => 4};
+        call [args => qw(a b)] => {a => 'b'};
         field x => 1;
         field y => 2;
         etc;
     };
 
     my $closed_hash = object {
-        call foo => 'foo';
-        call bar => 'bar';
-        call_list many => [1,2,3,4];
-        call_hash many => {1=>2,3=>4};
-        call [args => qw(a b)] => {a=>'b'};
+        call foo       => 'foo';
+        call bar       => 'bar';
+        call_list many => [1, 2, 3, 4];
+        call_hash many => {1 => 2, 3 => 4};
+        call [args => qw(a b)] => {a => 'b'};
         field x => 1;
         field y => 2;
         end();
     };
 
     my $meta = object {
-        call foo => 'foo';
-        call bar => 'bar';
-        call_list many => [1,2,3,4];
-        call_hash many => {1=>2,3=>4};
-        call [args => qw(a b)] => {a=>'b'};
+        call foo       => 'foo';
+        call bar       => 'bar';
+        call_list many => [1, 2, 3, 4];
+        call_hash many => {1 => 2, 3 => 4};
+        call [args => qw(a b)] => {a => 'b'};
         prop blessed => 'ObjectFoo';
         prop reftype => 'HASH';
         etc;
     };
 
     my $mix = object {
-        call foo => 'foo';
-        call bar => 'bar';
-        call_list many => [1,2,3,4];
-        call_hash many => {1=>2,3=>4};
-        call [args => qw(a b)] => {a=>'b'};
-        field x => 1;
-        field y => 2;
+        call foo       => 'foo';
+        call bar       => 'bar';
+        call_list many => [1, 2, 3, 4];
+        call_hash many => {1 => 2, 3 => 4};
+        call [args => qw(a b)] => {a => 'b'};
+        field x      => 1;
+        field y      => 2;
         prop blessed => 'ObjectFoo';
         prop reftype => 'HASH';
         etc;
     };
 
-    my $obf = mock 'ObjectFoo' => (add => [
-        foo => sub { 'foo' },
-        bar => sub { 'bar' },
-        baz => sub {'baz'},
-        many => sub { (1,2,3,4) },
-        args => sub { shift; +{@_} },
-    ]);
-    my $obb = mock 'ObjectBar' => (add => [
-        foo => sub { 'nop' },
-        baz => sub { 'baz' },
-        many => sub { (1,2,3,4) },
-        args => sub { shift; +{@_} },
-    ]);
+    my $obf = mock 'ObjectFoo' => (
+        add => [
+            foo  => sub { 'foo' },
+            bar  => sub { 'bar' },
+            baz  => sub { 'baz' },
+            many => sub { (1, 2, 3, 4) },
+            args => sub { shift; +{@_} },
+        ]);
+    my $obb = mock 'ObjectBar' => (
+        add => [
+            foo  => sub { 'nop' },
+            baz  => sub { 'baz' },
+            many => sub { (1, 2, 3, 4) },
+            args => sub { shift; +{@_} },
+        ]);
 
     is(bless({}, 'ObjectFoo'), $empty, "Empty matches any object");
     is(bless({}, 'ObjectBar'), $empty, "Empty matches any object");
@@ -1226,7 +1292,7 @@ subtest object => sub {
     is(bless({}, 'ObjectFoo'), $simple, "simple match hash");
     is(bless([], 'ObjectFoo'), $simple, "simple match array");
 
-    is(bless([qw/x y/], 'ObjectFoo'), $array, "array match");
+    is(bless([qw/x y/],   'ObjectFoo'), $array, "array match");
     is(bless([qw/x y z/], 'ObjectFoo'), $array, "array match");
 
     is(bless([qw/x y/], 'ObjectFoo'), $closed_array, "closed array");
@@ -1241,15 +1307,15 @@ subtest object => sub {
     is(bless({x => 1, y => 2, z => 3}, 'ObjectFoo'), $mix, "mix");
 
     my $events = intercept {
-        is({}, $empty);
-        is(undef, $empty);
-        is(1, $empty);
+        is({},      $empty);
+        is(undef,   $empty);
+        is(1,       $empty);
         is('ARRAY', $empty);
 
         is(bless({}, 'ObjectBar'), $simple, "simple match hash");
         is(bless([], 'ObjectBar'), $simple, "simple match array");
 
-        is(bless([qw/a y/], 'ObjectFoo'), $array, "array match");
+        is(bless([qw/a y/],   'ObjectFoo'), $array, "array match");
         is(bless([qw/a y z/], 'ObjectFoo'), $array, "array match");
 
         is(bless([qw/x y z/], 'ObjectFoo'), $closed_array, "closed array");
@@ -1267,7 +1333,7 @@ subtest object => sub {
         is(bless({x => 1, y => 2, z => 3}, 'ObjectBar'), $mix, "mix");
     };
 
-    @$events = grep {$_->isa('Test2::Event::Ok')} @$events;
+    @$events = grep { $_->isa('Test2::Event::Ok') } @$events;
     is(@$events, 17, "17 events");
     is($_->pass, 0, "event failed") for @$events;
 
@@ -1301,9 +1367,11 @@ subtest event => sub {
         etc;
     };
 
-    my $from_hash = event Ok => sub { field pass => 1; field name => 'pass'; etc};
+    my $from_hash = event Ok => sub { field pass => 1; field name => 'pass'; etc };
 
-    my $from_build = array { event Ok => sub { field pass => 1; field name => 'pass'; etc } };
+    my $from_build = array {
+        event Ok => sub { field pass => 1; field name => 'pass'; etc }
+    };
 
     my $pass = intercept { ok(1, 'pass') };
     my $fail = intercept { ok(0, 'fail') };
@@ -1323,7 +1391,7 @@ subtest event => sub {
         is($fail,      $from_build, "worked in build");
     };
 
-    @$events = grep {$_->isa('Test2::Event::Ok')} @$events;
+    @$events = grep { $_->isa('Test2::Event::Ok') } @$events;
     is(@$events, 4, "4 events");
     is($_->pass, 0, "event failed") for @$events;
 
@@ -1350,13 +1418,15 @@ subtest sets => sub {
 
         like(
             intercept {
-                is('fox', check_set(sub{ check match qr/fo/; check 'foo' }));
+                is('fox', check_set(sub { check match qr/fo/; check 'foo' }));
                 is('fox', check_set(match qr/fo/, 'foo'));
             },
             array {
-                filter_items { grep { !$_->isa('Test2::Event::Diag') } @_ };
-                event Ok => { pass => 0 };
-                event Ok => { pass => 0 };
+                filter_items {
+                    grep { !$_->isa('Test2::Event::Diag') } @_
+                };
+                event Ok => {pass => 0};
+                event Ok => {pass => 0};
                 end;
             },
             "Failed cause not all checks passed"
@@ -1377,13 +1447,15 @@ subtest sets => sub {
 
         like(
             intercept {
-                is('fox', in_set(sub{ check 'x'; check 'foo' }));
+                is('fox', in_set(sub { check 'x'; check 'foo' }));
                 is('fox', in_set('x', 'foo'));
             },
             array {
-                filter_items { grep { !$_->isa('Test2::Event::Diag') } @_ };
-                event Ok => { pass => 0 };
-                event Ok => { pass => 0 };
+                filter_items {
+                    grep { !$_->isa('Test2::Event::Diag') } @_
+                };
+                event Ok => {pass => 0};
+                event Ok => {pass => 0};
                 end;
             },
             "Failed cause not all checks passed"
@@ -1404,13 +1476,15 @@ subtest sets => sub {
 
         like(
             intercept {
-                is('fox', not_in_set(sub{ check 'x'; check 'fox' }));
+                is('fox', not_in_set(sub { check 'x'; check 'fox' }));
                 is('fox', not_in_set('x', 'fox'));
             },
             array {
-                filter_items { grep { !$_->isa('Test2::Event::Diag') } @_ };
-                event Ok => { pass => 0 };
-                event Ok => { pass => 0 };
+                filter_items {
+                    grep { !$_->isa('Test2::Event::Diag') } @_
+                };
+                event Ok => {pass => 0};
+                event Ok => {pass => 0};
                 end;
             },
             "Failed cause not all checks passed"
@@ -1423,14 +1497,14 @@ subtest regex => sub {
     is(qr/abc/, qr/abc/, "same regex");
 
     my $events = intercept {
-        is(qr/abc/i, qr/abc/, "Wrong flags");
-        is(qr/abc/, qr/abcd/, "wrong pattern");
-        is(qr/abc/, exact_ref(qr/abc/), "not an exact match");
+        is(qr/abc/i, qr/abc/,            "Wrong flags");
+        is(qr/abc/,  qr/abcd/,           "wrong pattern");
+        is(qr/abc/,  exact_ref(qr/abc/), "not an exact match");
     };
 
-    @$events = grep {$_->isa('Test2::Event::Ok')} @$events;
+    @$events = grep { $_->isa('Test2::Event::Ok') } @$events;
     is(@$events, 3, "3 events");
-    ok(!$_->{pass}, "Event was a failure") for @$events
+    ok(!$_->{pass}, "Event was a failure") for @$events;
 };
 
 subtest isnt => sub {
@@ -1441,32 +1515,32 @@ subtest isnt => sub {
     my $events = intercept {
         isnt([], []);
         isnt('a', 'a');
-        isnt(1, 1);
+        isnt(1,   1);
         isnt({}, {});
     };
 
-    @$events = grep {$_->isa('Test2::Event::Ok')} @$events;
+    @$events = grep { $_->isa('Test2::Event::Ok') } @$events;
     is(@$events, 4, "4 events");
-    ok(!$_->{pass}, "Event was a failure") for @$events
+    ok(!$_->{pass}, "Event was a failure") for @$events;
 };
 
 subtest unlike => sub {
     unlike('a', 'b', "a is not b");
     unlike({}, [], "has is not array");
-    unlike(0, 1, "0 is not 1");
+    unlike(0,     1,       "0 is not 1");
     unlike('aaa', qr/bbb/, "aaa does not match /bbb/");
 
     my $events = intercept {
         unlike([], []);
         unlike('a', 'a');
-        unlike(1, 1);
+        unlike(1,   1);
         unlike({}, {});
-        unlike( 'foo', qr/o/ );
+        unlike('foo', qr/o/);
     };
 
-    @$events = grep {$_->isa('Test2::Event::Ok')} @$events;
+    @$events = grep { $_->isa('Test2::Event::Ok') } @$events;
     is(@$events, 5, "5 events");
-    ok(!$_->{pass}, "Event was a failure") for @$events
+    ok(!$_->{pass}, "Event was a failure") for @$events;
 };
 
 subtest all_items => sub {
@@ -1481,15 +1555,18 @@ subtest all_items => sub {
     );
 
     my @lines;
-    my $array = [qw/a aa aaa/];
-    my $regx = qr/^b+$/;
+    my $array  = [qw/a aa aaa/];
+    my $regx   = qr/^b+$/;
     my $events = intercept {
         is(
             $array,
             array {
-                all_items match $regx;  push @lines => __LINE__;
-                item 'b';               push @lines => __LINE__;
-                item 'aa';              push @lines => __LINE__;
+                all_items match $regx;
+                push @lines => __LINE__;
+                item 'b';
+                push @lines => __LINE__;
+                item 'aa';
+                push @lines => __LINE__;
                 end;
             },
             "items do not all match, and diag reflects all issues, and in order"
@@ -1532,16 +1609,20 @@ subtest all_keys_and_vals => sub {
     );
 
     my @lines;
-    my $hash = {a => 'a', 'aa' => 'aa', 'aaa' => 'aaa'};
-    my $regx = qr/^b+$/;
+    my $hash   = {a => 'a', 'aa' => 'aa', 'aaa' => 'aaa'};
+    my $regx   = qr/^b+$/;
     my $events = intercept {
         is(
             $hash,
             hash {
-                all_keys match $regx;   push @lines => __LINE__;
-                all_vals match $regx;   push @lines => __LINE__;
-                field aa => 'aa';       push @lines => __LINE__;
-                field b  => 'b';        push @lines => __LINE__;
+                all_keys match $regx;
+                push @lines => __LINE__;
+                all_vals match $regx;
+                push @lines => __LINE__;
+                field aa    => 'aa';
+                push @lines => __LINE__;
+                field b     => 'b';
+                push @lines => __LINE__;
                 end;
             },
             "items do not all match, and diag reflects all issues, and in order"
@@ -1572,6 +1653,5 @@ subtest all_keys_and_vals => sub {
         "items do not all match, and diag reflects all issues, and in order"
     );
 };
-
 
 done_testing;

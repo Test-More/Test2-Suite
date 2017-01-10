@@ -8,7 +8,7 @@ use base 'Test2::Require';
 our $VERSION = '0.000064';
 
 sub skip {
-    my $class = shift;
+    shift;
     my ($var) = @_;
     confess "no environment variable specified" unless $var;
     return undef if $ENV{$var};

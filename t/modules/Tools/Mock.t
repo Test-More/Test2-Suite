@@ -50,9 +50,9 @@ subtest mocks => sub {
     my $class;
 
     my $object = sub {
-        $inst      = mock_obj({}, add_constructor => [new => 'hash']);
+        $inst = mock_obj({}, add_constructor => [new => 'hash']);
         ($control) = mocked($inst);
-        $class     = $control->class;
+        $class = $control->class;
     };
 
     my $package = sub {
@@ -65,7 +65,7 @@ subtest mocks => sub {
         $case->();
 
         isa_ok($control, 'Test2::Mock');
-        isa_ok($inst, $class);
+        isa_ok($inst,    $class);
         ok($class, "got a class");
 
         subtest mocked => sub {
@@ -78,13 +78,15 @@ subtest mocks => sub {
 
             is(mocked($inst), 2, "now 2 control objects for this instance");
             my ($c1, $c2) = mocked($inst);
-            ref_is($c1, $control, "got first control");
+            ref_is($c1, $control,  "got first control");
             ref_is($c2, $control2, "got second control");
         };
 
         subtest build_and_do => sub {
             like(
-                dies { mock_build(undef, sub { 1 }) },
+                dies {
+                    mock_build(undef, sub { 1 })
+                },
                 qr/mock_build requires a Test2::Mock object as its first argument/,
                 "control is required",
             );
@@ -96,7 +98,9 @@ subtest mocks => sub {
             );
 
             like(
-                dies { mock_do add => (foo => sub { 'foo' }) },
+                dies {
+                    mock_do add => (foo => sub { 'foo' })
+                },
                 qr/Not currently building a mock/,
                 "mock_do outside of a build fails"
             );
@@ -123,7 +127,7 @@ subtest mocks => sub {
             };
 
             ok(!mock_building, "no mock is building");
-            ok($ran, "build sub completed successfully");
+            ok($ran,           "build sub completed successfully");
         };
     }
 };
@@ -131,16 +135,16 @@ subtest mocks => sub {
 subtest mock_obj => sub {
     my $ref = {};
     my $obj = mock_obj $ref;
-    is($ref, $obj, "blessed \$ref");
-    is($ref->foo(1), 1, "is vivifying object");
+    is($ref,         $obj, "blessed \$ref");
+    is($ref->foo(1), 1,    "is vivifying object");
 
     my $ran = 0;
     $obj = mock_obj(sub { $ran++ });
     is($ref->foo(1), 1, "is vivifying object");
-    is($ran, 1, "code ran");
+    is($ran,         1, "code ran");
 
-    $obj = mock_obj { foo => 'foo' } => (
-        add => [ bar => sub { 'bar' }],
+    $obj = mock_obj {foo => 'foo'} => (
+        add => [bar => sub { 'bar' }],
     );
 
     # We need to test the methods returned by ->can before we call the subs by
@@ -169,11 +173,11 @@ subtest mock_obj => sub {
     is($obj->{'~~MOCK~CONTROL~~'}, $c, "control is stashed");
 
     my $class = $c->class;
-    my $file = $c->file;
+    my $file  = $c->file;
     ok($INC{$file}, "Mocked Loaded");
 
     $obj = undef;
-    $c = undef;
+    $c   = undef;
 
     ok(!$INC{$file}, "Not loaded anymore");
 };
@@ -227,13 +231,12 @@ subtest just_mock => sub {
     $c = mocked($o);
     ok($c, "got control");
 
-    $o = mock { foo => 'foo' };
-    is($o->foo, 'foo', "got the expected result");
+    $o = mock {foo => 'foo'};
+    is($o->foo,   'foo', "got the expected result");
     is($o->{foo}, 'foo', "blessed the reference");
 
     $c = mock $o;
     isa_ok($o, $c->class);
-
 
     my $code = mock accessor => 'foo';
     ok(reftype($code), 'CODE', "Generated an accessor");
@@ -249,11 +252,9 @@ subtest handlers => sub {
                     caller  => T(),
                     builder => T(),
                     args    => T(),
-                }
-            );
+                });
             1;
-        }
-    );
+        });
 
     is(
         dies {

@@ -25,7 +25,7 @@ sub break {
     $self->{+_LEN} = $len;
 
     $self->{+IDX} = 0;
-    my $str = $self->{+STRING} . ""; # Force stringification
+    my $str = $self->{+STRING} . "";    # Force stringification
 
     binmode(STDOUT, ':utf8');
     my @parts;

@@ -43,8 +43,8 @@ subtest deltas => sub {
 
     $one->add_prop('blessed' => 'Foo');
     $one->add_prop('reftype' => 'HASH');
-    $one->add_prop('this' => exact_ref($it));
-    $one->add_prop('size' => 3);
+    $one->add_prop('this'    => exact_ref($it));
+    $one->add_prop('size'    => 3);
 
     is(
         [$one->deltas(got => $it, convert => \&convert, seen => {})],
@@ -57,10 +57,10 @@ subtest deltas => sub {
     like(
         [$one->deltas(got => $not_it, convert => \&convert, seen => {})],
         [
-            { verified => F(), got => 'Bar' },
-            { verified => F(), got => 'ARRAY' },
-            { verified => F(), got => $not_it },
-            { verified => F(), got => 1 },
+            {verified => F(), got => 'Bar'},
+            {verified => F(), got => 'ARRAY'},
+            {verified => F(), got => $not_it},
+            {verified => F(), got => 1},
         ],
         "Nothing matches"
     );
@@ -68,10 +68,10 @@ subtest deltas => sub {
     like(
         [$one->deltas(got => 'a', convert => \&convert, seen => {})],
         [
-            { verified => F(), got => undef },
-            { verified => F(), got => undef },
-            { verified => F(), got => 'a' },
-            { verified => F(), got => undef },
+            {verified => F(), got => undef},
+            {verified => F(), got => undef},
+            {verified => F(), got => 'a'},
+            {verified => F(), got => undef},
         ],
         "Nothing matches, wrong everything"
     );

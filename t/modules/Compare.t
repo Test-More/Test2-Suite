@@ -28,11 +28,12 @@ imported_ok qw{
 do_def;
 
 {
+
     package Fake::Check;
 
     sub run {
         my $self = shift;
-        return {@_, self => $self}
+        return {@_, self => $self};
     }
 }
 
@@ -79,23 +80,32 @@ like(
 ok(pop_build(get_build()), "Popped");
 
 my $inner;
-my $build = sub { build('Test2::Compare::Array', sub {
-    local $_ = 1;
-    $inner = get_build();
-}) }->();
+my $build = sub {
+    build(
+        'Test2::Compare::Array',
+        sub {
+            local $_ = 1;
+            $inner = get_build();
+        });
+    }
+    ->();
 is($build->lines, [__LINE__ - 4, __LINE__ - 1], "got lines");
 is($build->file, __FILE__, "got file");
 
 ref_is($inner, $build, "Build was set inside block");
 
 like(
-    dies { my $x = build('Test2::Compare::Array', sub { die 'xxx' }) },
+    dies {
+        my $x = build('Test2::Compare::Array', sub { die 'xxx' })
+    },
     qr/xxx at/,
     "re-threw exception"
 );
 
 like(
-    dies { build('Test2::Compare::Array', sub { }) },
+    dies {
+        build('Test2::Compare::Array', sub { })
+    },
     qr/should not be called in void context/,
     "You need to retain the return from build"
 );
@@ -106,7 +116,7 @@ subtest convert => sub {
 
     my @sets = (
         ['a',   'String', 'String'],
-        [undef, 'Undef', 'Undef'],
+        [undef, 'Undef',  'Undef'],
         ['',    'String', 'String'],
         [1,     'String', 'String'],
         [0,     'String', 'String'],
@@ -117,7 +127,7 @@ subtest convert => sub {
         [\*STDERR, 'Ref',    'Ref'],
         [\'foo',   'Scalar', 'Scalar'],
         [$true,    'Scalar', 'Scalar'],
-        [$false,   'Scalar', 'Scalar'],
+        [$false, 'Scalar', 'Scalar'],
 
         [
             bless({}, 'Test2::Compare::Base'),
@@ -138,11 +148,11 @@ subtest convert => sub {
         my $name = defined $item ? "'$item'" : 'undef';
 
         my $gs = strict_convert($item);
-        my $st = join '::', grep {$_} 'Test2::Compare', $strict;
+        my $st = join '::', grep { $_ } 'Test2::Compare', $strict;
         ok($gs->isa($st), "$name -> $st") || diag Dumper($item);
 
         my $gr = relaxed_convert($item);
-        my $rt = join '::', grep {$_} 'Test2::Compare', $relaxed;
+        my $rt = join '::', grep { $_ } 'Test2::Compare', $relaxed;
         ok($gr->isa($rt), "$name -> $rt") || diag Dumper($item);
     }
 };

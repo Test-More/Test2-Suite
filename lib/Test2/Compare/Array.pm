@@ -14,7 +14,7 @@ use Scalar::Util qw/reftype looks_like_number/;
 sub init {
     my $self = shift;
 
-    if(my $ref = $self->{+INREF}) {
+    if (my $ref = $self->{+INREF}) {
         croak "Cannot specify both 'inref' and 'items'" if $self->{+ITEMS};
         croak "Cannot specify both 'inref' and 'order'" if $self->{+ORDER};
         croak "'inref' must be an array reference, got '$ref'" unless reftype($ref) eq 'ARRAY';
@@ -43,7 +43,7 @@ sub init {
 sub name { '<ARRAY>' }
 
 sub verify {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
 
     return 0 unless $params{exists};
@@ -54,20 +54,20 @@ sub verify {
 }
 
 sub top_index {
-    my $self = shift;
+    my $self  = shift;
     my @order = @{$self->{+ORDER}};
 
-    while(@order) {
+    while (@order) {
         my $idx = pop @order;
         next if ref $idx;
         return $idx;
     }
 
-    return undef; # No indexes
+    return undef;    # No indexes
 }
 
 sub add_item {
-    my $self = shift;
+    my $self  = shift;
     my $check = pop;
     my ($idx) = @_;
 
@@ -98,21 +98,21 @@ sub add_for_each {
 }
 
 sub deltas {
-    my $self = shift;
+    my $self   = shift;
     my %params = @_;
     my ($got, $convert, $seen) = @params{qw/got convert seen/};
 
     my @deltas;
-    my $state = 0;
-    my @order = @{$self->{+ORDER}};
-    my $items = $self->{+ITEMS};
+    my $state    = 0;
+    my @order    = @{$self->{+ORDER}};
+    my $items    = $self->{+ITEMS};
     my $for_each = $self->{+FOR_EACH};
 
     # Make a copy that we can munge as needed.
     my @list = @$got;
 
     while (@order) {
-        my $idx = shift @order;
+        my $idx      = shift @order;
         my $overflow = 0;
         my $val;
 
@@ -127,7 +127,7 @@ sub deltas {
 
         while ($state <= $idx) {
             $overflow = !@list;
-            $val = shift @list;
+            $val      = shift @list;
 
             # check-all goes here so we hit each item, even unspecified ones.
             for my $check (@$for_each) {

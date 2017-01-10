@@ -47,7 +47,7 @@ sub sub_name {
 
 sub sub_info {
     my ($sub, @all_lines) = @_;
-    my %in = map {$_ => 1} @all_lines;
+    my %in = map { $_ => 1 } @all_lines;
 
     croak "sub_info requires a coderef as its first argument"
         unless ref($sub) eq 'CODE';
@@ -73,7 +73,7 @@ sub sub_info {
         # parens on the lines before and after.
         if ($start < $end) {
             $start-- unless $start <= 1 || $in{$start};
-            $end++   unless $in{$end};
+            $end++ unless $in{$end};
         }
         @lines = ($start, $end);
     }
