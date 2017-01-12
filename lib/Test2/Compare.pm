@@ -184,6 +184,8 @@ This library is the driving force behind deep comparison tools such as
 C<Test2::Tools::Compare::is()> and
 C<Test2::Tools::ClassicCompare::is_deeply()>.
 
+See L<Test2::Compare::Base> for details about writing a custom check.
+
 =head1 SYNOPSIS
 
     package Test2::Tools::MyCheck;
@@ -214,8 +216,6 @@ C<Test2::Tools::ClassicCompare::is_deeply()>.
 
         return Test2::Compare::MyCheck->new(stuff => $thing);
     }
-
-See L<Test2::Compare::Base> for details about writing a custom check.
 
 =head1 EXPORTS
 

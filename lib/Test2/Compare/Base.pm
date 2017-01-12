@@ -150,7 +150,7 @@ All comparison classes for Test2::Compare should inherit from this base class.
 
     sub verify {
         my $self = shift;
-        my $params = @_;
+        my %params = @_;
 
         # Always check if $got exists! This method must return false if no
         # value at all was received.

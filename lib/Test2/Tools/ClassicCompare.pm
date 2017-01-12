@@ -316,7 +316,7 @@ unlike the L<Test2::Tools::Compare> plugin which has modified them.
 
     is_deeply($got, $expect, "These structures are same when checked deeply");
 
-    cmp_ok($GOT, $OP, $WANT, 'Compare these items using the specified operatr');
+    cmp_ok($GOT, $OP, $WANT, 'Compare these items using the specified operator');
 
 =head1 EXPORTS
 
