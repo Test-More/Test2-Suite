@@ -94,4 +94,22 @@ subtest deltas => sub {
     );
 };
 
+{
+  package Foo;
+
+  use base 'MyTest::Target';
+
+  sub new {
+      my $class = shift;
+      bless [ @_ ] , $class;
+  }
+}
+
+subtest object_as_arrays => sub {
+
+    my $o1 = Foo->new( 'b') ;
+
+    is ( $o1 , subset{  item 'b' }, "same" );
+};
+
 done_testing;
