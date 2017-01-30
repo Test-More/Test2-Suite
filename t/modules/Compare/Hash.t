@@ -35,7 +35,7 @@ subtest verify => sub {
 
 subtest init => sub {
     my $one = $CLASS->new();
-    ok($one, "args are not required");
+    ok( defined $one, "args are not required");
     is($one->items, {}, "got the items hash");
     is($one->order, [], "got order array");
 
@@ -192,5 +192,28 @@ subtest deltas => sub {
     );
 
 };
+
+{
+  package Foo;
+
+  use Test2::Tools::Basic;
+  main::imported_ok(qw/fail/);
+  
+  use overload bool => sub { fail( 'illegal use of overloaded bool') } ;
+  use overload '""' => sub { $_[0] };
+  sub new {
+      my $class = shift;
+      bless { @_ } , $class;
+  }
+}
+
+subtest objects_with_hashes => sub {
+
+    my $o1 = Foo->new( b => { foo => 2 } ) ;
+    my $o2 = Foo->new( b => { foo => 2 } ) ;
+
+    is ( $o1, $o2, "same" );
+};
+
 
 done_testing;

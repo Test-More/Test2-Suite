@@ -246,4 +246,27 @@ subtest deltas => sub {
     );
 };
 
+{
+  package Foo;
+
+  use Test2::Tools::Basic;
+  main::imported_ok(qw/fail/);
+  
+  use overload bool => sub { fail( 'illegal use of overloaded bool') } ;
+  use overload '""' => sub { $_[0] };
+  sub new {
+      my $class = shift;
+      bless [ @_ ] , $class;
+  }
+}
+
+subtest objects_as_arrays => sub {
+
+    my $o1 = Foo->new( 'b' ) ;
+    my $o2 = Foo->new( 'b' ) ;
+
+    is ( $o1, $o2, "same" );
+};
+
+
 done_testing;
