@@ -1,6 +1,20 @@
-use Test2::Bundle::Extended -target => 'Test2::Todo';
+use Test2::Bundle::Extended;
 
-my $todo = Test2::Todo->new(reason => 'xyz');
+{ package Target;
+
+  use base 'Test2::Todo';
+
+  use Test2::Tools::Basic qw( fail );
+  main::imported_ok(qw/fail/);
+  
+  use overload bool => sub { fail( 'illegal use of overloaded bool') } ;
+}
+
+my $CLASS = 'Target';
+sub CLASS() { $CLASS }
+
+
+my $todo = $CLASS->new(reason => 'xyz');
 def isa_ok => ($todo, $CLASS);
 def ok => ((grep {$_->{code} == $todo->_filter} @{Test2::API::test2_stack->top->_pre_filters}), "filter added");
 def is => ($todo->reason, 'xyz', "got reason");
@@ -28,7 +42,7 @@ is($filtered_diag->message, $diag->message, "new note has the same message");
 my $events = intercept {
     ok(0, 'fail');
 
-    my $todo = Test2::Todo->new(reason => 'xyz');
+    my $todo = $CLASS->new(reason => 'xyz');
     ok(0, 'todo fail');
     $todo = undef;
 

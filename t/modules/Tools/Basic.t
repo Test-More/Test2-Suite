@@ -1,4 +1,16 @@
-use Test2::Bundle::Extended -target => 'Test2::Tools::Basic';
+use Test2::Bundle::Extended;
+
+{ package Target;
+
+  use base 'Test2::Tools::Basic';
+
+  use overload bool => sub { fail( 'illegal use of overloaded bool') } ;
+  use overload '""' => sub { $_[0] };
+}
+
+my $CLASS = 'Target';
+sub CLASS() { $CLASS }
+
 
 {
     package Temp;

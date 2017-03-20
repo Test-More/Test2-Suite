@@ -1,4 +1,19 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Bag';
+use Test2::Bundle::Extended;
+
+{ package Target;
+
+  use base 'Test2::Compare::Bag';
+
+  use Test2::Tools::Basic qw( fail );
+  main::imported_ok(qw/fail/);
+  
+  use overload bool => sub { fail( 'illegal use of overloaded bool') } ;
+  use overload '""' => sub { $_[0] };
+}
+
+my $CLASS = 'Target';
+sub CLASS() { $CLASS }
+
 
 isa_ok($CLASS, 'Test2::Compare::Base');
 is($CLASS->name, '<BAG>', "got name");

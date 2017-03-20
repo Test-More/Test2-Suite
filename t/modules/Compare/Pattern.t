@@ -1,4 +1,19 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Pattern';
+use Test2::Bundle::Extended;
+
+{ package Target;
+
+  use base 'Test2::Compare::Pattern';
+
+  use Test2::Tools::Basic qw( fail );
+  main::imported_ok(qw/fail/);
+  
+  use overload bool => sub { fail( 'illegal use of overloaded bool') } ;
+  use overload '""' => sub { $_[0] };
+}
+
+my $CLASS = 'Target';
+sub CLASS() { $CLASS }
+
 
 my $one = $CLASS->new(pattern => qr/HASH/);
 isa_ok($one, $CLASS, 'Test2::Compare::Base');
