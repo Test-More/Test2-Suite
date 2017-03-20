@@ -8,6 +8,7 @@ use Test2::Bundle::Extended;
   main::imported_ok(qw/fail/);
   
   use overload bool => sub { fail( 'illegal use of overloaded bool') } ;
+  use overload eq => sub { "$_[0]" eq "$_[1]" };
 }
 
 my $CLASS = 'Target';
