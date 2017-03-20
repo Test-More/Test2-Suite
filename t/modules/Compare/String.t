@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::String';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Compare::String';
 
 my $number = $CLASS->new(input => '22.0');
 my $string = $CLASS->new(input => 'hello');

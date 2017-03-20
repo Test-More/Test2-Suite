@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Util::Grabber';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Util::Grabber';
 
 ok(1, "initializing");
 

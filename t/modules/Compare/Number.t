@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Number';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Compare::Number';
 
 my $num    = $CLASS->new(input => '22.0');
 my $untrue = $CLASS->new(input => 0);

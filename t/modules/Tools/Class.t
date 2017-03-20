@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Tools::Class';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Tools::Class';
 
 {
     package Temp;
@@ -9,6 +10,12 @@ use Test2::Bundle::Extended -target => 'Test2::Tools::Class';
 
 {
     package X;
+
+    use Test2::Tools::Basic qw( fail );
+    main::imported_ok(qw/fail/);
+
+    use overload 'bool' => sub { fail( 'illegal use of overloaded bool') } ;
+    use overload '""' => sub { $_[0] };
 
     sub can {
         my $thing = pop;
@@ -37,8 +44,11 @@ use Test2::Bundle::Extended -target => 'Test2::Tools::Class';
 
 {
     package My::String;
-    use overload '""' => sub { "xxx\nyyy" };
+    use Test2::Tools::Basic qw( fail );
+    main::imported_ok(qw/fail/);
 
+    use overload '""' => sub { "xxx\nyyy" };
+    use overload 'bool' => sub { fail( 'illegal use of overloaded bool') } ;
     sub DOES { 0 }
 }
 

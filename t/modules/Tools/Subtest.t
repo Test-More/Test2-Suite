@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Tools::Subtest';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Tools::Subtest';
 
 use Test2::Tools::Subtest qw/subtest_streamed subtest_buffered/;
 

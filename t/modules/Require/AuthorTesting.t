@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Require::AuthorTesting';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Require::AuthorTesting';
 
 {
     local %ENV = %ENV;

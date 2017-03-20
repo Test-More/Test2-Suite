@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Tools::Ref';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Tools::Ref';
 
 {
     package Temp;

@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Tools::Compare';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Tools::Compare';
 use Test2::Util::Table();
 sub table { join "\n" => Test2::Util::Table::table(@_) }
 
