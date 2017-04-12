@@ -8,6 +8,7 @@ requires "Test2" => "1.302073";
 requires "overload" => "0";
 requires "perl" => "5.008001";
 requires "utf8" => "0";
+suggests "Term::ANSIColor" => "0";
 
 on 'configure' => sub {
   requires "ExtUtils::MakeMaker" => "0";

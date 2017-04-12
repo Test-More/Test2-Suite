@@ -4,6 +4,7 @@ use warnings;
 
 use Scalar::Util qw/blessed/;
 use Test2::Util::Term qw/USE_ANSI_COLOR term_size/;
+use Test2::Util qw/IS_WIN32/;
 
 BEGIN { require Test2::Formatter; our @ISA = qw(Test2::Formatter) }
 
