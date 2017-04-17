@@ -1,18 +1,5 @@
-use Test2::Bundle::Extended;
-
-{ package Target;
-
-  use base 'Test2::Util::Grabber';
-
-  use Test2::Tools::Basic qw( fail );
-  main::imported_ok(qw/fail/);
-  
-  use overload bool => sub { fail( 'illegal use of overloaded bool') } ;
-  use overload '""' => sub { $_[0] };
-}
-
-my $CLASS = 'Target';
-sub CLASS() { $CLASS }
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Util::Grabber';
 
 ok(1, "initializing");
 

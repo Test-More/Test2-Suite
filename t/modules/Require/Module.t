@@ -1,19 +1,5 @@
-use Test2::Bundle::Extended;
-
-{ package Target;
-
-  use base 'Test2::Require::Module';
-
-  use Test2::Tools::Basic qw( fail );
-  main::imported_ok(qw/fail/);
-  
-  use overload bool => sub { fail( 'illegal use of overloaded bool') } ;
-  use overload '""' => sub { $_[0] };
-}
-
-my $CLASS = 'Target';
-sub CLASS() { $CLASS }
-
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Require::Module';
 
 is($CLASS->skip('Scalar::Util'), undef, "will not skip, module installed");
 is($CLASS->skip('Scalar::Util', 0.5), undef, "will not skip, module at sufficient version");

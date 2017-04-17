@@ -1,18 +1,5 @@
-use Test2::Bundle::Extended;
-
-{ package Target;
-
-  use base 'Test2::Compare::Object';
-
-  use Test2::Tools::Basic qw( fail );
-  main::imported_ok(qw/fail/);
-  
-  use overload bool => sub { fail( 'illegal use of overloaded bool') } ;
-  use overload '""' => sub { $_[0] };
-}
-
-my $CLASS = 'Target';
-sub CLASS() { $CLASS }
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Compare::Object';
 
 subtest simple => sub {
     my $one = $CLASS->new;
@@ -120,11 +107,7 @@ subtest add_call => sub {
 {
     package Foo::Bar;
 
-    use Test2::Tools::Basic qw( fail );
-    main::imported_ok(qw/fail/);
-  
-    use overload bool => sub { fail( 'illegal use of overloaded bool') } ;
-    use overload '""' => sub { $_[0] };
+    use base 'MyTest::Target';
 
     sub foo { 'foo' }
     sub baz { 'baz' }
@@ -134,11 +117,7 @@ subtest add_call => sub {
 
     package Fake::Fake;
 
-    use Test2::Tools::Basic qw( fail );
-    main::imported_ok(qw/fail/);
-  
-    use overload bool => sub { fail( 'illegal use of overloaded bool') } ;
-    use overload '""' => sub { $_[0] };
+    use base 'MyTest::Target';
 
     sub foo { 'xxx' }
     sub one { 2 }
