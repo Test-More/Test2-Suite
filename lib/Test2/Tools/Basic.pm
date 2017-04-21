@@ -102,6 +102,9 @@ sub skip_all {
 
 sub done_testing {
     my $ctx = context();
+
+    $ctx->plan(shift) if @_;
+
     $ctx->hub->finalize($ctx->trace, 1);
     $ctx->release;
 }
