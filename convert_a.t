@@ -1,9 +1,11 @@
 use strict;
 use warnings;
-use Test::More tests => 15;
+use Test::More tests => 16;
 
-use ok 'Scalar::Util' => qw/blessed reftype/;
-use ok 'List::Util' => qw/min max shuffle/;
+BEGIN {
+    use_ok 'Scalar::Util' => qw/blessed reftype/;
+    use_ok 'List::Util'   => qw/min max shuffle/;
+}
 
 require_ok 'Exporter';
 
@@ -71,10 +73,16 @@ ok(
     "Sets are the same"
 );
 
+
+
 note explain(['a', 'b', 'c']);
+
 
 my $x = new_ok(__PACKAGE__, [a => 1]);
 is($x->p1, 'p1', "test p1 method");
+
+my $x2 = $x;
+is($x, $x2, '$x and $x2 are the same reference');
 
 {
     local $TODO = 'example failure';

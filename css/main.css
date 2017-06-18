@@ -22,6 +22,10 @@ ul#navigation {
     border-bottom: 2px solid green;
     border-radius: 10px;
     padding-bottom: 2px;
+    position: fixed;
+    top: 0;
+    background: white;
+    z-index: 1000;
 }
 
 ul#navigation li {
@@ -75,12 +79,9 @@ ul.lineage li {
 }
 
 div#content {
-    margin-top: 20px;
+    margin-top: 30px;
     min-height: 350px;
-    border-top: 3px solid black;
-    border-bottom: 3px solid black;
-    border-radius: 10px;
-    padding: 14px;
+    border: none;
     clear: both;
     overflow: hidden;
 }
@@ -106,6 +107,7 @@ div#subnav {
     float: left;
     display: block;
     margin-right: -120px;
+    position: fixed;
 }
 
 ul.listnav {
@@ -113,6 +115,9 @@ ul.listnav {
     border-bottom: 3px solid;
     border-color: #33AAAA;
     border-radius: 10px;
+    border-left: thin dotted #33AAAA;
+    border-right: thin dotted #33AAAA;
+    background: white;
 
     display: block;
 
@@ -176,7 +181,7 @@ div#view {
     float: left;
 
     border-radius: 10px;
-    border: 1px dotted;
+    border: thin dotted;
     border-top: 3px solid;
     border-bottom: 3px solid;
     border-color: #33AAFF;
