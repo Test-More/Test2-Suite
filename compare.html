@@ -37,7 +37,7 @@
         These are some shortcuts for checking the state of vars or nested elements.
 
         <script class="code">
-            # Loaded by default in Test2::Bundle::Extended
+            # Loaded by default in Test2::V0
             use Test2::Tools::Compare qw{ T F D DNE FDNE };
 
             is(1, T(), "Check that we got a true value");
@@ -68,7 +68,7 @@
 
         <p><br />
         <script class="code">
-            # Loaded by default in Test2::Bundle::Extended
+            # Loaded by default in Test2::V0
             use Test2::Tools::Compare qw{ match mismatch number string exact_ref };
 
             is("foo", match qr/oo/, "String matches pattern");
@@ -101,7 +101,7 @@
 
         <p><br />
         <script class="code">
-            # Loaded by default in Test2::Bundle::Extended
+            # Loaded by default in Test2::V0
             use Test2::Tools::Compare qw{ validator };
 
             is(

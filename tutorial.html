@@ -40,7 +40,7 @@
 
         t/first_test.t:
         <script class="code">
-            use Test2::Bundle::Extended;
+            use Test2::V0;
         </script>
 
         <br />
@@ -96,7 +96,7 @@
                 Test2 does support this form:
 
                 <script class="code">
-                    use Test2::Bundle::Extended;
+                    use Test2::V0;
 
                     plan 5; # We expect 5 tests
                 </script>
@@ -122,7 +122,7 @@
                 <br />
 
                 <script class="code">
-                    use Test2::Bundle::Extended;
+                    use Test2::V0;
 
                     ...
 
@@ -150,7 +150,7 @@
                 <p><br />
 
                 <script class="code">
-                    use Test2::Bundle::Extended;
+                    use Test2::V0;
 
                     skip_all "Do not run on windows"
                         if $^O eq 'MSWin32';
@@ -174,7 +174,7 @@
         <p><br />
 
         <script class="code">
-            use Test2::Bundle::Extended;
+            use Test2::V0;
 
             ok(1, "This is a pass");
             ok(0, "This is a failure");
@@ -339,6 +339,83 @@
         </script>
     </dd>
 
+
+    <dt id="what_next">Listing&nbsp;Deps</dt>
+    <dd>
+        <dl class="sub_list">
+            <dt id="overview">Overview</dt>
+            <dd>
+                <h2>What should I depend on?</h2>
+
+                <br />
+                <br />
+
+                This is an important note for cpan authors using Test2 in their distributions.
+                <p>
+                Simply depending on Test2::Suite will break your dist one day!
+                <p>
+                It is very important that you list any bundles, tools, plugin, and require
+                modules directly in your meta-data.
+                <p>
+                Old V# bundles may be moved to their own distributions (which will depend on
+                Test2::Suite) along with any tools, plugins, etc that are no longer used in
+                newer bundles.
+                <p>
+                The goal here is to keep Test2::Suite light, and free of burdensome legacy
+                without breaking any existing usage.
+            </dd>
+
+            <dt id="dzil">dzil</dt>
+            <dd>
+                <h2>Dist::Zilla</h2>
+
+                <h3>WRONG</h3>
+
+                <script class="code">
+                    [Prereqs / TestRequires]
+                    Test2::Suite = 0.000060
+                </script>
+
+                <h3>Correct</h3>
+
+                <script class="code">
+                    [Prereqs / TestRequires]
+                    Test2::V0 = 0.000060
+                </script>
+            </dd>
+
+            <dt id="makemaker">MakeMaker</dt>
+            <dd>
+                <h2>MakeMaker</h2>
+
+                <h3>WRONG</h3>
+
+                <script class="code">
+                    my %WriteMakefileArgs = (
+                      ...
+                      "TEST_REQUIRES" => {
+                        "Test2::Suite" => "0.000060"
+                      },
+                      ...
+                    );
+                </script>
+
+                <h3>Correct</h3>
+
+                <script class="code">
+                    my %WriteMakefileArgs = (
+                      ...
+                      "TEST_REQUIRES" => {
+                        "Test2::V0" => "0.000060"
+                      },
+                      ...
+                    );
+
+                </script>
+            </dd>
+        </dl>
+    </dd>
+
     <dt id="what_next">What&nbsp;Next?</dt>
     <dd>
         <h2>What Next?</h2>
@@ -346,7 +423,7 @@
         <br /><p>
 
         Now you know the basics of writing tests.
-        
+
         <br /><p>
         <br /><p>
 

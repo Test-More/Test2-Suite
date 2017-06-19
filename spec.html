@@ -20,8 +20,8 @@
         <h2>Test Blocks</h2>
 
         <script class="code">
-            use Test2::Bundle::Extended;
-            use Test2::Tools::Spec; # Not loaded by the extended bundle
+            use Test2::V0;
+            use Test2::Tools::Spec; # Not loaded by the V0 bundle
 
             tests foo => sub {
                 ok(1, "pass");
@@ -334,7 +334,7 @@
         <p>
 
         <script class="code">
-            use Test2::Bundle::Extended;
+            use Test2::V0;
             use Test2::Tools::Spec;
             use Test2::Plugin::SpecDeclare;
 
