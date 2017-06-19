@@ -1,13 +1,34 @@
 <dl class="listnav">
     <dt id="Convert">Convert?</dt>
     <dd>
-        <h2>This tutorial takes you through 2 types of conversion.</h2>
-
-        <h3>From Test::More to Test2::Bundle::More</h3>
-
-        <h3>From Test2::Bundle::More to Test2::V0</h3>
-
         <dl class="sub_list">
+            <dt id="test_more">Overview</dt>
+            <dd>
+                <h2>This tutorial takes you through 2 types of conversion.</h2>
+
+                <h3>From Test::More to Test2::Bundle::More</h3>
+
+                <ul>
+                    <li>Cannot plan at import</li>
+                    <li>use_ok() is gone (use ok ...; still works)</li>
+                    <li>require_ok() is gone</li>
+                    <li>todo_skip() is gone</li>
+                    <li>eq_array(), eq_hash(), and eq_set() are gone</li>
+                    <li>explain() is gone</li>
+                    <li>new_ok() is gone</li>
+                    <li>isa_ok() takes different arguments</li>
+                    <li>is_deeply() has better diagnostics</li>
+                    <li>$TODO is replaced by todo()</li>
+                </ul>
+
+                <h3>From Test2::Bundle::More to Test2::V0</h3>
+
+                <ul>
+                    <li>is($r1, $r2) -&gt; ref_is($r1, $r2)</li>
+                    <li>is_deeply($a, $b) -&gt; is($a, $b)</li>
+                </ul>
+            </dd>
+
             <dt id="test_more">Test::More</dt>
             <dd>
                 <div class="code" src="convert_a.t" />
