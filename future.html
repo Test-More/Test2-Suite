@@ -27,15 +27,76 @@
 
     <dt id="optimal_pass">Optimal&nbsp;Pass</dt>
     <dd>
+        <h2>Optimized event for passing assertions</h2>
+
+        New optimized 'Pass' event, and context methods.
+
+        <script class="code">
+            sub pass {
+                my ($name) = @_;
+                return context->pass_and_release($name);
+            }
+        </script>
+
+        <ul>
+            <li>One call to send the event and release the context</li>
+            <li>Returns true</li>
+            <li>Path through the Test2 internals is shortcutted and optimized</li>
+        </ul>
+    </dd>
+
+    <dt id="performance">Performance</dt>
+    <dd>
+        <h3>Current Time to run 100,000 OK's (Lower is better)</h3>
+        <table>
+            <tr><td>Test::Builder (Test2)</td><td>3.370</td></tr>
+            <tr><td>Test2</td><td>2.300</td></tr>
+            <tr></tr>
+            <tr><td>Test::Builder (Test2 + IPC)</td><td>4.294</td></tr>
+            <tr><td>Test2 (IPC)</td><td>3.158</td></tr>
+        </table>
+
+        <br />
+
+        <h3>Time to run 100,000 OK's with Facets and optimal pass</h3>
+        <table>
+            <tr><td>Test::Builder (Test2)</td><td>3.096</td></tr>
+            <tr><td>Test2</td><td>1.879</td></tr>
+            <tr></tr>
+            <tr><td>Test::Builder (Test2 + IPC)</td><td>4.008</td></tr>
+            <tr><td>Test2 (IPC)</td><td>2.738</td></tr>
+        </table>
     </dd>
 
     <dt id="compare">New&nbsp;Compare</dt>
     <dd>
+        <h2>New comparison internals</h2>
+
+        Working on Structure::Verify, which will replace the internals of
+        Test2::Compare (interface should not change significantly).
+
+        <p>
+
+        <ul>
+            <li>Easier to write extentions</li>
+            <li>Easier to understand and maintain internally</li>
+        </ul>
     </dd>
 
     <dt id="yath">Yath</dt>
     <dd>
+        <h2>Test2::Harness (Yet Another Test Harness)</h2>
+
+        This is a modern alternative to prove.
+
+        <ul>
+            <li>preload+fork option</li>
+            <li>recursive by default</li>
+            <li>recieves events instead of parsing TAP.</li>
+            <li>can parse TAP. if needed (works with really old tests)</li>
+            <li>Able to output alternatives to TAP.</li>
+        </ul>
+
+        There is a prototype on CPAN, but it is undergoing a complete rewrite.
     </dd>
-
-
 </dl>
