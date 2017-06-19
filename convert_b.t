@@ -92,4 +92,4 @@ todo 'example failure' => sub {
     );
 };
 
-plan 15;
+plan 16;

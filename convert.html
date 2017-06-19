@@ -29,19 +29,165 @@
                 </ul>
             </dd>
 
+            <dt id="must_I">Must&nbsp;I?</dt>
+            <dd>
+                Do I have to upgrade to Test2?
+                <br />
+                No. But it is a good idea.
+                <br />
+                <br />
+                <br />
+                Do I have to update my tests when I upgrade?
+                <br />
+                No in general, unless you use one of the tiny fraction of
+                broken dists.
+                <br />
+                <br />
+                <br />
+                What dists are broken?
+                <ul>
+                    <li>Log::Dispatch::Config::TestLog</li>
+                    <li>Net::BitTorrent</li>
+                    <li>Test::Able</li>
+                    <li>Test::Aggregate</li>
+                    <li>Test::Flatten</li>
+                    <li>Test::Group</li>
+                    <li>Test::ParallelSubtest</li>
+                    <li>Test::Pretty</li>
+                    <li>Test::Wrapper</li>
+                </ul>
+            </dd>
+
             <dt id="test_more">Test::More</dt>
             <dd>
                 <div class="code" src="convert_a.t" />
+
+                <script class="output">
+# <spacer>
+1..16
+ok 1 - use Scalar::Util;
+ok 2 - use List::Util;
+ok 3 - require Exporter;
+ok 4 - 'p1' isa 'p2'
+ok 5 - main->can(...)
+ok 6 - main->can(...)
+not ok 7 # TODO & SKIP foo
+ok 8 # skip bar
+not ok 9 - fixme later # TODO baz
+#   Failed (TODO) test 'fixme later'
+#   at convert_a.t line 49.
+ok 10 - Arrays are the same
+ok 11 - Hashes are the same
+ok 12 - Sets are the same
+# [
+#   'a',
+#   'b',
+#   'c'
+# ]
+ok 13 - An object of class 'main' isa 'main'
+ok 14 - test p1 method
+ok 15 - $x and $x2 are the same reference
+not ok 16 - This will fail # TODO example failure
+#   Failed (TODO) test 'This will fail'
+#   at convert_a.t line 89.
+#     Structures begin differing at:
+#          $got->{b} = '2'
+#     $expected->{b} = '3'
+                </script>
             </dd>
 
             <dt id="bundle_more">Bundle::More</dt>
             <dd>
                 <div class="code" src="convert_b.t" />
+
+                <script class="output">
+# <spacer>
+ok 1 - use Scalar::Util;
+ok 2 - use List::Util;
+ok 3 - Loaded Exporter
+ok 4 - Check ISA
+ok 5 - Check methods
+ok 6 - Check imports
+ok 7 - skipped test # TODO & SKIP foo
+ok 8 - skipped test # skip bar
+not ok 9 - fixme later # TODO baz
+# Failed test 'fixme later'
+# at convert_b.t line 47.
+ok 10 - Arrays are the same
+ok 11 - Hashes are the same
+ok 12 - Sets are the same
+# $VAR1 = [
+#           'a',
+#           'b',
+#           'c'
+#         ];
+ok 13 - Made a new object
+ok 14 - test p1 method
+ok 15 - $x and $x2 are the same reference
+not ok 16 - This will fail # TODO example failure
+# Failed test 'This will fail'
+# at convert_b.t line 88.
+# +--------+------------------+---------+------------------+
+# | PATH   | GOT              | OP      | CHECK            |
+# +--------+------------------+---------+------------------+
+# | {a}    | 1                | eq      | 2                |
+# | {b}    | 2                | eq      | 3                |
+# | {c}[0] | a                | eq      | d                |
+# | {c}[1] | b                | eq      | e                |
+# | {c}[2] | c                | eq      | f                |
+# | {x}{b} | <DOES NOT EXIST> |         | 2                |
+# | {x}{a} | 1                | !exists | <DOES NOT EXIST> |
+# | {y}    | 0.0              | eq      | 0                |
+# +--------+------------------+---------+------------------+
+1..16
+                </script>
             </dd>
 
             <dt id="test2_v0">Test2::V0</dt>
             <dd>
                 <div class="code" src="convert_c.t" />
+
+                <script class="output">
+# Seeded srand with seed '20170619' from local date.
+ok 1 - use Scalar::Util;
+ok 2 - use List::Util;
+ok 3 - Loaded Exporter
+ok 4 - Check ISA
+ok 5 - Check methods
+ok 6 - Check imports
+ok 7 - skipped test # TODO & SKIP foo
+ok 8 - skipped test # skip bar
+not ok 9 - fixme later # TODO baz
+# Failed test 'fixme later'
+# at convert_c.t line 47.
+ok 10 - Arrays are the same
+ok 11 - Hashes are the same
+ok 12 - Sets are the same
+# $VAR1 = [
+#           'a',
+#           'b',
+#           'c'
+#         ];
+ok 13 - Made a new object
+ok 14 - test p1 method
+ok 15 - $x and $x2 are the same reference
+not ok 16 - This will fail # TODO example failure
+# Failed test 'This will fail'
+# at convert_c.t line 88.
+# +--------+------------------+---------+------------------+
+# | PATH   | GOT              | OP      | CHECK            |
+# +--------+------------------+---------+------------------+
+# | {a}    | 1                | eq      | 2                |
+# | {b}    | 2                | eq      | 3                |
+# | {c}[0] | a                | eq      | d                |
+# | {c}[1] | b                | eq      | e                |
+# | {c}[2] | c                | eq      | f                |
+# | {x}{b} | <DOES NOT EXIST> |         | 2                |
+# | {x}{a} | 1                | !exists | <DOES NOT EXIST> |
+# | {y}    | 0.0              | eq      | 0                |
+# +--------+------------------+---------+------------------+
+1..16
+                </script>
             </dd>
         </dl>
     </dd>
