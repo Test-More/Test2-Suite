@@ -147,7 +147,7 @@
         <p><br />
         Check that the value matches ALL of the specified checks.
         <script class="code">
-            is('apple', not_in_set(match qr/pp/, match qr/a/), "matched both patterns");
+            is('apple', check_set(match qr/pp/, match qr/a/), "matched both patterns");
         </script>
     </dd>
 
