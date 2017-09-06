@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Pattern';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Compare::Pattern';
 
 my $one = $CLASS->new(pattern => qr/HASH/);
 isa_ok($one, $CLASS, 'Test2::Compare::Base');

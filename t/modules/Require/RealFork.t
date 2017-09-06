@@ -9,7 +9,8 @@ BEGIN {
     *Test2::Util::CAN_REALLY_FORK = sub { $forks };
 }
 
-use Test2::Bundle::Extended -target => 'Test2::Require::RealFork';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Require::RealFork';
 
 {
     $forks = 0;

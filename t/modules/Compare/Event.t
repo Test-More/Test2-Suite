@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Event';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Compare::Event';
 
 my $one = $CLASS->new(etype => 'Ok');
 is($one->name, '<EVENT: Ok>', "got name");

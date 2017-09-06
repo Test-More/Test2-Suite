@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::EventMeta';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Compare::EventMeta';
 
 use Test2::Util qw/get_tid/;
 

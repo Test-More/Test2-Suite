@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Ref';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Compare::Ref';
 
 my $ref = sub { 1 };
 my $one = $CLASS->new(input => $ref);

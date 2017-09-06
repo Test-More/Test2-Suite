@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Object';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Compare::Object';
 
 subtest simple => sub {
     my $one = $CLASS->new;
@@ -12,7 +13,7 @@ subtest simple => sub {
 
     is($one->object_base, 'UNIVERSAL', "Correct object base");
 
-    ok($CLASS->new(calls => []), "Can specify a calls array")
+    ok(defined $CLASS->new(calls => []), "Can specify a calls array")
 };
 
 subtest verify => sub {
@@ -106,6 +107,8 @@ subtest add_call => sub {
 {
     package Foo::Bar;
 
+    use base 'MyTest::Target';
+
     sub foo { 'foo' }
     sub baz { 'baz' }
     sub one { 1 }
@@ -113,6 +116,8 @@ subtest add_call => sub {
     sub args { shift; +{@_} }
 
     package Fake::Fake;
+
+    use base 'MyTest::Target';
 
     sub foo { 'xxx' }
     sub one { 2 }

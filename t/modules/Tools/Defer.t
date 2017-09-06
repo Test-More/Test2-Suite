@@ -16,7 +16,8 @@ BEGIN {
     def is => ({}, [], "a hash is not an array");
 }
 
-use Test2::Bundle::Extended -target => 'Test2::Tools::Defer';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Tools::Defer';
 
 sub capture(&) {
     my $code = shift;

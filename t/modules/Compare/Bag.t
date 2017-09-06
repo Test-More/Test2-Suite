@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Bag';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Compare::Bag';
 
 isa_ok($CLASS, 'Test2::Compare::Base');
 is($CLASS->name, '<BAG>', "got name");

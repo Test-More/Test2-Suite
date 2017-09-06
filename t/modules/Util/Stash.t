@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Util::Stash';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Util::Stash';
 
 use Test2::Util::Stash qw{
     get_stash
