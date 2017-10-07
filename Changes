@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+    - Ensure that objects are not used in Boolean contexts, second
+      attempt. (djerius)
+
 0.000077  2017-09-12 07:49:16-07:00 America/Los_Angeles
 
     - No changes since last TRIAL release

@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Array';
+use lib './t/lib';
+use Test2::Bundle::Extended  -target => 'MyTest::Test2::Compare::Array';;
 
 isa_ok($CLASS, 'Test2::Compare::Base');
 is($CLASS->name, '<ARRAY>', "got name");
@@ -230,5 +231,25 @@ subtest deltas => sub {
         "Filter worked, but input is still wrong"
     );
 };
+
+{
+  package Foo;
+
+  use base 'MyTest::Target';
+
+  sub new {
+      my $class = shift;
+      bless [ @_ ] , $class;
+  }
+}
+
+subtest objects_as_arrays => sub {
+
+    my $o1 = Foo->new( 'b' ) ;
+    my $o2 = Foo->new( 'b' ) ;
+
+    is ( $o1, $o2, "same" );
+};
+
 
 done_testing;

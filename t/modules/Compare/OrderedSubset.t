@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::OrderedSubset';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Compare::OrderedSubset';
 
 isa_ok($CLASS, 'Test2::Compare::Base');
 is($CLASS->name, '<ORDERED SUBSET>', "got name");
@@ -91,6 +92,24 @@ subtest deltas => sub {
         [],
         "No delta, not checking ending"
     );
+};
+
+{
+  package Foo;
+
+  use base 'MyTest::Target';
+
+  sub new {
+      my $class = shift;
+      bless [ @_ ] , $class;
+  }
+}
+
+subtest object_as_arrays => sub {
+
+    my $o1 = Foo->new( 'b') ;
+
+    is ( $o1 , subset{  item 'b' }, "same" );
 };
 
 done_testing;

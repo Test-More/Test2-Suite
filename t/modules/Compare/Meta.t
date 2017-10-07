@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Meta';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Compare::Meta';
 
 local *convert = Test2::Compare->can('strict_convert');
 
@@ -9,7 +10,7 @@ subtest simple => sub {
     is($one->name, '<META CHECKS>', "sane name");
     is($one->verify(exists => 0), 0, "Does not verify for non-existant values");
     is($one->verify(exists => 1), 1, "always verifies for existing values");
-    ok($CLASS->new(items => []), "Can provide items");
+    ok(defined $CLASS->new(items => []), "Can provide items");
 };
 
 subtest add_prop => sub {

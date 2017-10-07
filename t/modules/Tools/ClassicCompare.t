@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Tools::ClassicCompare';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Tools::ClassicCompare';
 
 BEGIN { $ENV{TABLE_TERM_SIZE} = 80 }
 
@@ -72,6 +73,12 @@ is_deeply(
 
 {
     package Foo;
+
+    use Test2::Tools::Basic qw( fail );
+
+    main::imported_ok(qw/fail/);
+  
+    use overload bool => sub { fail( 'illegal use of overloaded bool') } ;
     use overload '""' => sub { 'xxx' };
 }
 my $foo = bless({}, 'Foo');

@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Base';
+use lib './t/lib';
+use Test2::Bundle::Extended  -target => 'MyTest::Test2::Compare::Base';;
 
 my $one = $CLASS->new();
 isa_ok($one, $CLASS);

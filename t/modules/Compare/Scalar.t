@@ -1,4 +1,5 @@
-use Test2::Bundle::Extended -target => 'Test2::Compare::Scalar';
+use lib './t/lib';
+use Test2::Bundle::Extended -target => 'MyTest::Test2::Compare::Scalar';
 
 my $one = $CLASS->new(item => 'foo');
 is($one->name, '<SCALAR>', "got name");
