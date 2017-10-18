@@ -145,6 +145,7 @@ eval {
     };
     1;
 };
+diag $@;
 like(
     $@,
     check_set(
