@@ -146,6 +146,12 @@ eval {
     1;
 };
 diag $@;
+diag $@ =~ qr/^Exception in build 'dies' with 2 unseen event\(s\)\.$/m;
+diag $@ =~ qr{^xxx at .*Acceptance\.t line \d+\.$}m;
+diag $@ =~ qr{^xxx at .*Acceptance\.t line \d+\.$}m; 
+diag $@ =~ qr/^    Test2::Event::Ok at .*Acceptance\.t line \d+$/m;
+diag $@ =~ qr/^    Test2::Event::Ok at .*Acceptance\.t line \d+/m;
+diag $@ =~ qr/Fred/m;
 like(
     $@,
     check_set(
