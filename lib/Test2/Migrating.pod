@@ -45,7 +45,7 @@ tests to Test2.
 
 =head2 Test2::
 
-	use Test2::Bundle::Extended;
+	use Test2::V0;
 
 	ok 1;
 
