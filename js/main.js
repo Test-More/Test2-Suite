@@ -180,6 +180,10 @@ function process_samples( container ) {
         $(this).replaceWith( build_code( $(this).text() ));
     });
 
+    container.find( 'script.code_js' ).each( function() {
+        $(this).replaceWith( build_js( $(this).text() ));
+    });
+
     container.find( 'script.output' ).each( function() {
         $(this).replaceWith( build_output( $(this).text() ));
     });
@@ -203,6 +207,27 @@ function process_samples( container ) {
             }
         )
     });
+
+    container.find( 'div.code_js' ).each( function() {
+        var list = $(this);
+        jQuery.ajax(
+            list.attr( 'src' ),
+            {
+                dataType: 'text',
+                success: function( data ) {
+                    list.replaceWith( build_js( data ));
+                    fixView();
+                    start_debugger();
+                },
+                error: function(blah, message1, message2) {
+                    $( '#error_window' ).show();
+                    $( '#error_window ul.errors' ).append( "<li>Error loading " + list.attr( 'src' ) + "</li>" )
+                    fixView();
+                }
+            }
+        )
+    });
+
 
     container.find( 'div.output' ).each( function() {
         var list = $(this);
@@ -251,6 +276,14 @@ function build_code( data ) {
     brush.init({ toolbar: false });
     return brush.getHtml( data );
 }
+
+function build_js( data ) {
+    var brush = new SyntaxHighlighter.brushes.JScript();
+
+    brush.init({ toolbar: false });
+    return brush.getHtml( data );
+}
+
 
 function build_output( data ) {
     var brush = new SyntaxHighlighter.brushes.TAP();
