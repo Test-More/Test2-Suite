@@ -212,7 +212,7 @@ exodist@abydos main $ yath times log_file.jsonl.bz2
                     <li>preload hook - called when loaded</li>
                     <li>pre_fork hook - called before forking for tests</li>
                     <li>post_fork hook - called right after forking, in the test</li>
-                    <li>pre_launch hook - called just before the harness drops downt to the test</li>
+                    <li>pre_launch hook - called just before the harness drops down to the test</li>
                 </ul>
 
                 You can also define stages. An example use of stages is when
@@ -238,7 +238,7 @@ exodist@abydos main $ yath times log_file.jsonl.bz2
                 <p>
 
                 This command generates a 'test.pl' file that will execute all
-                tests under the 't' and 't2' using yath.
+                tests under the 't' and 't2' directories using yath.
 
                 <p>
 
@@ -435,7 +435,7 @@ exodist@abydos main $ yath times log_file.jsonl.bz2
                 <script class="code"># HARNESS-CAT-LONG</script>
                 <p>
 
-                Use this to mark tests that should nto be run concurrently with
+                Use this to mark tests that should not be run concurrently with
                 other IMMISCIBLE tests.
                 <script class="code"># HARNESS-CAT-IMMISCIBLE</script>
                 <p>
@@ -548,8 +548,8 @@ Found: /home/exodist/projects/Moose-2.2006/.yath-persist.json
                 <p>
 
                 This command lets you monitor the output of a persistent
-                runner. This will noyl show you output produced by the runner,
-                it will now show any test results.
+                runner. This will only show you output produced by the runner,
+                it will not show any test results.
 
                 </p>
 
@@ -581,7 +581,7 @@ Found: /home/exodist/projects/Moose-2.2006/.yath-persist.json
                 <p>
 
                 This is normally not necessary as yath will watch files for
-                changes and reload as necessary (excluding and module that
+                changes and reload as necessary (excluding any module that
                 changed when it does).
 
                 <p>
@@ -813,16 +813,8 @@ T2-HARNESS-ESYNC: 8
 
                 <p>
 
-                The TAP parser is line based, the subtests are re-assmbled and verified after parsing.
+                The TAP parser is line based, the subtests are re-assembled and verified after parsing.
             </dd>
         </dl>
     </dd>
 </dl>
-
-<!--
-        Stream formatter
-        Run directory
-        App::Yath
-        Test2::Harness
-        TAP
--->
