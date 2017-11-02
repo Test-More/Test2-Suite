@@ -655,6 +655,37 @@ STDERR LOG:
         </script>
     </dd>
 
+    <dt id="Speed">Speed</dt>
+    <dd>
+        <h2>Performance Example</h2>
+
+        This table compares the performance of 'prove' and 'yath' when running
+        the test suite for Moose-2.2006. All times were taken on the same
+        system around the same time.
+
+        <p>
+
+        <table width="100%">
+            <tr><th width="150">command         </th><th>Wallclock</th><th width="150">CPU Time</th><th>Notes</th></tr>
+            <tr><td>prove -r t      </td><td align="center">96s   </td><td align="center">097.74</td><td>Just prove</td></tr>
+            <tr><td>prove -r t -j3  </td><td align="center">49s   </td><td align="center">145.22</td><td>prove with 3 procs</td></tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr><td>yath            </td><td align="center">97.97s</td><td align="center">097.63</td><td>Just yath</td></tr>
+            <tr><td>yath -j3        </td><td align="center">50.17s</td><td align="center">146.66</td><td>Yath with 3 procs</td></tr>
+            <tr><td>yath -PMoose    </td><td align="center">40.92s</td><td align="center">040.22</td><td>Yath with Moose preloaded</td></tr>
+            <tr><td>yath -j3 -PMoose</td><td align="center">20.05s</td><td align="center">055.68</td><td>Yath with 3 procs and Moose preloaded</td></tr>
+        </table>
+
+        <p>
+
+        <ul>
+            <li>Lower is better</li>
+            <li>Prove is not as precise when listing wallclock time</li>
+            <li>yath is recursive by default and does not need the <i>-r</i> argument</li>
+            <li>Arguments to find the correct lib paths ommited for simplicity</li>
+        </ul>
+    </dd>
+
     <dt id="Misc">Misc</dt>
     <dd>
         <dl class="sub_list">
