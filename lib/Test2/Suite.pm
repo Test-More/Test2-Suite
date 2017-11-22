@@ -328,6 +328,12 @@ See L<Test2::Require::Threads> for complete documentation.
 
 =back
 
+=head1 MIGRATING FROM TEST::MORE
+
+It is easy to move from L<Test::More> to Test2 some information on Migrating is
+available L<Test2::Migrating>.
+
+
 =head1 SEE ALSO
 
 See the L<Test2> documentation for a namespace map. Everything in this
