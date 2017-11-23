@@ -216,6 +216,10 @@ This exports tools for validating and comparing references.
 
 See L<Test2::Tools::Ref> for complete documentation.
 
+=item Spec
+
+This is an implementation of RSPEC using L<Test2::Workflow>.
+
 =item Subtest
 
 This exports tools for running subtests.
@@ -325,6 +329,20 @@ threading enabled.
 B<Note:> This will not turn threading on for you.
 
 See L<Test2::Require::Threads> for complete documentation.
+
+=back
+
+=head1 INCLUDED WORKFLOWS 
+
+=over 4
+
+=item Test2::Workflow
+
+A test workflow is a way of structuring tests using composable units. A well 
+known example of a test workflow is RSPEC. RSPEC is implemented using 
+Test2::Workflow in L<Test2::Tools::Spec> along with several extensions.
+
+See L<Test2::Workflow> for complete documentation.
 
 =back
 
