@@ -1,0 +1,326 @@
+<dl class="listnav">
+    <dt id="Overview">Overview</dt>
+    <dd>
+        <h2>Facet Overview</h2>
+
+        <br />
+        <br />
+        The new event API is a single method: <I>facet_data()</I>.
+        <p>
+        This method must return a hashref where each key is specific to a facet type.
+        <p>
+        The value is either a facet hashref, or an array of hashrefs.
+        <p>
+        Some facets <B>MUST</B> be lone hashrefs, others <B>MUST</B> be
+        hashrefs inside an arrayref.
+    </dd>
+
+    <dt id="about">About</dt>
+    <dd>
+        <h2>About</h2>
+
+        <script class="code">
+            about => {
+                details    => $string,
+                no_display => $bool,
+                package    => $pkg,
+            }
+        </script>
+
+        <p>
+        An event may only have one.
+
+        <p>
+        'details' is a human readable string describing the overall event.
+
+        <p>
+        'no_display' means that a formatter/harness should hide the event.
+
+        <p>
+        'package' is the package of the event the facet describes (IE: <I>Test2::Event::Ok</I>)
+    </dd>
+
+    <dt id="amnesty">Amnesty</dt>
+    <dd>
+        <h2>Amnesty</h2>
+
+        <script class="code">
+        amnesty => [
+            {
+                details   => $string,
+                tag       => $short_string,
+                inherited => $bool
+            },
+        ]
+        </script>
+
+        <p>
+        An event may have multiple.
+
+        <p>
+        This event is how things like 'todo' are implemented. Amnesty prevents
+        a failing assertion from causing a global test failure.
+
+        <p>
+        'details' is a human readable description of why the failure is being
+        granted amnesty (IE The 'todo' reason)
+
+        <p>
+        'tag' is a short human readable string, or category for the amnesty.
+        This is typically 'TODO' or 'SKIP'.
+
+        <p>
+        'inherited' is true if the amnesty was applied in a parent context
+        (true if this test is run in a subtest that is marked todo).
+    </dd>
+
+    <dt id="assert">Assert</dt>
+    <dd>
+        <h2>Assert</h2>
+
+        <script class="code">
+            assert => {
+                details  => $name,
+                pass     => $bool,
+                no_debug => $bool,
+                number   => $maybe_int,
+            }
+        </script>
+
+        <p>
+        An event may only have one.
+
+        <p>
+        The 'details' key is the name of the assertion.
+
+        <p>
+        The 'pass' key denotes a passing or failing assertion.
+
+        <p>
+        The 'no_debug' key tells any harness or formatter that diagnostics should not
+        be added automatically to a failing assertion (used when there are custom
+        diagnostics instead).
+
+        <p>
+        The 'number' key is for internal use, never set it yourself.
+    </dd>
+
+    <dt id="control">Control</dt>
+    <dd>
+        <h2>Control</h2>
+
+        <script class="code">
+        control => {
+            details      => $string,
+            global       => $bool,
+            terminate    => $maybe_int,
+            halt         => $bool,
+            has_callback => $bool,
+            encoding     => $enc,
+        }
+        </script>
+
+        <p>
+        An event may have one.
+
+        <p>
+        This facet is used to apply extra behavior when the event is processed.
+
+        <p>
+        'details' is a human readable explanation for the behavior.
+
+        <p>
+        'global' is true if this event should be forwarded to, and processed
+        by, all hubs everywhere. (bail-out uses this)
+
+        <p>
+        'terminate' this should either be undef, or an integer (0-255). When
+        defined this will cause the test to exit with the specific exit code.
+
+        <p>
+        'halt' is used to signal any harness that no further test files should
+        be run (bail-out uses this).
+
+        <p>
+        'has_callback' is set to true if the event has a callback sub defined.
+
+        <p>
+        'encoding' used to tell the formatter what encoding to use.
+    </dd>
+
+    <dt id="errors">Errors</dt>
+    <dd>
+        <h2>Errors</h2>
+
+        <script class="code">
+        errors => [
+            {
+                details => $string,
+                tag     => $short_string,
+                fail    => $bool,
+            },
+        ]
+        </script>
+
+        <p>
+        An event may have multiple.
+
+        <p>
+        'details' is a human readable explanation of the error.
+
+        <p>
+        'tag' is a short human readable category for the error.
+
+        <p>
+        'fail' is true if the error should cause test failure. If this is false
+        the error is simply informative, but not fatal.
+    </dd>
+
+    <dt id="info">Info</dt>
+    <dd>
+        <h2>Info</h2>
+
+        <script class="code">
+        info => [
+            {
+                details   => $string,
+                tag       => $short_string,
+                debug     => $bool,
+                important => $bool,
+            },
+        ]
+        </script>
+
+        <p>
+        An event may have multiple.
+
+        <p>
+        This is how diag and note are implemented.
+
+        <p>
+        'details' human readable message.
+
+        <p>
+        'tag' short category for the message, such as 'diag' or 'note'.
+
+        <p>
+        'debug' is true if the message is diagnostics in nature, this is the
+        main difference between a note and a diag.
+
+        <p>
+        'important' is true if the message is not diagnostics, but is important
+        to have it shown anyway. This is primarily used to communicate with a
+        harness.
+    </dd>
+
+    <dt id="parent">Parent</dt>
+    <dd>
+        <h2>Parent</h2>
+
+        <script class="code">
+        parent => {
+            details  => $string,
+            hid      => $hid,
+            children => [...],
+            buffered => 1,
+        },
+        </script>
+
+        <p>
+        An event may have one.
+
+        <p>
+        This is used by subtests.
+
+        <p>
+        'details' human readable name of the subtest.
+
+        <p>
+        'hid' subtest hub id.
+
+        <p>
+        'children' an arrayref containing facet_data instances from all child events.
+
+        <p>
+        'buffered' true if it was a buffered subtest.
+    </dd>
+
+    <dt id="plan">Plan</dt>
+    <dd>
+        <h2>Plan</h2>
+
+        <script class="code">
+        plan => {
+            details => $string,
+            count   => $int,
+            skip    => $bool,
+            none    => $bool,
+        }
+        </script>
+
+        <p>
+        An event may have one.
+
+        <p>
+        'details' is a human readable string describing the plan (for instance,
+        why a test is skipped)
+
+        <p>
+        'count' is the number of expected assertions (0 for skip)
+
+        <p>
+        'skip' is true if the plan is to skip the test.
+
+        <p>
+        'none' used for Test::More's 'no_plan' plan.
+    </dd>
+
+    <dt id="trace">Trace</dt>
+    <dd>
+        <h2>Trace</h2>
+
+        <script class="code">
+        trace => {
+            details  => $string,
+            frame    => [$pkg, $file, $line, $sub],
+            pid      => $int,
+            tid      => $int,
+            cid      => $cid,
+            hid      => $hid,
+            nested   => $int,
+            buffered => $bool,
+        }
+        </script>
+
+        <p>
+        An event may have one.
+
+        <p>
+        This is how debugging information is tracked. This is taken from the context
+        object at event creation.
+
+        <p>
+        'details' human readable debug message (otherwise generated from frame)
+
+        <p>
+        'frame' first 4 fields returned by caller.
+
+        <p>
+        'pid' the process id in which the event was created.
+
+        <p>
+        'tid' the thread is in which the event was created.
+
+        <p>
+        'cid' the id of the context used to create the event.
+
+        <p>
+        'hid' the id of the hub to which the event was sent.
+
+        <p>
+        'nest' subtest nesting depth of the event.
+
+        <p>
+        'buffered' is true if the event was generated inside a buffered subtest.
+    </dd>
+</dl>

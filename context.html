@@ -74,7 +74,32 @@
     <dd>
         <h2>Event Generation</h2>
 
-        The primary event types all have a shortcut method that creates, sends, and returns an event:
+        <script class="code">
+            $event = $ctx->pass()
+            $event = $ctx->pass($name)
+            $bool  = $ctx->pass_and_release()
+            $bool  = $ctx->pass_and_release($name)
+
+            $event = $ctx->fail()
+            $event = $ctx->fail($name)
+            $event = $ctx->fail($name, @diagnostics)
+            $false = $ctx->fail_and_release()
+            $false = $ctx->fail_and_release($name)
+            $false = $ctx->fail_and_release($name, @diagnostics)
+
+            $event = $ctx->send_ev2(%facets)
+            $event = $ctx->build_e2(%facets)
+            $event = $ctx->send_ev2_and_release($Type, %parameters)
+        </script>
+
+        See the facets section above for more details on facets.
+    </dd>
+
+    <dt id="LEvents">Legacy&nbsp;Events</dt>
+    <dd>
+        <h2>Legacy Event Generation</h2>
+
+        The legacy event types all have a shortcut method that creates, sends, and returns an event:
 
         <script class="code">
             $e = $ctx->ok($bool, $name, \@diag);
@@ -85,7 +110,7 @@
             $e = $ctx->bail($reason)
         </script>
 
-        All other event types can be generated via <i>send_event()</i> and <i>build_event()</i>
+        All other legacy/custom event types can be generated via <i>send_event()</i> and <i>build_event()</i>
 
         <script class="code">
             # Create and send the event

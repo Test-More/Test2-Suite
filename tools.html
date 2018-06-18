@@ -78,8 +78,10 @@
             my $class = 'Foo::Bar::Baz';
 
             isa_ok($class, 'Foo::Bar::Baz', 'Foo::Bar');
+            isa_ok($class, ['Foo::Bar::Baz', 'Foo::Bar'], "test name here");
 
             can_ok($class, qw/foo bar baz/);
+            can_ok($class, [qw/foo bar baz/], "test name here");
 
             DOES_ok($class, ...);
         </script>
@@ -91,6 +93,7 @@
             <li>First argument is always a class or instance.</li>
             <li>All additional arguments are items to check.</li>
             <li>Each calls the object method you expect.</li>
+            <li><b>NEW!</b>If the second argument is an array it is taken as a list of things to check, allowing a name as the third argument.</li>
         </ul>
 
         See the <a href="https://metacpan.org/pod/Test2::Tools::Class">module documentation</a> for more.
@@ -243,8 +246,8 @@
         ref_is_not() is the opposite:
         <script class="code">
             # Pass:
-            ref_is($x, $y, '$x and $y are not the same ref');
-            ref_is($x, $z); # Fails, they are the same ref
+            ref_is_not($x, $y, '$x and $y are not the same ref');
+            ref_is_not($x, $z); # Fails, they are the same ref
         </script>
 
     <dd>
