@@ -794,4 +794,38 @@ subtest set => sub {
     is(My::Set->bar, 'BAR', "injected 'bar'");
 };
 
+subtest calls => sub {
+    my $mock = Test2::Mock->new(
+        class => 'Fake17',
+        add_constructor => [new => 'hash'],
+        add => [
+            foo => sub { 1 },
+        ],
+    );
+
+    is($mock->next_call, undef, "next_call returns undef on a new object");
+    ok(!$mock->called('foo'), "called('foo') returns false on a new object");
+    ok(!$mock->called('bar'), "called('foo') returns false because bar doesn't exist");
+
+    ok($mock->clear, "clear() can be called whenever");
+    is($mock->next_call, undef, "next_call returns undefined after clear");
+    ok(!$mock->called('foo'), "called('foo') returns false after clear");
+
+    my $obj = $mock->class->new;
+    $obj->foo;
+    ok($mock->called('foo'), "called('foo') returns true after invocation");
+    is([$mock->next_call], ['new', ['Fake17']], "next_call returns the first call (instantiation)");
+    is($mock->next_call, 'foo', "next_call returns the second call after clear");
+    is($mock->next_call, undef, "next_call returns undef when empty");
+
+
+    $obj->foo;
+    ok($mock->called('foo'), "called('foo') returns true after invocation");
+    ok($mock->clear, "clear() clears the stack");
+    is($mock->next_call, undef, "next_call returns undefined after clear");
+    ok(!$mock->called('foo'), "called('foo') returns false after clear");
+
+    $mock->clear;
+};
+
 done_testing;

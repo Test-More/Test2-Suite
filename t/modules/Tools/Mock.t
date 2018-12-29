@@ -20,6 +20,7 @@ imported_ok qw{
     mock_building
 };
 
+=pod
 subtest generators => sub {
     # These are all thin wrappers around HashBase subs, we just test that we
     # get subs, HashBase subtest that the thing we are wrapping produce the
@@ -127,6 +128,7 @@ subtest mocks => sub {
         };
     }
 };
+=cut
 
 subtest mock_obj => sub {
     my $ref = {};
@@ -172,12 +174,16 @@ subtest mock_obj => sub {
     my $file = $c->file;
     ok($INC{$file}, "Mocked Loaded");
 
+    warn $obj;
     $obj = undef;
+    warn $c;
     $c = undef;
 
+    warn $file;
     ok(!$INC{$file}, "Not loaded anymore");
 };
 
+=pod
 subtest mock_class_basic => sub {
     my $c = mock_class 'Fake';
     isa_ok($c, 'Test2::Mock');
@@ -280,5 +286,6 @@ subtest set => sub {
     is(My::Set->foo, 'FOO', "overrode 'foo'");
     is(My::Set->bar, 'BAR', "injected 'bar'");
 };
+=cut
 
 done_testing;

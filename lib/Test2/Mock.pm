@@ -7,7 +7,7 @@ our $VERSION = '0.000119';
 use Carp qw/croak confess/;
 our @CARP_NOT = (__PACKAGE__);
 
-use Scalar::Util qw/weaken reftype blessed/;
+use Scalar::Util qw/weaken reftype blessed refaddr/;
 use Test2::Util qw/pkg_to_file/;
 use Test2::Util::Stash qw/parse_symbol slot_to_sig get_symbol get_stash purge_symbol/;
 use Test2::Util::Sub qw/gen_accessor gen_reader gen_writer/;
@@ -304,7 +304,13 @@ sub _parse_inject {
         return ($sig, $sym, $ref);
     }
 
+    # AUTOLOAD doesn't work with goto &$arg
     return ('&', $param, $arg)
+        if ref($arg) && reftype($arg) eq 'CODE' && $param eq 'AUTOLOAD';
+
+    # q.v. the comments on log_call().
+    my $r = refaddr $self;
+    return ('&', $param, sub { Test2::Mock::log_call($r, $param, @_); goto &$arg })
         if ref($arg) && reftype($arg) eq 'CODE';
 
     my ($is, $field, $val);
@@ -348,7 +354,7 @@ sub _parse_inject {
         $sub = sub { $val };
     }
 
-    return ('&', $param, $sub);
+    return ('&', $param, sub { Test2::Mock::log_call($r, $param, @_); goto &$sub })
 }
 
 sub _inject {
@@ -470,6 +476,66 @@ sub DESTROY {
 
     $self->_purge if $self->{+_PURGE_ON_DESTROY};
 }
+
+### The code below is all for the accounting of invocations of mocked methods.
+sub clear {
+    my $self = shift;
+    @{ _calls($self) } = ();
+    $self;
+}
+
+sub next_call {
+    my ($self, $num)  = @_;
+    $num ||= 1;
+
+    my $calls = _calls( $self );
+    return unless @$calls >= $num;
+
+    my ($call) = (splice(@$calls, 0, $num))[-1];
+    return wantarray() ? @$call : $call->[0];
+}
+
+sub called {
+    my ($self, $sub) = @_;
+
+    foreach my $called (reverse @{ _calls($self) }) {
+        return 1 if $called->[0] eq $sub;
+    }
+
+    return 0;
+}
+
+# This MUST be called as a function and with the refaddr() and not the
+# $self itself. Otherwise, object destruction doesn't trigger reset_all()
+# and tests fail.
+sub log_call {
+    my ($refaddr, $sub, @call_args) = @_;
+
+    # prevent circular references with weaken
+    for my $arg ( @call_args ) {
+        next unless ref $arg;
+        weaken( $arg ) if refaddr( $arg ) eq $refaddr;
+    }
+
+    push @{ _calls( $refaddr ) }, [ $sub, \@call_args ];
+}
+
+sub _get_key {
+    my $invocant = shift;
+    return blessed( $invocant ) ? refaddr( $invocant ) : $invocant;
+}
+
+{
+    my %calls;
+    sub _calls {
+        $calls{ _get_key( shift ) } ||= [];
+    }
+
+    sub _clear_calls {
+        delete $calls{ _get_key( shift ) };
+    }
+}
+### To here.
 
 1;
 
