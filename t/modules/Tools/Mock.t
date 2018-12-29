@@ -174,12 +174,9 @@ subtest mock_obj => sub {
     my $file = $c->file;
     ok($INC{$file}, "Mocked Loaded");
 
-    warn $obj;
     $obj = undef;
-    warn $c;
     $c = undef;
 
-    warn $file;
     ok(!$INC{$file}, "Not loaded anymore");
 };
 

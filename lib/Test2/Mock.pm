@@ -513,8 +513,7 @@ sub log_call {
 
     # prevent circular references with weaken
     for my $arg ( @call_args ) {
-        next unless ref $arg;
-        weaken( $arg ) if refaddr( $arg ) eq $refaddr;
+        weaken( $arg ) if ref($arg) && blessed( $arg );
     }
 
     push @{ _calls( $refaddr ) }, [ $sub, \@call_args ];
