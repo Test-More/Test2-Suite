@@ -308,9 +308,9 @@ sub _parse_inject {
     return ('&', $param, $arg)
         if ref($arg) && reftype($arg) eq 'CODE' && $param eq 'AUTOLOAD';
 
-    # q.v. the comments on log_call().
+    # q.v. the comments on _log_call().
     my $r = refaddr $self;
-    return ('&', $param, sub { Test2::Mock::log_call($r, $param, @_); goto &$arg })
+    return ('&', $param, sub { Test2::Mock::_log_call($r, $param, @_); goto &$arg })
         if ref($arg) && reftype($arg) eq 'CODE';
 
     my ($is, $field, $val);
@@ -354,7 +354,7 @@ sub _parse_inject {
         $sub = sub { $val };
     }
 
-    return ('&', $param, sub { Test2::Mock::log_call($r, $param, @_); goto &$sub })
+    return ('&', $param, sub { Test2::Mock::_log_call($r, $param, @_); goto &$sub })
 }
 
 sub _inject {
@@ -508,7 +508,7 @@ sub called {
 # This MUST be called as a function and with the refaddr() and not the
 # $self itself. Otherwise, object destruction doesn't trigger reset_all()
 # and tests fail.
-sub log_call {
+sub _log_call {
     my ($refaddr, $sub, @call_args) = @_;
 
     # prevent circular references with weaken
@@ -823,6 +823,19 @@ would lead to a very unpleasant situation.
 =item $c = $mock->child
 
 Returns the child mock, if any.
+
+=item $mock->clear
+
+Clears all logged calls for all any objects created from this mock.
+
+=item $mock->called('name')
+
+Returns true or false depending on if name is both mocked and has been called.
+
+=item $mock->next_call($n)
+
+Returns the next N calls (default 1) on objects created from this mock. Each is
+an array with the function name first and an arrayref of the parameters second.
 
 =back
 
