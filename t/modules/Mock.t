@@ -855,4 +855,25 @@ subtest calls => sub {
     ok($mock->called($obj1, 'foo'), "called('foo') returns true because call-logging is on");
 };
 
+subtest calls_off => sub {
+    my $mock = Test2::Mock->new(
+        class => 'Fake18',
+        add_constructor => [new => 'hash'],
+        add => [
+            foo => sub { 1 },
+        ],
+    );
+
+    ok(!$mock->log_calls, "Call-logging is off");
+
+    my $obj1 = $mock->class->new;
+
+    is($mock->next_call($obj1), undef, "next_call(obj) returns undef when not logging calls");
+    is($mock->next_call('Fake18'), undef, "next_call(class) returns undef when not logging calls");
+    ok(!$mock->called($obj1, 'foo'), "called(obj) returns undef when not logging calls");
+
+    ok($mock->clear($obj1), "clear(obj) succeeds");
+    ok($mock->clear, "clear() succeeds");
+};
+
 done_testing;
