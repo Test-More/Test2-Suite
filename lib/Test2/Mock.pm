@@ -310,8 +310,10 @@ sub _parse_inject {
 
     # q.v. the comments on _log_call().
     my $r = refaddr $self;
-    return ('&', $param, sub { Test2::Mock::_log_call($r, $param, @_); goto &$arg })
-        if ref($arg) && reftype($arg) eq 'CODE';
+    return ('&', $param, sub {
+        Test2::Mock::_log_call($r, $param, @_);
+        goto &$arg;
+    }) if ref($arg) && reftype($arg) eq 'CODE';
 
     my ($is, $field, $val);
 
@@ -354,7 +356,10 @@ sub _parse_inject {
         $sub = sub { $val };
     }
 
-    return ('&', $param, sub { Test2::Mock::_log_call($r, $param, @_); goto &$sub })
+    return ('&', $param, sub {
+        Test2::Mock::_log_call($r, $param, @_);
+        goto &$sub;
+    });
 }
 
 sub _inject {
@@ -479,16 +484,15 @@ sub DESTROY {
 
 ### The code below is all for the accounting of invocations of mocked methods.
 sub clear {
-    my $self = shift;
-    @{ _calls($self) } = ();
-    $self;
+    _clear_calls(@_);
+    $_[0];
 }
 
 sub next_call {
-    my ($self, $num)  = @_;
+    my ($self, $obj, $num)  = @_;
     $num ||= 1;
 
-    my $calls = _calls( $self );
+    my $calls = _calls($self, $obj);
     return unless @$calls >= $num;
 
     my ($call) = (splice(@$calls, 0, $num))[-1];
@@ -496,9 +500,9 @@ sub next_call {
 }
 
 sub called {
-    my ($self, $sub) = @_;
+    my ($self, $obj, $sub) = @_;
 
-    foreach my $called (reverse @{ _calls($self) }) {
+    foreach my $called (reverse @{ _calls($self, $obj) }) {
         return 1 if $called->[0] eq $sub;
     }
 
@@ -512,26 +516,37 @@ sub _log_call {
     my ($refaddr, $sub, @call_args) = @_;
 
     # prevent circular references with weaken
-    for my $arg ( @call_args ) {
-        weaken( $arg ) if ref($arg) && blessed( $arg );
+    for my $arg (@call_args) {
+        weaken($arg) if ref($arg) && blessed($arg);
     }
 
-    push @{ _calls( $refaddr ) }, [ $sub, \@call_args ];
+    # ASSUMPTION: All the mocked methods are called as object or class methods.
+    push @{_calls($refaddr, $call_args[0])}, [ $sub, \@call_args ];
 }
 
 sub _get_key {
     my $invocant = shift;
-    return blessed( $invocant ) ? refaddr( $invocant ) : $invocant;
+    return blessed($invocant) ? refaddr($invocant) : $invocant;
 }
 
 {
     my %calls;
     sub _calls {
-        $calls{ _get_key( shift ) } ||= [];
+        my ($x, $y) = @_;
+        my $z = $calls{ _get_key($x) } ||= {};
+        $z->{ _get_key($y) } ||= [];
     }
 
     sub _clear_calls {
-        delete $calls{ _get_key( shift ) };
+        my ($x, $y) = @_;
+        if ($y) {
+            if (exists $calls{ _get_key($x) }) {
+                delete $calls{ _get_key($x) }{ _get_key($y) };
+            }
+        }
+        else {
+            delete $calls{ _get_key($x) };
+        }
     }
 }
 ### To here.
@@ -824,18 +839,21 @@ would lead to a very unpleasant situation.
 
 Returns the child mock, if any.
 
-=item $mock->clear
+=item $mock->clear($obj)
 
-Clears all logged calls for all any objects created from this mock.
+Clears all logged calls for the passed object.
 
-=item $mock->called('name')
+If nothing is passed, all calls for all objects by this mock will be cleared.
 
-Returns true or false depending on if name is both mocked and has been called.
+=item $mock->called($obj, 'name')
 
-=item $mock->next_call($n)
+Returns true or false depending on if name is both mocked and has been called
+on the passed object.
 
-Returns the next N calls (default 1) on objects created from this mock. Each is
-an array with the function name first and an arrayref of the parameters second.
+=item $mock->next_call($obj, [$n])
+
+Returns the next N calls (default 1) on the passed object. Each is an array with
+the function name first and an arrayref of the parameters second.
 
 =back
 

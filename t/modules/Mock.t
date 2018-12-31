@@ -803,29 +803,46 @@ subtest calls => sub {
         ],
     );
 
-    is($mock->next_call, undef, "next_call returns undef on a new object");
-    ok(!$mock->called('foo'), "called('foo') returns false on a new object");
-    ok(!$mock->called('bar'), "called('foo') returns false because bar doesn't exist");
+    my $obj1 = $mock->class->new;
 
-    ok($mock->clear, "clear() can be called whenever");
-    is($mock->next_call, undef, "next_call returns undefined after clear");
-    ok(!$mock->called('foo'), "called('foo') returns false after clear");
+    is($mock->next_call($obj1), undef, "next_call returns undef when empty");
+    is([$mock->next_call('Fake17')], ['new', ['Fake17']], "next_call returns the first call (instantiation, array returns method and args)");
+    is($mock->next_call('Fake17'), undef, "next_call returns undef when empty");
 
-    my $obj = $mock->class->new;
-    $obj->foo;
-    ok($mock->called('foo'), "called('foo') returns true after invocation");
-    is([$mock->next_call], ['new', ['Fake17']], "next_call returns the first call (instantiation)");
-    is($mock->next_call, 'foo', "next_call returns the second call after clear");
-    is($mock->next_call, undef, "next_call returns undef when empty");
+    ok($mock->clear($obj1), "clear() can be called whenever");
+    is($mock->next_call($obj1), undef, "next_call returns undefined after clear");
+    ok(!$mock->called($obj1, 'foo'), "called('foo') returns false after clear");
+
+    $obj1->foo;
+    ok($mock->called($obj1, 'foo'), "called('foo') returns true after invocation");
+    ok(!$mock->called($obj1, 'bar'), "called('bar') returns false because it wasn't mocked");
+    is($mock->next_call($obj1), 'foo', "next_call returns the first call after clear (scalar returns just method)");
+    is($mock->next_call($obj1), undef, "next_call returns undef when empty");
 
 
-    $obj->foo;
-    ok($mock->called('foo'), "called('foo') returns true after invocation");
-    ok($mock->clear, "clear() clears the stack");
-    is($mock->next_call, undef, "next_call returns undefined after clear");
-    ok(!$mock->called('foo'), "called('foo') returns false after clear");
+    $obj1->foo;
+    ok($mock->called($obj1, 'foo'), "called('foo') returns true after invocation");
+    ok($mock->clear($obj1), "clear() clears the stack");
+    is($mock->next_call($obj1), undef, "next_call returns undefined after clear");
+    ok(!$mock->called($obj1, 'foo'), "called('foo') returns false after clear");
+
+    my $obj2 = $mock->class->new;
+    $obj2->foo;
+    ok(!$mock->called($obj1, 'foo'), "called('foo') returns false on obj1 (uncalled)");
+    ok($mock->called($obj2, 'foo'), "called('foo') returns true on obj2");
+    $mock->clear($obj1);
+    ok($mock->called($obj2, 'foo'), "called('foo') still returns true on obj2");
+    $mock->clear($obj2);
+    ok(!$mock->called($obj2, 'foo'), "called('foo') returns false on obj2 after clear");
+
+    $obj1->foo;
+    $obj2->foo;
+    ok($mock->called($obj1, 'foo'), "called('foo') returns true on obj1");
+    ok($mock->called($obj2, 'foo'), "called('foo') returns true on obj2");
 
     $mock->clear;
+    ok(!$mock->called($obj1, 'foo'), "called('foo') returns false on obj1 after clear");
+    ok(!$mock->called($obj2, 'foo'), "called('foo') returns false on obj2 after clear");
 };
 
 done_testing;
