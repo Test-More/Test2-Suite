@@ -483,6 +483,12 @@ sub DESTROY {
 }
 
 ### The code below is all for the accounting of invocations of mocked methods.
+sub log_calls {
+    my $self = shift;
+    _log_calls($self, $_[0] && 1) if @_;
+    _calls_are_logged($self);
+}
+
 sub clear {
     _clear_calls(@_);
     $_[0];
@@ -515,6 +521,8 @@ sub called {
 sub _log_call {
     my ($refaddr, $sub, @call_args) = @_;
 
+    return unless _calls_are_logged($refaddr);
+
     # prevent circular references with weaken
     for my $arg (@call_args) {
         weaken($arg) if ref($arg) && blessed($arg);
@@ -527,6 +535,16 @@ sub _log_call {
 sub _get_key {
     my $invocant = shift;
     return blessed($invocant) ? refaddr($invocant) : $invocant;
+}
+
+{
+    my %calls_are_logged;
+    sub _log_calls {
+        $calls_are_logged{ _get_key($_[0]) } = $_[1];
+    }
+    sub _calls_are_logged {
+        $calls_are_logged{ _get_key($_[0]) };
+    }
 }
 
 {
@@ -854,6 +872,16 @@ on the passed object.
 
 Returns the next N calls (default 1) on the passed object. Each is an array with
 the function name first and an arrayref of the parameters second.
+
+=item $mock->log_calls($bool)
+
+Determines whether calls will be logged on objects from this mock.
+
+This can be passed in as a constructor parameter to Test2::Mock. By default,
+no calls will be logged.
+
+This will only affect calls moving forward. Any calls that have been logged will
+remain logged.
 
 =back
 

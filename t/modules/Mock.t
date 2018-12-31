@@ -801,7 +801,10 @@ subtest calls => sub {
         add => [
             foo => sub { 1 },
         ],
+        log_calls => 1,
     );
+
+    ok($mock->log_calls, "Call-logging is on");
 
     my $obj1 = $mock->class->new;
 
@@ -843,6 +846,13 @@ subtest calls => sub {
     $mock->clear;
     ok(!$mock->called($obj1, 'foo'), "called('foo') returns false on obj1 after clear");
     ok(!$mock->called($obj2, 'foo'), "called('foo') returns false on obj2 after clear");
+
+    $mock->log_calls(0);
+    $obj1->foo;
+    ok(!$mock->called($obj1, 'foo'), "called('foo') returns false because call-logging is off");
+    $mock->log_calls(1);
+    $obj1->foo;
+    ok($mock->called($obj1, 'foo'), "called('foo') returns true because call-logging is on");
 };
 
 done_testing;
