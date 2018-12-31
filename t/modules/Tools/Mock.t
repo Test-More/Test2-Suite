@@ -281,4 +281,47 @@ subtest set => sub {
     is(My::Set->bar, 'BAR', "injected 'bar'");
 };
 
+subtest call_logging_via_class => sub {
+    my $obj = mock_obj { foo => 'foo' } => (
+        add => [ bar => sub { 'bar' }],
+        log_calls => 1,
+    );
+
+    is($obj->foo, 'foo', "obj->foo() is 'foo'");
+    my ($c) = mocked($obj);
+    ok($c->called($obj, 'foo'), "foo has been called");
+    ok($c->clear($obj), "Can clear the object");
+    ok(!$c->called($obj, 'foo'), "called(obj, foo) now returns false");
+
+    is($obj->foo, 'foo', "obj->foo() is 'foo'");
+    ok($c->called($obj, 'foo'), "foo has been called via the non-AUTOLOAD");
+
+    is($obj->bar, 'bar', "obj->bar() is 'bar'");
+    ok($c->called($obj, 'bar'), "bar has been called");
+};
+
+subtest call_logging_via_sub => sub {
+    my $obj = mock_obj sub {
+        mock_do log_calls => 1;
+        mock_do add => (
+            foo => sub { 'foo' },
+        );
+        mock_do add => (
+            bar => sub { 'bar' },
+        );
+    };
+
+    is($obj->foo, 'foo', "obj->foo() is 'foo'");
+    my ($c) = mocked($obj);
+    ok($c->called($obj, 'foo'), "foo has been called");
+    ok($c->clear($obj), "Can clear the object");
+    ok(!$c->called($obj, 'foo'), "called(obj, foo) now returns false");
+
+    is($obj->foo, 'foo', "obj->foo() is 'foo'");
+    ok($c->called($obj, 'foo'), "foo has been called via the non-AUTOLOAD");
+
+    is($obj->bar, 'bar', "obj->bar() is 'bar'");
+    ok($c->called($obj, 'bar'), "bar has been called");
+};
+
 done_testing;

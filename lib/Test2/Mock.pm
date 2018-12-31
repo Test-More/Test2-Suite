@@ -180,6 +180,8 @@ our \$AUTOLOAD;
         };
 
         \$c->add(\$name => \$sub);
+        # Need to do this manually here because we're goto-ing the sub directly.
+        Test2::Mock::_log_call(\$c, \$name, \@_);
         goto &\$sub;
     }
 EOT
