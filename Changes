@@ -1,6 +1,6 @@
 {{$NEXT}}
 
-    - Add Test2::Plugin::DataLine
+    - Add Test2::Plugin::DebugOnFail
 
 0.000153  2023-04-27 15:27:32-07:00 America/Los_Angeles
 
