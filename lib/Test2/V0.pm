@@ -35,7 +35,7 @@ use Test2::Tools::Compare qw{
     etc end filter_items
     T F D DF E DNE FDNE U L
     event fail_events
-    exact_ref
+    exact_ref refcount
 };
 
 use Test2::Tools::Warnings qw{
@@ -54,7 +54,7 @@ use Test2::Tools::Exports   qw/imported_ok not_imported_ok/;
 use Test2::Tools::Ref       qw/ref_ok ref_is ref_is_not/;
 use Test2::Tools::Mock      qw/mock mocked/;
 use Test2::Tools::Exception qw/try_ok dies lives/;
-use Test2::Tools::Refcount  qw/is_refcount is_oneref refcount/;
+use Test2::Tools::Refcount  qw/is_refcount is_oneref/;
 
 our @EXPORT = qw{
     ok pass fail diag note todo skip
@@ -89,7 +89,7 @@ our @EXPORT = qw{
     event fail_events
     exact_ref
 
-    is_refcount is_oneref refcount
+    is_refcount is_oneref
 };
 
 my $SRAND;
@@ -543,8 +543,6 @@ See L<Test2::Tools::Refcount>.
 =item is_refcount($ref, $count, $description)
 
 =item is_oneref($ref, $description)
-
-=item $count = refcount($ref)
 
 =back
 

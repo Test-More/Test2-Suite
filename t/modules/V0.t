@@ -32,7 +32,7 @@ imported_ok qw{
     event fail_events
     exact_ref
 
-    is_refcount is_oneref refcount
+    is_refcount is_oneref
 };
 
 ok(Test2::Plugin::ExitSummary->active, "Exit Summary is loaded");
