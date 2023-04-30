@@ -437,6 +437,23 @@ subtest exact_ref => sub {
     );
 };
 
+subtest refcount => sub {
+    my $arr = [];
+
+    my $events = intercept {
+        is($arr, refcount(1), "pass");
+        #is($arr, refcount(2), "fail");
+    };
+
+    like(
+        $events,
+        array {
+            event Ok => {pass => 1};
+        },
+        "Got events"
+    );
+};
+
 subtest string => sub {
     my $check = string "foo"; my $line = __LINE__;
     is($check->lines, [$line], "Got line number");

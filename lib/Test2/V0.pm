@@ -87,7 +87,7 @@ our @EXPORT = qw{
     etc end filter_items
     T F D DF E DNE FDNE U L
     event fail_events
-    exact_ref
+    exact_ref refcount
 
     is_refcount is_oneref
 };
@@ -451,6 +451,8 @@ See L<Test2::Tools::Compare>.
 =item $check = L()
 
 =item $check = exact_ref($ref)
+
+=item $check = refcount($count)
 
 =item end()
 

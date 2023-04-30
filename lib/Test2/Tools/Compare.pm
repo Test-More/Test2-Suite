@@ -31,6 +31,7 @@ use Test2::Compare::Object();
 use Test2::Compare::OrderedSubset();
 use Test2::Compare::Pattern();
 use Test2::Compare::Ref();
+use Test2::Compare::Refcount();
 use Test2::Compare::DeepRef();
 use Test2::Compare::Regex();
 use Test2::Compare::Scalar();
@@ -55,6 +56,7 @@ use Test2::Compare::Wildcard();
     'Test2::Compare::Object'        => 1,
     'Test2::Compare::Pattern'       => 1,
     'Test2::Compare::Ref'           => 1,
+    'Test2::Compare::Refcount'      => 1,
     'Test2::Compare::Regex'         => 1,
     'Test2::Compare::Scalar'        => 1,
     'Test2::Compare::Set'           => 1,
@@ -75,7 +77,7 @@ our @EXPORT_OK = qw{
     etc end filter_items
     T F D DF E DNE FDNE U L
     event fail_events
-    exact_ref
+    exact_ref refcount
 };
 use base 'Exporter';
 
@@ -304,6 +306,15 @@ sub L() {
 sub exact_ref($) {
     my @caller = caller;
     return Test2::Compare::Ref->new(
+        file  => $caller[1],
+        lines => [$caller[2]],
+        input => $_[0],
+    );
+}
+
+sub refcount($) {
+    my @caller = caller;
+    return Test2::Compare::Refcount->new(
         file  => $caller[1],
         lines => [$caller[2]],
         input => $_[0],

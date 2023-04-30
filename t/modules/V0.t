@@ -30,7 +30,7 @@ imported_ok qw{
     etc end filter_items
     T F D DF E DNE FDNE U L
     event fail_events
-    exact_ref
+    exact_ref refcount
 
     is_refcount is_oneref
 };
