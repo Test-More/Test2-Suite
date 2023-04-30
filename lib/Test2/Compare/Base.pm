@@ -5,14 +5,14 @@ use warnings;
 our $VERSION = '0.000156';
 
 use Carp qw/confess croak/;
-use Scalar::Util qw/blessed/;
+use Scalar::Util qw/blessed weaken/;
 
 use Test2::Util::Sub qw/sub_info/;
 use Test2::Compare::Delta();
 
 sub MAX_CYCLES() { 75 }
 
-use Test2::Util::HashBase qw{builder _file _lines _info called};
+use Test2::Util::HashBase qw{builder _file _lines _info called <weak};
 use Test2::Util::Ref qw/render_ref/;
 
 {
@@ -88,11 +88,15 @@ sub run {
     my $convert = $params{convert} or confess "no convert sub provided";
     my $seen    = $params{seen} ||= {};
 
+    weaken($params{got}) if $self->weak && exists($params{got}) && ref($params{got});
+
     $params{exists} = exists $params{got} ? 1 : 0
         unless exists $params{exists};
 
     my $exists = $params{exists};
     my $got = $exists ? $params{got} : undef;
+
+    weaken($got) if $self->weak && ref($got);
 
     my $gotname = render_ref($got);
 

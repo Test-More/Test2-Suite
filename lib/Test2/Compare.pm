@@ -4,7 +4,7 @@ use warnings;
 
 our $VERSION = '0.000156';
 
-use Scalar::Util qw/blessed/;
+use Scalar::Util qw/blessed weaken/;
 use Test2::Util qw/try/;
 use Test2::Util::Ref qw/rtype/;
 
@@ -19,6 +19,11 @@ use base 'Exporter';
 
 sub compare {
     my ($got, $check, $convert) = @_;
+
+    if (ref($got)) {
+        weaken($_[0]); # Evil, but useful as now not all consumers of compare() need to weaken it.
+        weaken($got);
+    }
 
     $check = $convert->($check);
 

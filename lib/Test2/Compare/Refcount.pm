@@ -5,6 +5,7 @@ use warnings;
 use base 'Test2::Compare::Base';
 
 use Carp qw/croak/;
+use Scalar::Util qw/weaken/;
 use B qw( svref_2object );
 
 our $VERSION = '0.000156';
@@ -24,10 +25,14 @@ sub operator { '==' }
 
 sub name { $_[0]->{+INPUT} }
 
+sub weak { 1 }
+
 sub verify {
     my $self = shift;
     my %params = @_;
     my ($exists) = @params{qw/exists/};
+
+    weaken($params{got}) if exists($params{got}) && ref($params{got});
 
     my $gotcount = svref_2object( $params{got} )->REFCNT;
 
